@@ -13,7 +13,9 @@ function Dashboard() {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get("http://localhost:1916/showbooking");
+      const response = await axios.get(
+        "https://coolservices.onrender.com/showbooking"
+      );
       setbooking(response.data);
     } catch (error) {
       toast.error("Failed to fetch bookings");
@@ -29,7 +31,9 @@ function Dashboard() {
       return;
     }
     try {
-      await axios.delete(`http://localhost:1916/deletebooking/${id}`);
+      await axios.delete(
+        `https://coolservices.onrender.com/deletebooking/${id}`
+      );
       toast.success("Deleted successfully!");
       setTimeout(fetchBookings(), 500);
     } catch (error) {

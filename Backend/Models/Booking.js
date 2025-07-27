@@ -2,6 +2,7 @@ const mongoose = require("mongoose");
 
 const BookingSchema = new mongoose.Schema({
   appliance: String,
+  company: String,
   issue: String,
   address: String,
   pincode: String,

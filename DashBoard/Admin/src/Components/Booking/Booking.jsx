@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 const Booking = () => {
   const [form, setForm] = useState({
     appliance: "",
+    company: "",
     issue: "",
     address: "",
     pincode: "",
@@ -33,6 +34,7 @@ const Booking = () => {
     }
     setForm({
       appliance: "",
+      company: "",
       issue: "",
       address: "",
       pincode: "",
@@ -82,16 +84,16 @@ const Booking = () => {
         <div>
           <label className="block mb-1">Company Type</label>
           <select
-            name="appliance"
+            name="company"
             className="w-full border px-3 py-2 rounded "
-            value={form.appliance}
+            value={form.company}
             onChange={handleChange}
             required
           >
             <option value="">-- Select Company --</option>
-            <option value="AC">BPL</option>
-            <option value="Refrigerator">Kelvinator</option>
-            <option value="Washing Machine">IBM</option>
+            <option value="BPL">BPL</option>
+            <option value="Kelvinator">Kelvinator</option>
+            <option value="IBM">IBM</option>
             <option value="Other">Other</option>
           </select>
         </div>

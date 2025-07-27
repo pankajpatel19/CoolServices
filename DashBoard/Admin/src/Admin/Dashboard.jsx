@@ -106,6 +106,7 @@ function Dashboard() {
             <tr>
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Appliance</th>
+              <th className="p-2 border">Company</th>
               <th className="p-2 border">Date</th>
               <th className="p-2 border">Phone</th>
               <th className="p-2 border">Time</th>

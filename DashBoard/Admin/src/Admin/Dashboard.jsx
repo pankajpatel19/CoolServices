@@ -41,9 +41,12 @@ function Dashboard() {
   const updatebooking = async (id, val) => {
     console.log(id, val);
     try {
-      await axios.patch(`http://localhost:1916/updatebooking/${id}`, {
-        status: val,
-      });
+      await axios.patch(
+        `https://coolservices.onrender.com/updatebooking/${id}`,
+        {
+          status: val,
+        }
+      );
       toast.success("Update successfully!");
       fetchBookings();
     } catch (error) {

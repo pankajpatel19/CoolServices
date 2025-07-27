@@ -20,9 +20,13 @@ function SignUp() {
   const handleform = async (e) => {
     e.preventDefault();
     try {
-      const data = await axios.post("http://localhost:1916/signup", form, {
-        withCredentials: true,
-      });
+      const data = await axios.post(
+        "https://coolservices.onrender.com/signup",
+        form,
+        {
+          withCredentials: true,
+        }
+      );
 
       toast.success("User Registered SuccessFully");
       setError("");

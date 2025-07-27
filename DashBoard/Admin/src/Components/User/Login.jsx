@@ -19,9 +19,13 @@ function Login() {
     e.preventDefault();
 
     try {
-      const data = await axios.post("http://localhost:1916/login", form, {
-        withCredentials: true,
-      });
+      const data = await axios.post(
+        "https://coolservices.onrender.com/login",
+        form,
+        {
+          withCredentials: true,
+        }
+      );
       localStorage.setItem("token", data.data.token);
       if (data.data.role == "user") {
         navigate("/");
@@ -36,7 +40,7 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300 fixed">
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-green-100 via-green-200 to-green-300">
       <ToastContainer position="top-center" />
       <motion.form
         initial={{ y: -100, opacity: 0 }}

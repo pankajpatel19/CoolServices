@@ -25,7 +25,7 @@ const Booking = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:1916/addbooking", form);
+      await axios.post("https://coolservices.onrender.com/addbooking", form);
       toast.success("Booking successful!");
     } catch (e) {
       console.log(e);

@@ -18,9 +18,11 @@ function Data() {
 
   useEffect(() => {
     try {
-      axios.get("http://localhost:1916/showbooking/dashboard").then((res) => {
-        setDashData(res.data);
-      });
+      axios
+        .get("https://coolservices.onrender.com/showbooking/dashboard")
+        .then((res) => {
+          setDashData(res.data);
+        });
     } catch (error) {
       console.log(error);
     }

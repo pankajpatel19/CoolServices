@@ -123,6 +123,7 @@ function Dashboard() {
               >
                 <td className="border px-4 py-2">{item.name}</td>
                 <td className="border px-4 py-2">{item.appliance}</td>
+                <td className="border px-4 py-2">{item.company}</td>
                 <td className="border px-4 py-2">{item.date}</td>
                 <td className="border px-4 py-2">{item.phone}</td>
                 <td className="border px-4 py-2">{item.time}</td>

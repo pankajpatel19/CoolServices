@@ -1,38 +1,57 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 function Customer() {
   return (
-    <>
-      <div className="Banner px-4 py-8 sm:px-8 md:px-16 lg:px-24 bg-opacity-90">
-        <h1 className="text-2xl sm:text-4xl md:text-5xl text-zinc-50 font-serif text-center md:text-left">
-          Any Query About Services
+    <motion.div
+      initial={{ y: -100, opacity: 0 }}
+      animate={{ y: 0, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 80, duration: 0.8 }}
+      className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 px-4 py-12 sm:px-8 md:px-16 lg:px-24 text-white"
+    >
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl sm:text-5xl font-serif font-bold text-center md:text-left mb-6">
+          Any Query About Services?
         </h1>
-        <div className="mt-6">
-          <h2 className="text-lg sm:text-2xl md:text-3xl text-zinc-50 font-serif mt-2 md:mt-5 text-center md:text-left">Contact Us</h2>
-          <div>
-            <h1 className="text-white text-base sm:text-lg md:text-xl">Cool Services</h1>
-          </div>
+
+        <div className="mt-6 space-y-4">
+          <h2 className="text-2xl sm:text-3xl font-serif text-center md:text-left">
+            Contact Us
+          </h2>
+          <p className="text-lg sm:text-xl text-center md:text-left">
+            <span className="font-semibold">Cool Services</span> – Your home
+            appliance partner
+          </p>
         </div>
-        <div className="flex flex-col md:flex-row md:justify-end mt-8 md:mt-0">
-          <div className="md:w-80 w-full mx-auto md:mx-0">
-            <h2 className="text-lg sm:text-2xl md:text-3xl mb-2 text-zinc-50 font-serif text-center md:text-left">
+
+        {/* Chat Section */}
+        <div className="flex flex-col md:flex-row justify-between items-center mt-10 gap-8">
+          <div className="w-full md:w-1/2">
+            <h2 className="text-2xl sm:text-3xl font-serif mb-4 text-center md:text-left">
               Chat With Us
             </h2>
-            <img
-              src="Media/wp.jpg"
-              alt="WhatsApp"
-              className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 object-cover rounded-2xl mx-auto md:mx-0"
-            />
-            <div className="text-white bg-green-500 w-full p-3 sm:p-4 rounded-2xl mt-2 text-center">
-              <a href="">
-                <i className="fa-brands fa-whatsapp ml-2"></i>
-                <span className="ml-2">WhatsApp</span>
+            <div className="flex justify-center md:justify-start">
+              <img
+                src="Media/wp.jpg"
+                alt="WhatsApp"
+                className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-3xl shadow-lg object-cover"
+              />
+            </div>
+            <div className="mt-4 flex justify-center md:justify-start">
+              <a
+                href="https://wa.me/8511994480"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-3 px-6 py-3 bg-green-500 hover:bg-green-600 text-white rounded-full font-semibold text-lg transition duration-200 shadow-lg"
+              >
+                <i className="fa-brands fa-whatsapp text-xl"></i> Chat on
+                WhatsApp
               </a>
             </div>
           </div>
         </div>
       </div>
-    </>
+    </motion.div>
   );
 }
 

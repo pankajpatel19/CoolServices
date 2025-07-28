@@ -1,9 +1,7 @@
-import { ToastContainer } from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { toast } from "react-toastify";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import Done from "../Admin/Data";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -25,25 +23,22 @@ function Dashboard() {
 
   const handledelete = async (id) => {
     const confirm = window.confirm(
-      "Are you Sure ,,,want to delete this booking"
+      "Are you sure you want to delete this booking?"
     );
-    if (!confirm) {
-      return;
-    }
+    if (!confirm) return;
     try {
       await axios.delete(
         `https://coolservices.onrender.com/deletebooking/${id}`
       );
       toast.success("Deleted successfully!");
-      setTimeout(fetchBookings(), 500);
+      setTimeout(() => fetchBookings(), 500); // ✅ fixed here
     } catch (error) {
       console.log(error);
-      toast.error("Something Went Wrong");
+      toast.error("Something went wrong");
     }
   };
 
   const updatebooking = async (id, val) => {
-    console.log(id, val);
     try {
       await axios.patch(
         `https://coolservices.onrender.com/updatebooking/${id}`,
@@ -51,106 +46,105 @@ function Dashboard() {
           status: val,
         }
       );
-      toast.success("Update successfully!");
+      toast.success("Updated successfully!");
       fetchBookings();
     } catch (error) {
       console.log(error);
-      toast.error("Something Went Wrong", error);
+      toast.error("Something went wrong");
     }
   };
 
-  const handleLogout = () => {
-    navigate("/");
-  };
-
-  const showDashboard = async () => {
-    navigate("/dashboard");
-  };
+  const handleLogout = () => navigate("/");
+  const showDashboard = () => navigate("/dashboard");
 
   useEffect(() => {
     fetchBookings();
   }, []);
 
   return (
-    <div className="flex justify-center mt-5">
+    <div className="flex justify-center mt-6 px-4 sm:px-6">
       <ToastContainer position="top-center" />
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, type: "spring", stiffness: 80 }}
-        className="w-full max-w-6xl"
+        className="w-full max-w-7xl"
       >
-        <div className="flex justify-end mb-2">
+        {/* Top Buttons */}
+        <div className="flex justify-end gap-2 mb-4">
           <button
             onClick={handleLogout}
-            className="text-white  p-2 w-20 bg-green-500 mr-2"
+            className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded shadow-md transition"
           >
-            LogOut
+            Logout
           </button>
           <button
             onClick={showDashboard}
-            className="bg-blue-500 p-2 text-white "
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md transition"
           >
-            DashBoard
+            Dashboard
           </button>
         </div>
-        <div>
-          <h1 className="text-3xl font-serif flex justify-center mb-5">
-            Complaints
-          </h1>
-        </div>
-        {/* <Done /> */}
 
-        <table className="text-center w-full mt-10">
-          <thead className="bg-gray-100">
-            <tr>
-              <th className="p-2 border">Name</th>
-              <th className="p-2 border">Appliance</th>
-              <th className="p-2 border">Company</th>
-              <th className="p-2 border">Date</th>
-              <th className="p-2 border">Phone</th>
-              <th className="p-2 border">Time</th>
-              <th className="p-2 border">Status</th>
-              <th className="p-2 border">Delete</th>
-            </tr>
-          </thead>
-          <tbody>
-            {booking.map((item) => (
-              <motion.tr
-                key={item._id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4 }}
-              >
-                <td className="border px-4 py-2">{item.name}</td>
-                <td className="border px-4 py-2">{item.appliance}</td>
-                <td className="border px-4 py-2">{item.company}</td>
-                <td className="border px-4 py-2">{item.date}</td>
-                <td className="border px-4 py-2">{item.phone}</td>
-                <td className="border px-4 py-2">{item.time}</td>
-                <td className="border px-4 py-2">
-                  <select
-                    value={item.status}
-                    onChange={(e) => updatebooking(item._id, e.target.value)}
-                    required
-                  >
-                    <option>New</option>
-                    <option>In Progress</option>
-                    <option>Done</option>
-                  </select>
-                </td>
-                <td className="p-1 border">
-                  <button
-                    className="w-24 h-10 bg-red-400 text-white rounded hover:bg-red-600"
-                    onClick={() => handledelete(item._id)}
-                  >
-                    Delete
-                  </button>
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+        {/* Header */}
+        <h1 className="text-3xl font-serif font-semibold text-center mb-6 text-gray-800">
+          Complaints
+        </h1>
+
+        {/* Table Section */}
+        <div className="overflow-x-auto shadow-md rounded-lg bg-white">
+          <table className="min-w-full text-center border-collapse">
+            <thead className="bg-gray-100 sticky top-0 z-10">
+              <tr className="text-sm sm:text-base">
+                <th className="p-2 border">Name</th>
+                <th className="p-2 border">Appliance</th>
+                <th className="p-2 border">Company</th>
+                <th className="p-2 border">Date</th>
+                <th className="p-2 border">Phone</th>
+                <th className="p-2 border">Time</th>
+                <th className="p-2 border">Status</th>
+                <th className="p-2 border">Delete</th>
+              </tr>
+            </thead>
+            <tbody>
+              {booking.map((item) => (
+                <motion.tr
+                  key={item._id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.4 }}
+                  className="hover:bg-gray-50"
+                >
+                  <td className="border px-3 py-2">{item.name}</td>
+                  <td className="border px-3 py-2">{item.appliance}</td>
+                  <td className="border px-3 py-2">{item.company}</td>
+                  <td className="border px-3 py-2">{item.date}</td>
+                  <td className="border px-3 py-2">{item.phone}</td>
+                  <td className="border px-3 py-2">{item.time}</td>
+                  <td className="border px-3 py-2">
+                    <select
+                      className="border rounded px-2 py-1 bg-white focus:outline-none text-sm"
+                      value={item.status}
+                      onChange={(e) => updatebooking(item._id, e.target.value)}
+                    >
+                      <option value="New">New</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Done">Done</option>
+                    </select>
+                  </td>
+                  <td className="p-1 border">
+                    <button
+                      className="w-full sm:w-24 py-2 bg-red-500 hover:bg-red-600 text-white text-sm rounded transition"
+                      onClick={() => handledelete(item._id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </motion.tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </motion.div>
     </div>
   );

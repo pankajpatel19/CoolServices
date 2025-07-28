@@ -18,9 +18,11 @@ const sendBookEmail = require("./utils/Sendmails");
 
 //cors
 const cors = require("cors");
-app.use(
-  cors({ origin: "https://cool-services.vercel.app", credentials: true })
-);
+const alloworigin = [
+  "https://cool-services.vercel.app",
+  "http://localhost:5173",
+];
+app.use(cors({ origin: alloworigin, credentials: true }));
 
 //models
 const Booking = require("./Models/Booking");

@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
-.Banner{
-  background-image: url("back.jpg");
-  /* background-repeat: no-repeat; */
-  /* background-position: center; */
-  /* background-size: cover; */
+.Service{
+  background-image: url("coolService.jpg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 .active{

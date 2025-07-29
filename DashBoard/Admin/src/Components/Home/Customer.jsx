@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import image from "../../assets/Designer.jpeg";
 
 function Customer() {
   return (
@@ -32,7 +33,7 @@ function Customer() {
             </h2>
             <div className="flex justify-center md:justify-start">
               <img
-                src="Media/wp.jpg"
+                src={image}
                 alt="WhatsApp"
                 className="w-36 h-36 sm:w-44 sm:h-44 md:w-52 md:h-52 rounded-3xl shadow-lg object-cover"
               />

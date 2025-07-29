@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-
+import image from "../../assets/coolService.jpeg";
 import { useNavigate } from "react-router-dom";
 
 function Service() {
@@ -15,7 +15,7 @@ function Service() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 80, duration: 0.8 }}
-      className="flex flex-col md:flex-row items-center md:items-start px-4 py-12 sm:px-8 md:px-16 lg:px-24 bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100 gap-10"
+      className="Service flex flex-col md:flex-row items-center md:items-start px-4 py-12 sm:px-8 md:px-16 lg:px-24 bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100 gap-10"
     >
       {/* Left Section: Heading + Image */}
       <div className="w-full md:w-1/2 flex flex-col items-center md:items-start">
@@ -24,7 +24,7 @@ function Service() {
         </h2>
         <div className="w-full flex justify-center md:justify-start">
           <img
-            src="Media/Service.jpg"
+            src={image}
             alt="Service"
             className="w-52 h-52 sm:w-64 sm:h-64 md:w-80 md:h-80 object-cover rounded-3xl shadow-xl hover:scale-105 transition-transform duration-300"
           />

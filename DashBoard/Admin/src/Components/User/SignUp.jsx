@@ -103,6 +103,8 @@ function SignUp() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           type="submit"
+          color="indigo"
+          radius="md"
           className="w-full py-2 bg-green-500 text-white font-semibold rounded-lg shadow-md hover:bg-green-600 transition-colors duration-300"
         >
           Create Account

@@ -8,7 +8,7 @@ function Banner() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 80, duration: 0.8 }}
-      className="relative min-h-[300px] sm:min-h-[400px] md:min-h-[500px] bg-[url('https://images.unsplash.com/photo-1606813902914-8b3ef88a368b')] bg-cover bg-center bg-no-repeat bg-fixed flex items-center justify-center"
+      className="relative min-h-[300px] sm:min-h-[400px] md:min-h-[500px]  bg-cover bg-center bg-no-repeat bg-fixed flex items-center justify-center"
     >
       <div className="absolute inset-0 bg-black bg-opacity-50"></div>
       <div className="relative text-center px-4 z-10">

@@ -20,6 +20,7 @@ function Data() {
         const res = await axios.get(
           "https://coolservices.onrender.com/showbooking/dashboard"
         );
+        console.log(res.data);
         setDashData(res.data);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -30,7 +31,7 @@ function Data() {
 
   const chartData = [
     { name: "New", count: DashData.newBooking || 0 },
-    { name: "In Progress", count: DashData.inProgress || 0 },
+    { name: "In Progress", count: DashData.InProgress || 0 },
     { name: "Done", count: DashData.Done || 0 },
   ];
 
@@ -57,7 +58,7 @@ function Data() {
 
         <div className="bg-orange-100 p-4 rounded shadow-md text-center">
           <p className="text-sm text-zinc-600">In Progress</p>
-          <h3 className="text-2xl font-semibold">{DashData.inProgress || 0}</h3>
+          <h3 className="text-2xl font-semibold">{DashData.InProgress || 0}</h3>
         </div>
 
         <div className="bg-green-100 p-4 rounded shadow-md text-center">

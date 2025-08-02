@@ -10,7 +10,7 @@ function Nav() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 80, duration: 0.8 }}
-      className="p-3 sm:p-5 shadow-md sticky top-0 z-50 bg-white border-b border-gray-200"
+      className="p-3 sm:p-5 shadow-md sticky top-0 z-50 border-b border-gray-200 "
     >
       <div className="flex flex-col sm:flex-row items-center justify-between max-w-6xl mx-auto">
         {/* Logo */}

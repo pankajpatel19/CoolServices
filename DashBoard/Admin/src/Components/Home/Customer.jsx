@@ -8,7 +8,7 @@ function Customer() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 80, duration: 0.8 }}
-      className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 px-4 py-12 sm:px-8 md:px-16 lg:px-24 text-white"
+      className="relative bg-gradient-to-r from-blue-900 via-blue-800 to-blue-700 px-4 py-12 sm:px-8 md:px-16 lg:px-24 text-white  "
     >
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl sm:text-5xl font-serif font-bold text-center md:text-left mb-6">

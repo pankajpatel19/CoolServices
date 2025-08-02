@@ -15,7 +15,7 @@ function Service() {
       initial={{ y: -100, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ type: "spring", stiffness: 80, duration: 0.8 }}
-      className="Service flex flex-col md:flex-row items-center md:items-start px-4 py-12 sm:px-8 md:px-16 lg:px-24 bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100 gap-10"
+      className="Service flex flex-col md:flex-row items-center md:items-start px-4 py-12 sm:px-8 md:px-16 lg:px-24 bg-gradient-to-r from-zinc-100 via-zinc-200 to-zinc-100 gap-10 sticky top-0"
     >
       {/* Left Section: Heading + Image */}
       <div className="w-full md:w-1/2 flex flex-col items-center md:items-start">

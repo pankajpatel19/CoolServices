@@ -1,12 +1,5 @@
 @import "tailwindcss";
 
-.Service{
-  background-image: url("coolService.jpg");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
-}
-
 .active{
   color: red;
 }

@@ -28,7 +28,7 @@ function Login() {
       );
       localStorage.setItem("token", data.data.token);
       if (data.data.role == "user") {
-        navigate("/");
+        navigate("/Home");
       } else {
         navigate("/showbooking");
       }

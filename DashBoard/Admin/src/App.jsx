@@ -15,6 +15,8 @@ import Booking from "./Components/Booking/Booking";
 import DashBoardLayout from "./Layout/DashBoardLayout";
 import Dashboard from "./Admin/Dashboard";
 import ContactUs from "./Components/User/ContactUs";
+import UserHomeLayout from "../src/Layout/UserHomeLayout";
+import User_Home from "./Components/User/UserHome";
 
 function App() {
   const router = createBrowserRouter(
@@ -22,12 +24,15 @@ function App() {
       <>
         <Route path="/" element={<RootLayout />}>
           <Route index element={<Home />} />
+
           <Route path="signup" element={<SignUp />} />
           <Route path="login" element={<Login />} />
           <Route path="addbooking" element={<Booking />} />
           <Route path="contactUs" element={<ContactUs />} />
         </Route>
-
+        <Route path="/Home" element={<UserHomeLayout />}>
+          <Route index element={<User_Home />} />
+        </Route>
         <Route>
           <Route path="admin" element={<DashBoardLayout />} />
           <Route path="showbooking" element={<Dashboard />} />

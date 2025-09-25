@@ -1,0 +1,6 @@
+Backend/node_modules/
+Backend/.env
+
+#frontend
+DashBoard/Admin/node_modules/
+DashBoard/Admin/.env

@@ -1,0 +1,15 @@
+{
+  "postman.settings.dotenv-detection-notification-visibility": false,
+  "cSpell.words": [
+    "addbooking",
+    "deletebooking",
+    "getdata",
+    "Murl",
+    "Showbooking",
+    "showdata",
+    "techdata",
+    "techhome",
+    "techniciandata",
+    "updatebooking"
+  ]
+}

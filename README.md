@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # CoolServices
 🎯 Service Booking Web Application
 
@@ -34,3 +35,6 @@ This is a full-stack service booking web application built using:
 - Contact form
 
 Made with ❤️ for learning, practice, and deployment-ready use!
+=======
+# CoolServices
+>>>>>>> 6407b5b50835bd837bb4eca402fe744b4a40feed

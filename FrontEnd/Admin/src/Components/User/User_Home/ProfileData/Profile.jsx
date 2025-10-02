@@ -44,7 +44,7 @@ function Profile() {
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.put(
+      const res = await axios.patch(
         "http://localhost:1916/updateprofile",
         formData,
         {
@@ -102,7 +102,7 @@ function Profile() {
         handleLogout={handleLogout}
       />
 
-      <div className="mt-6 bg-white rounded-lg shadow-md p-6">
+      <div className="m-15 bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Quick Actions
         </h3>
@@ -130,7 +130,7 @@ function Profile() {
       </div>
 
       {edit && (
-        <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50 z-50">
+        <div className="fixed inset-0 flex items-center justify-center  backdrop-blur-2xl z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
             <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
 
@@ -189,6 +189,18 @@ function Profile() {
                 className="w-full border p-2 rounded mt-1"
               />
             </label>
+
+            {/* <label className="block mb-3">
+              <span className="text-gray-700 text-sm">avatar</span>
+              <input
+                type="file"
+                name="avatar"
+                onChange={(e) =>
+                  setFormData({ ...formData, avatar: e.target.files })
+                }
+                className="w-full border p-2 rounded mt-1"
+              />
+            </label> */}
 
             {/* Buttons */}
             <div className="flex justify-end space-x-2 mt-4">

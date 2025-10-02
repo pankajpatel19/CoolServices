@@ -27,6 +27,7 @@ import SearchBooks from "../src/Admin/Dashboard/SearchBooks.jsx";
 import TechnicianHomePage from "../src/Components/Technician/TechnicianHomePage.jsx";
 import Unauthorized from "../src/Components/Home/Unautorized.jsx";
 import TechLocation from "../src/Admin/Location/TechLocation.jsx";
+import SolvedByYour from "../src/Components/User/User_Home/SolvedByYour.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +48,7 @@ const router = createBrowserRouter(
 
           <Route path="profile/:id" element={<Profile />} />
           <Route path="complain" element={<ComplainForm />} />
+          <Route path="solvedByYou" element={<SolvedByYour />} />
         </Route>
       </Route>
 

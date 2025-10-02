@@ -2,5 +2,5 @@ Backend/node_modules/
 Backend/.env
 
 #frontend
-DashBoard/Admin/node_modules/
-DashBoard/Admin/.env
+FrontEnd/Admin/node_modules/
+FrontEnd/Admin/.env

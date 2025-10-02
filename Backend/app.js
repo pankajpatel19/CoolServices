@@ -19,7 +19,7 @@ app.use(
     origin: "http://localhost:5173",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
   })
 );
 
@@ -51,6 +51,7 @@ const {
   getAllLocations,
 } = require("./Controller/Technician/TechnicianData.js");
 const checkRole = require("./MiddleWare/checkrole.js");
+const { upload } = require("./MiddleWare/multer.js");
 
 //login route
 app.post("/login", login);
@@ -80,8 +81,12 @@ app.patch("/updatebooking/:id", userAuth, UpdateBooking);
 app.patch("/updateTechnician/:id", UpdateTechnician);
 app.get("/profile/:id", fetchUser);
 
-app.put("/updateprofile", userAuth, updateProfile);
+app.patch("/updateprofile", userAuth, updateProfile);
 
+// upload.fields([
+//   { name: "avatar", maxCount: 1 },
+//   { name: "coverImage", maxCount: 1 },
+// ]),
 //technician
 app.get("/api/techhome/getdata", techniciandata);
 app.get("/handleTechnician", userAuth, handleTech);
@@ -89,10 +94,75 @@ app.delete("/handleTechnician/:id", userAuth, deleteTech);
 app.post("/api/technician/update-location", updateLocation);
 app.get("/api/admin/technicians-locations", getAllLocations);
 
-// //demo
-// app.get("/test", userAuth, (req, res) => {
-//   console.log(req.user);
-//   res.json({ message: "done" });
+//chat
+const OpenAI = require("openai");
+
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_KEY,
+});
+
+app.post("/home/chat", async (req, res) => {
+  try {
+    const { data } = req.body;
+    if (!data) return res.status(400).json({ error: "Message required" });
+
+    const completion = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [{ role: "user", content: data }],
+    });
+
+    const reply = completion.choices[0].message.content;
+    res.json({ reply });
+  } catch (error) {
+    console.error("Error while getting AI response:", error);
+    res.status(500).json({ error: "Something went wrong" });
+  }
+});
+//user location
+// const serviceArea = [
+//   "Navsari City",
+//   "Gandevi",
+//   "Chikhli",
+//   "Mollakhadi",
+//   "Vejalpur",
+//   "Bhimrad",
+//   "Dandi",
+//   "Khergam",
+//   "Pardi",
+//   "Amalsad",
+//   //ahmadabad
+//   "Vastrapur",
+//   "Navrangpura",
+//   "Satellite",
+//   "Bodakdev",
+//   "Paldi",
+//   "Maninagar",
+//   "Thaltej",
+//   "Naranpura",
+//   "Bapunagar",
+//   "Gota",
+//   "Ambawadi",
+//   "Ellisbridge",
+//   "Isanpur",
+//   "Odhav",
+//   "Vejalpur",
+//   "Kankaria",
+//   "Sarkhej",
+//   "Motera",
+//   "Gandhinagar Road",
+//   "Khodiyar",
+//   "Naroda",
+//   "New Ranip",
+//   "Old Ranip",
+//   "Juhapura",
+//   "Chandkheda",
+//   "Vejalpur",
+//   "Vasna",
+//   "Vishala",
+// ];
+
+// app.get("/home/userLocation", (req, res) => {
+//   res.json({ serviceArea });
 // });
 
 //server

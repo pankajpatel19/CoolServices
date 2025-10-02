@@ -12,7 +12,7 @@ import {
 function EditProfile({ user, getRoleColor, handleLogout }) {
   return (
     <div>
-      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 ">
         {/* Personal Information */}
         <div className="bg-white rounded-lg shadow-md p-6">
           <div className="flex items-center justify-between mb-4">

@@ -19,10 +19,6 @@ function EditProfile({ user, getRoleColor, handleLogout }) {
             <h3 className="text-lg font-semibold text-gray-900">
               Personal Information
             </h3>
-            <button className="flex items-center gap-2 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors">
-              <Edit2 className="w-4 h-4" />
-              Edit
-            </button>
           </div>
 
           <div className="space-y-4">

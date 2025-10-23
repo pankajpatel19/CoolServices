@@ -1,4 +1,7 @@
 require("dotenv").config();
+const Groq = require("groq-sdk");
+const groq = new Groq({ apiKey: process.env.GROQ_API });
+
 const express = require("express");
 const app = express();
 const port = process.env.PORT;
@@ -29,7 +32,9 @@ const {
   logout,
   updateProfile,
   fetchUser,
+  updateImagePro,
 } = require("./Controller/User/AuthController");
+
 const {
   AddBooking,
   Showbooking_Dashboard,
@@ -40,9 +45,15 @@ const {
   history,
   searchData,
   historyBookingPDF,
+  getStatusBooking,
+  StatusBooking,
 } = require("./Controller/Admin/Booking");
 const userAuth = require("./MiddleWare/UserAuth");
-const { techniciandata } = require("./Controller/Technician/technician");
+const {
+  techniciandata,
+  getTechnician,
+  TechStatusBooking,
+} = require("./Controller/Technician/technician");
 const {
   handleTech,
   deleteTech,
@@ -50,7 +61,6 @@ const {
   updateLocation,
   getAllLocations,
 } = require("./Controller/Technician/TechnicianData.js");
-const checkRole = require("./MiddleWare/checkrole.js");
 const { upload } = require("./MiddleWare/multer.js");
 
 //login route
@@ -60,63 +70,77 @@ app.post("/signup", signup);
 //logout route
 app.get("/logout", logout);
 
-//dashboard
-app.get("/showbooking/dashboard", userAuth, Showbooking_Dashboard);
-
 //simple route
-app.post("/Home/addbooking", userAuth, checkRole(["customer"]), AddBooking);
+app.post("/Home/addbooking", userAuth, AddBooking);
+app.get("/Home/history/status", userAuth, getStatusBooking);
 app.get("/Home/history/:id", history);
 app.get("/Home/history/:id/pdf", historyBookingPDF);
 
 //show
-app.get("/showbooking", userAuth, checkRole("admin"), ShowBooking);
+app.get("/showbooking", userAuth, ShowBooking);
 app.get("/showbooking/search", searchData);
-app.get("/showbooking/:id", bookData);
+app.get("/showbooking/status", userAuth, StatusBooking);
 
+//dashboard
+app.get("/showbooking/dashboard", userAuth, Showbooking_Dashboard);
+
+app.get("/showbooking/:id", bookData);
 //delete booking
 app.delete("/deletebooking/:id", userAuth, DeleteBooking);
-
 //update
 app.patch("/updatebooking/:id", userAuth, UpdateBooking);
 app.patch("/updateTechnician/:id", UpdateTechnician);
 app.get("/profile/:id", fetchUser);
 
 app.patch("/updateprofile", userAuth, updateProfile);
+app.post("/profile/upload", userAuth, upload.single("image"), updateImagePro);
 
-// upload.fields([
-//   { name: "avatar", maxCount: 1 },
-//   { name: "coverImage", maxCount: 1 },
-// ]),
 //technician
 app.get("/api/techhome/getdata", techniciandata);
 app.get("/handleTechnician", userAuth, handleTech);
 app.delete("/handleTechnician/:id", userAuth, deleteTech);
 app.post("/api/technician/update-location", updateLocation);
 app.get("/api/admin/technicians-locations", getAllLocations);
+app.get("/Techprofile", userAuth, getTechnician);
+app.get("/api/status", userAuth, TechStatusBooking);
 
 //chat
-const OpenAI = require("openai");
-
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_KEY,
-});
 
 app.post("/home/chat", async (req, res) => {
   try {
     const { data } = req.body;
     if (!data) return res.status(400).json({ error: "Message required" });
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: data }],
+    // Call the Groq API
+    const chatCompletion = await groq.chat.completions.create({
+      messages: [
+        {
+          role: "user",
+          content: data,
+        },
+      ],
+      model: "llama-3.1-8b-instant", // A powerful and fast model
     });
 
-    const reply = completion.choices[0].message.content;
-    res.json({ reply });
+    const reply = chatCompletion.choices[0]?.message?.content || "";
+
+    res.json({ text: reply });
   } catch (error) {
-    console.error("Error while getting AI response:", error);
+    console.error(
+      "Error with groq API:",
+      error.response ? error.response.data : error.message
+    );
     res.status(500).json({ error: "Something went wrong" });
   }
+});
+
+//server
+app.listen(port, (req, res) => {
+  console.log(`server Started on http://localhost:${port}`);
+  mongoose
+    .connect(Murl)
+    .then(() => console.log("MongoDB connected"))
+    .catch((err) => console.error("MongoDB connection error:", err));
 });
 //user location
 // const serviceArea = [
@@ -164,12 +188,3 @@ app.post("/home/chat", async (req, res) => {
 // app.get("/home/userLocation", (req, res) => {
 //   res.json({ serviceArea });
 // });
-
-//server
-app.listen(port, (req, res) => {
-  console.log("server Started");
-  mongoose
-    .connect(Murl)
-    .then(() => console.log("MongoDB connected"))
-    .catch((err) => console.error("MongoDB connection error:", err));
-});

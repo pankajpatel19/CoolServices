@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import ServiceData from "./ServiceData";
-import HeaderDash from "./HeaderDash";
 import StateCard from "./StateCard";
 import SearchBooks from "./SearchBooks";
 
@@ -15,8 +14,7 @@ function Dashboard() {
   const [requestDate, setRequestDate] = useState([]);
   const [inputRecord, setInputRecord] = useState(false);
   const [issearch, setIsSearch] = useState(false);
-
-  const navigate = useNavigate();
+  const [status, setStatus] = useState("");
 
   const Search = async () => {
     setInputRecord(true);
@@ -31,9 +29,9 @@ function Dashboard() {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(
-        "https://coolservices.onrender.com/showbooking"
-      );
+      const response = await axios.get("http://localhost:1916/showbooking", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       setbooking(response.data);
     } catch (error) {
       toast.error("Failed to fetch bookings");
@@ -91,18 +89,28 @@ function Dashboard() {
     }
   };
 
-  const handleLogout = async () => {
-    await axios.get("http://localhost:1916/logout", { withCredentials: true });
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+  const getStatusBooking = async (stts) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:1916/showbooking/status?status=${stts}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
-    toast.success("LogOut SuccessFully");
-    navigate("/login");
-    window.location.reload();
+      toast.success(res.data.message);
+      setbooking(res.data.bookings);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
-  const showDashboard = () => navigate("/dashboard");
-  const showTechnician = () => navigate("/techhome/handleTechnician");
-  const showTechnicianLocation = () => navigate("/TechLocations");
+
+  const changeStatus = (e) => {
+    const newVal = e.target.value;
+
+    setStatus(newVal);
+    getStatusBooking(newVal);
+  };
 
   useEffect(() => {
     fetchBookings();
@@ -130,14 +138,34 @@ function Dashboard() {
         toastClassName="backdrop-blur-sm"
         bodyClassName="text-sm font-medium"
       />
-      <HeaderDash
-        showDashboard={showDashboard}
-        handleLogout={handleLogout}
-        showTechnician={showTechnician}
-        showTechnicianLocation={showTechnicianLocation}
-      />
-      <StateCard booking={booking} />
 
+      <StateCard booking={booking} />
+      <br />
+      <div className="relative w-full max-w-xs ml-10">
+        <select
+          value={status}
+          onChange={changeStatus}
+          className="block w-full appearance-none rounded-md border border-gray-300 bg-white px-4 py-2 pr-8 text-gray-700 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        >
+          <option value="" disabled>
+            Select Status
+          </option>
+
+          <option value="New">New</option>
+          <option value="In Progress">In Progress</option>
+          <option value="Done">Done</option>
+        </select>
+        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+          <svg
+            className="h-5 w-5 fill-current"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 20 20"
+          >
+            <path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" />
+          </svg>
+        </div>
+      </div>
+      <br />
       <div className="flex justify-end mr-5 mb-5">
         <button
           onClick={() => setIsSearch(!issearch)}

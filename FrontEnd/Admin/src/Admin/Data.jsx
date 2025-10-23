@@ -24,9 +24,14 @@ function Data() {
       try {
         setIsLoading(true);
         const res = await axios.get(
-          "https://coolservices.onrender.com/showbooking/dashboard"
+          "http://localhost:1916/showbooking/dashboard",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
-        console.log(res.data);
+
         setDashData(res.data);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -41,7 +46,7 @@ function Data() {
     { name: "New", count: DashData.newBooking || 0, color: "#3b82f6" },
     {
       name: "In Progress",
-      count: DashData.InProgress || DashData.inProgress || 0,
+      count: DashData.InProgress || DashData.InProgress || 0,
       color: "#f59e0b",
     },
     {

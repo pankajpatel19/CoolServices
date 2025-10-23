@@ -10,7 +10,7 @@ function ServiceData({
   updateTechnician,
 }) {
   return (
-    <div>
+    <div className="m-10">
       {" "}
       {/* Table Section */}
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -58,7 +58,7 @@ function ServiceData({
                 >
                   <td className="px-6 py-4">
                     <Link
-                      to={`/showbooking/${item._id}`}
+                      to={`/admin/showbooking/${item._id}`}
                       className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors"
                     >
                       {item.name}

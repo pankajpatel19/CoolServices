@@ -10,14 +10,13 @@ import Data from "../src/Admin/Data";
 import Home from "../src/Components/Home/Home";
 import NotFound from "../src/Components/Home/NotFound";
 import Booking from "../src/Components/Booking/Booking";
-import DashBoardLayout from "../src/Layout/DashBoardLayout";
 import Dashboard from "../src/Admin/Dashboard/Dashboard.jsx";
 import ContactUs from "../src/Components/User/ContactUs";
 import UserHomeLayout from "../src/Layout/UserHomeLayout";
 import UserHome from "../src/Components/User/User_Home/UserHome";
 import ProtectRoute from "../src/ProtectedRoutes/ProtectRoute.jsx";
 import BookData from "../src/Admin/BookData";
-import History from "../src/Components/User/User_Home/History";
+import History from "../src/Components/User/History/History.jsx";
 import TechHome from "../src/Components/Technician/TechHome";
 import Profile from "../src/Components/User/User_Home/ProfileData/Profile.jsx";
 import Upcoming from "../src/Components/User/User_Home/Upcoming";
@@ -28,6 +27,10 @@ import TechnicianHomePage from "../src/Components/Technician/TechnicianHomePage.
 import Unauthorized from "../src/Components/Home/Unautorized.jsx";
 import TechLocation from "../src/Admin/Location/TechLocation.jsx";
 import SolvedByYour from "../src/Components/User/User_Home/SolvedByYour.jsx";
+import AdminLayout from "../src/Layout/AdminLayout.jsx";
+import Call from "../src/Components/Technician/Call.jsx";
+import TechProfile from "../src/Components/Technician/TechProfile.jsx";
+import HistoryFilter from "../src/Components/User/History/HistoryFilter.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -45,7 +48,7 @@ const router = createBrowserRouter(
           <Route path="addbooking" element={<Booking />} />
           <Route path="history/:id" element={<History />} />
           <Route path="history/upcoming" element={<Upcoming />} />
-
+          <Route path="history/status" element={<HistoryFilter />} />
           <Route path="profile/:id" element={<Profile />} />
           <Route path="complain" element={<ComplainForm />} />
           <Route path="solvedByYou" element={<SolvedByYour />} />
@@ -54,23 +57,23 @@ const router = createBrowserRouter(
 
       {/* admin */}
       <Route element={<ProtectRoute allowedRoles={["admin"]} />}>
-        <Route path="admin" element={<DashBoardLayout />} />
-        <Route path="showbooking" element={<Dashboard />} />
-        <Route path="showbooking/search" element={<SearchBooks />} />
-        <Route path="showbooking/:id" element={<BookData />} />
-        <Route path="dashboard" element={<Data />} />
-        <Route
-          path="techhome/handleTechnician"
-          element={<HandleTechnician />}
-        />
-        <Route path="TechLocations" element={<TechLocation />} />
+        <Route path="admin" element={<AdminLayout />}>
+          <Route path="showbooking" element={<Dashboard />} />
+          <Route path="showbooking/search" element={<SearchBooks />} />
+          <Route path="showbooking/:id" element={<BookData />} />
+          <Route path="dashboard" element={<Data />} />
+          <Route path="handleTechnician" element={<HandleTechnician />} />
+          <Route path="TechLocations" element={<TechLocation />} />
+        </Route>
       </Route>
 
       {/* technician */}
       <Route element={<ProtectRoute allowedRoles={["technician"]} />}>
         <Route path="techhome" element={<TechnicianHomePage />} />
         <Route path="techhome/getdata" element={<TechHome />} />
-        <Route path="getdata/TechProfile" element={<Profile />} />
+        <Route path="techhome/showbooking/:id" element={<Call />} />
+
+        <Route path="getdata/TechProfile" element={<TechProfile />} />
       </Route>
 
       <Route path="*" element={<NotFound />} />

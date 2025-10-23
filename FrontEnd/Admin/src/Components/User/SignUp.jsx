@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { User, Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 function SignUp() {
   const [form, setRegData] = useState({
-    username: "",
+    userName: "",
     email: "",
     password: "",
     userrole: "",
@@ -14,6 +14,7 @@ function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState(null);
+
   const navigate = useNavigate();
 
   const handlechange = (e) => {
@@ -25,21 +26,16 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post(
-        "http://localhost:1916/signup",
-        // "https://coolservices.onrender.com/login" || "http://localhost:5173",
-        form,
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await axios.post("http://localhost:1916/signup", form, {
+        withCredentials: true,
+      });
 
       navigate("/login");
-
       toast.success("register SuccessFullly");
     } catch (error) {
-      console.log(error);
-      toast.error("invalid UserName And Password");
+      setIsLoading(false);
+
+      toast.error(error.response.data.message);
     }
 
     if (!form) {
@@ -53,6 +49,16 @@ function SignUp() {
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-emerald-50 via-green-100 to-teal-200 overflow-hidden">
       {/* Animated background elements */}
+      <ToastContainer
+        position="top-center"
+        autoClose={3000}
+        hideProgressBar={false}
+        closeOnClick={true}
+        pauseOnHover={true}
+        toastClassName="!bg-white !border !border-gray-200 !shadow-lg !rounded-lg"
+        bodyClassName="!text-sm !font-medium"
+        progressClassName="!bg-blue-500"
+      />
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-20 -left-20 w-80 h-80 bg-gradient-to-r from-emerald-300/30 to-green-400/30 rounded-full blur-3xl animate-pulse"></div>
         <div
@@ -117,7 +123,6 @@ function SignUp() {
               Join us today and start your journey
             </p>
           </div>
-
           {/* Form Card */}
           <div className="bg-white/70 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-white/30 hover:shadow-3xl hover:bg-white/80 transition-all duration-500 relative overflow-hidden">
             {/* Subtle gradient overlay */}
@@ -138,7 +143,7 @@ function SignUp() {
                   </div>
                   <input
                     type="text"
-                    name="username"
+                    name="userName"
                     id="username"
                     value={form.username}
                     onChange={handlechange}

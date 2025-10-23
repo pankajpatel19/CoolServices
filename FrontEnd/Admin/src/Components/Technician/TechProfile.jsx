@@ -1,40 +1,36 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Mail, Shield, Edit2 } from "lucide-react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { toast } from "react-toastify";
-import ProfileCard from "./ProfileCard";
+import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
+import EditProfile from "../User/User_Home/ProfileData/EditProfile";
 
-function Profile() {
+function TechProfile() {
   const [edit, setEdit] = useState(false);
-  const [User, setUser] = useState({});
+  const [user, setUser] = useState({});
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
-  const { id } = useParams();
-  console.log(id);
-
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`http://localhost:1916/profile/${id}`);
-
-      setUser(res.data.user);
+      const User = JSON.parse(localStorage.getItem("user"));
+      setUser(User);
     };
     fetchUser();
-  }, [id, token]);
+  }, [token]);
 
   useEffect(() => {
-    if (User) {
+    if (user) {
       setFormData({
-        userName: User.userName || "",
-        email: User.email || "",
-        phone: User.phone || "",
-        location: User.location || "",
+        userName: user.userName || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        location: user.location || "",
       });
     }
-  }, [User]);
+  }, [user]);
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -63,9 +59,8 @@ function Profile() {
 
   const handleLogout = async () => {
     await axios.get("http://localhost:1916/logout", { withCredentials: true });
-    localStorage.removeItem("user");
     localStorage.removeItem("token");
-
+    localStorage.removeItem("user");
     toast.success("LogOut SuccessFully");
     navigate("/login");
     window.location.reload();
@@ -73,6 +68,40 @@ function Profile() {
 
   const handleGoBack = () => {
     window.history.back();
+  };
+
+  const [file, setFile] = useState(null);
+  const [upload, setUpload] = useState(null);
+
+  const changeImage = (e) => {
+    setFile(e.target.files[0]);
+  };
+  const changeProfile = async () => {
+    if (!file) {
+      toast.error("Select Image First");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const res = await axios.post(
+        "http://localhost:1916/profile/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      setUpload(res.data.user.avatar);
+      toast.success("Profile Changed");
+    } catch (error) {
+      toast.success(error);
+    }
   };
 
   const getRoleColor = (role) => {
@@ -99,12 +128,78 @@ function Profile() {
         <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
         Go Back
       </button>
-      <ProfileCard
-        getRoleColor={getRoleColor}
-        user={User}
-        handleLogout={handleLogout}
-      />
+      <div>
+        <ToastContainer
+          position="top-center"
+          autoClose={3000}
+          hideProgressBar={false}
+          closeOnClick={true}
+          pauseOnHover={true}
+          toastClassName="!bg-white !border !border-gray-200 !shadow-lg !rounded-lg"
+          bodyClassName="!text-sm !font-medium"
+          progressClassName="!bg-blue-500"
+        />
+        <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
+          <div className="bg-white rounded-lg shadow-md overflow-hidden">
+            {/* Header Gradient */}
+            <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-24 sm:h-32"></div>
 
+            <div className="relative px-4 sm:px-6 pb-4 sm:pb-6">
+              <div className="flex flex-col sm:flex-row items-center sm:items-start">
+                <div className="relative -mt-12 sm:-mt-16">
+                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full border-4 border-white shadow-lg flex items-center justify-center">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                      <img
+                        src={user.avatar}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* User Info */}
+                <div className="text-center sm:text-left sm:ml-6 mt-2 sm:mt-4">
+                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    {user.userName}
+                  </h2>
+                  <p className="text-sm sm:text-base text-gray-600 mt-1 break-all">
+                    {user.email}
+                  </p>
+                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-2 sm:mt-3">
+                    <span
+                      className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRoleColor(
+                        user.userrole
+                      )}`}
+                    >
+                      <Shield className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
+                      {user.userrole}
+                    </span>
+                    <input
+                      type="file"
+                      className="flex items-center w-30 gap-2 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      placeholder="update Profile Image"
+                      onChange={changeImage}
+                    />
+                    <button
+                      onClick={changeProfile}
+                      className="flex items-center gap-2 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                    >
+                      Edit Profile
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Information Cards */}
+          <EditProfile
+            user={user}
+            getRoleColor={getRoleColor}
+            handleLogout={handleLogout}
+          />
+        </div>
+      </div>
       <div className="m-15 bg-white rounded-lg shadow-md p-6">
         <h3 className="text-lg font-semibold text-gray-900 mb-4">
           Quick Actions
@@ -227,4 +322,4 @@ function Profile() {
   );
 }
 
-export default Profile;
+export default TechProfile;

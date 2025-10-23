@@ -31,7 +31,10 @@ function HandleTechnician() {
 
     try {
       const res = await axios.delete(
-        `http://localhost:1916/handleTechnician/${id}`
+        `http://localhost:1916/handleTechnician/${id}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
       console.log(res.data);
       getTechnician();

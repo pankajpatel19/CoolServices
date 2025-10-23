@@ -41,6 +41,22 @@ function TechHome() {
     }
   };
 
+  const updatebooking = async (id, val) => {
+    try {
+      await axios.patch(
+        `https://coolservices.onrender.com/updatebooking/${id}`,
+        {
+          status: val,
+        }
+      );
+      toast.success("Updated successfully!");
+      fetchBookings();
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong");
+    }
+  };
+
   const handleLogout = async () => {
     await axios.get("http://localhost:1916/logout", { withCredentials: true });
     localStorage.removeItem("user");
@@ -111,7 +127,11 @@ function TechHome() {
         Technician={Technician}
       />
       {/* Main Content */}
-      <MainContent booking={booking} getStatusColor={getStatusColor} />
+      <MainContent
+        booking={booking}
+        getStatusColor={getStatusColor}
+        updatebooking={updatebooking}
+      />
     </div>
   );
 }

@@ -6,9 +6,21 @@ const bcrypt = require("bcrypt");
 //jwt cookie
 const jwt = require("jsonwebtoken");
 const { SignUpEmail } = require("../../utils/Sendmails.js");
+const {
+  userRegistrationSchema,
+  loginRegisterSchema,
+} = require("../../MiddleWare/Joi.js");
+const { uploadFile } = require("../../utils/cloudinary.js");
+const Booking = require("../../Models/Booking.js");
 
 const login = async (req, res) => {
-  let { email, password } = req.body;
+  const { error, value } = loginRegisterSchema.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  let { email, password } = value;
 
   try {
     let user = await User.findOne({ email: email });
@@ -54,7 +66,13 @@ const login = async (req, res) => {
 };
 
 const signup = async (req, res) => {
-  let { username, email, password, userrole } = req.body;
+  const { error, value } = userRegistrationSchema.validate(req.body);
+
+  if (error) {
+    return res.status(400).json({ message: error.details[0].message });
+  }
+
+  let { userName, email, password, userrole } = value;
 
   try {
     const find = await User.findOne({ email: email });
@@ -65,7 +83,7 @@ const signup = async (req, res) => {
 
     const hashpassword = await bcrypt.hash(password, 10);
     const user = new User({
-      userName: username,
+      userName: userName,
       email: email,
       password: hashpassword,
       userrole: userrole,
@@ -77,6 +95,7 @@ const signup = async (req, res) => {
     } catch (err) {
       console.log(err);
     }
+
     //token
     let token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
@@ -84,13 +103,13 @@ const signup = async (req, res) => {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,
-      // process.env.NODE_ENV === "production",
       sameSite: "Lax",
-      // process.env.NODE_ENV === "production" ? "None" : "Lax",
     });
     res.json({ message: "Register SuccesFully", user });
   } catch (error) {
-    res.json({ message: error });
+    console.log(error);
+
+    return res.status(400).json({ message: error.details[0].message });
   }
 };
 
@@ -127,4 +146,43 @@ const fetchUser = async (req, res) => {
   res.json({ message: "user profile fetch", user });
 };
 
-module.exports = { login, signup, logout, updateProfile, fetchUser };
+const updateImagePro = async (req, res) => {
+  try {
+    let avatar = null;
+
+    if (req.file) {
+      const cloudres = await uploadFile(req.file.path);
+      avatar = cloudres?.secure_url;
+    }
+
+    if (!avatar) {
+      return res.json({ message: "Image Uplod failed" });
+    }
+
+    const updateimge = await User.findByIdAndUpdate(
+      req.user.id,
+      {
+        $set: {
+          avatar: avatar,
+        },
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ message: "avatar Image Uplod successFully", user: updateimge });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "SomeThing Went Wrong" });
+  }
+};
+
+module.exports = {
+  login,
+  signup,
+  logout,
+  updateProfile,
+  fetchUser,
+  updateImagePro,
+};

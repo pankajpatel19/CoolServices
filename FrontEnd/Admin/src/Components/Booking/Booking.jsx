@@ -99,7 +99,6 @@ const Booking = () => {
         ></div>
       </div>
 
-      {/* Enhanced Notification Toast */}
       {notification && (
         <div
           className={`fixed top-8 right-8 z-50 px-7 py-5 rounded-2xl shadow-2xl backdrop-blur-xl transform transition-all duration-500 animate-in slide-in-from-right ${
@@ -187,9 +186,7 @@ const Booking = () => {
 
             {/* Enhanced Form */}
             <form onSubmit={handleSubmit} className="space-y-7">
-              {/* Grid Layout for Better Organization */}
               <div className="grid md:grid-cols-2 gap-6">
-                {/* Appliance Type */}
                 <div className="group">
                   <label className={labelClasses}>
                     <Wrench className="w-5 h-5 text-blue-500" />

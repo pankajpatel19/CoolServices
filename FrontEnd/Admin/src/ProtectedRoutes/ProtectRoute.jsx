@@ -8,7 +8,7 @@ const ProtectRoute = ({ allowedRoles }) => {
 
   if (!token) {
     toast.error("You want to login first");
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to="/login" state={{ from: location.pathname }} replace />;
   }
 
   if (!allowedRoles.includes(user?.role)) {

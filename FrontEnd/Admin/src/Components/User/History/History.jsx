@@ -1,13 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
 import {
-  Home,
   ArrowLeft,
   Download,
   Calendar,
   Clock,
   User,
-  Package,
   Building2,
   FileText,
   Phone,
@@ -16,12 +13,16 @@ import {
   CheckCircle,
   Wrench,
 } from "lucide-react";
-import { useParams } from "react-router-dom";
 import { useHistoryData } from "../../../Contaxt/HistoryContaxt";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import { toast, ToastContainer } from "react-toastify";
 
 function History() {
-  const { history, loading } = useHistoryData();
+  const { history, loading, setHistory } = useHistoryData();
+  const [status, setStatus] = useState("");
+
+  // console.log(history);
 
   const downloadReciept = async (id) => {
     try {
@@ -39,6 +40,28 @@ function History() {
     } catch (error) {
       console.log("PDF DownLoad Error");
     }
+  };
+
+  const getStatusBooking = async (stts) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:1916/Home/history/status?status=${stts}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+      toast.success(res.data.message);
+      setHistory(res.data.bookings);
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
+  };
+
+  const changeStatus = (e) => {
+    const newVal = e.target.value;
+
+    setStatus(newVal);
+    getStatusBooking(newVal);
   };
 
   const handleGoBack = () => {
@@ -82,6 +105,11 @@ function History() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 relative overflow-hidden">
       {/* Enhanced Animated Background */}
+      <ToastContainer
+        position="top-center"
+        toastClassName="backdrop-blur-sm"
+        bodyClassName="text-sm font-medium"
+      />
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute -top-40 -right-40 w-[500px] h-[500px] bg-gradient-to-br from-blue-400/30 to-purple-500/30 rounded-full blur-3xl animate-pulse"></div>
         <div
@@ -133,6 +161,16 @@ function History() {
             <div className="mt-4 h-1 w-24 mx-auto bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"></div>
           </div>
         </motion.div>
+
+        <div>
+          <select name="" id="" value={status} onChange={changeStatus}>
+            <option value="New">Select Status</option>
+            <option value="New">New</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Done">Done</option>
+          </select>
+        </div>
+        {/* <Status history={history} /> */}
 
         {history.length > 0 ? (
           <div className="space-y-6">

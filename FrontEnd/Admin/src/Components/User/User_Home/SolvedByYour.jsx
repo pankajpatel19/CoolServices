@@ -1,6 +1,6 @@
 import axios from "axios";
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function SolvedByYour() {
   const [data, setData] = useState([
@@ -11,25 +11,42 @@ function SolvedByYour() {
   ]);
 
   const [input, setInput] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [data]);
 
   const sendquery = async () => {
     setData((prev) => [...prev, { sender: "user", text: input }]);
-    console.log(input);
+    setInput(""); // Clear input immediately for better UX
+
+    setIsLoading(true);
 
     try {
       const res = await axios.post("http://localhost:1916/home/chat", {
         data: input,
       });
 
-      setData((prev) => [...prev, { sender: "bot", text: res.data }]);
+      // Correctly get the 'text' property from the response
+      const botReply = res.data.text;
+      setData((prev) => [...prev, { sender: "bot", text: botReply }]);
     } catch (error) {
       console.error(error);
       setData((prev) => [
         ...prev,
-        { sender: "user", text: "something went wrong" },
+        // Show error message from the bot, not the user
+        { sender: "bot", text: "Something went wrong" },
       ]);
+    } finally {
+      setIsLoading(false);
     }
-    setInput("");
   };
 
   return (
@@ -135,6 +152,31 @@ function SolvedByYour() {
               </div>
             ))}
           </div>
+          {isLoading && (
+            <div className="message bot flex items-start gap-3 p-2 w-100 bg-gray-50 rounded-lg animate-pulse">
+              <div className="flex-shrink-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white text-sm font-semibold">B</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <p className="text-gray-700 italic">Bot is typing</p>
+                <div className="flex gap-1">
+                  <span
+                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "0ms" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "150ms" }}
+                  ></span>
+                  <span
+                    className="w-2 h-2 bg-gray-400 rounded-full animate-bounce"
+                    style={{ animationDelay: "300ms" }}
+                  ></span>
+                </div>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
         </div>
 
         {/* Input Area */}

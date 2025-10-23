@@ -43,7 +43,7 @@ function Login() {
         } else if (role === "technician") {
           redirect = "/techhome";
         } else if (role === "admin") {
-          redirect = "/showbooking";
+          redirect = "/admin/showbooking";
         }
       }
 
@@ -53,7 +53,8 @@ function Login() {
       toast.success("login SuccessFullly");
     } catch (error) {
       console.log(error);
-      toast.error("invalid UserName And Password");
+
+      toast.error(error.response.data.message);
     }
 
     if (!form) {

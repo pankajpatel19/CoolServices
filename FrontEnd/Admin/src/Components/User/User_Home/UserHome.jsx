@@ -5,12 +5,11 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import StateCard from "./StateCard";
 import ComplainBox from "./Complaints/ComplainBox";
+import { User } from "lucide-react";
 
 function UserHome() {
   const [User, setUser] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [usercity, setUserCity] = useState("");
-  const [allowed, setAllowed] = useState(false);
 
   const navigate = useNavigate();
 
@@ -83,13 +82,20 @@ function UserHome() {
             <div className="relative">
               <div className="flex items-center gap-4 mb-6">
                 <motion.div
-                  className="relative w-16 h-16 bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl group-hover:shadow-2xl transition-all duration-300"
                   whileHover={{ scale: 1.1, rotate: 5 }}
                   transition={{ type: "spring", stiffness: 400 }}
                 >
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-400 via-indigo-500 to-purple-500 rounded-2xl blur opacity-60 group-hover:opacity-80 transition-opacity"></div>
                   <span className="relative text-white text-2xl font-bold tracking-tight">
-                    CS
+                    <div className="w-16 h-16 mt-5 sm:w-20 sm:h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
+                      <img
+                        src={
+                          User.avatar || (
+                            <User className="w-5 h-5 text-gray-500" />
+                          )
+                        }
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
                   </span>
                 </motion.div>
                 <div>

@@ -6,8 +6,9 @@ const Showbooking_Dashboard = async (req, res) => {
   try {
     const total = await Booking.countDocuments();
     const newBooking = await Booking.countDocuments({ status: "New" });
-    const InProgress = await Booking.countDocuments({ status: "In progress" });
+    const InProgress = await Booking.countDocuments({ status: "In Progress" });
     const Done = await Booking.countDocuments({ status: "Done" });
+
     res.json({ total, newBooking, InProgress, Done });
   } catch (error) {
     res.json({ message: "No Bookings" });
@@ -29,14 +30,15 @@ const bookData = async (req, res) => {
 };
 
 const AddBooking = async (req, res) => {
-  const newBooking = new Booking({ ...req.body, user: req.user._id });
+  const newBooking = new Booking({ ...req.body, user: req.user.id });
   await newBooking.save();
   await sendBookEmail(newBooking);
   res.json({ message: "Booking Successfully", newBooking });
 };
 
 const ShowBooking = async (req, res) => {
-  const showdata = await Booking.find({});
+  const showdata = await Booking.find().sort({ date: -1 });
+
   res.json(showdata);
 };
 
@@ -66,11 +68,12 @@ const history = async (req, res) => {
   const { id } = req.params;
 
   try {
-    const historyData = await Booking.find({ user: id });
+    const historyData = await Booking.find({ user: id }).sort({ date: -1 });
 
     if (!historyData) {
       return res.status(404).json({ message: "Booking not found" });
     }
+
     res.status(200).json(historyData);
   } catch (error) {
     res.status(500).json({ message: error });
@@ -96,6 +99,42 @@ const searchData = async (req, res) => {
 
   res.json(filter);
 };
+const getStatusBooking = async (req, res) => {
+  const { status } = req.query;
+
+  try {
+    const bookings = await Booking.find({
+      user: req.user.id,
+      status: status,
+    });
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: "Booking Not Found with Status" });
+    }
+
+    res.status(200).json({ message: "Fetched Succcessfully", bookings });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something Went Wrong" });
+  }
+};
+
+const StatusBooking = async (req, res) => {
+  const { status } = req.query;
+
+  try {
+    const bookings = await Booking.find({ status: status });
+
+    if (bookings.length === 0) {
+      return res.status(404).json({ message: "Booking Not Found with Status" });
+    }
+
+    res.status(200).json({ message: "Fetched Succcessfully", bookings });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Something Went Wrong" });
+  }
+};
 
 module.exports = {
   AddBooking,
@@ -107,4 +146,6 @@ module.exports = {
   history,
   searchData,
   historyBookingPDF,
+  getStatusBooking,
+  StatusBooking,
 };

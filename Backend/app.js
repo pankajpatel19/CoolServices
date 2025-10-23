@@ -46,7 +46,7 @@ const {
   searchData,
   historyBookingPDF,
   getStatusBooking,
-  StatusBooking,
+  AdminStatusBooking,
 } = require("./Controller/Admin/Booking");
 const userAuth = require("./MiddleWare/UserAuth");
 const {
@@ -79,7 +79,7 @@ app.get("/Home/history/:id/pdf", historyBookingPDF);
 //show
 app.get("/showbooking", userAuth, ShowBooking);
 app.get("/showbooking/search", searchData);
-app.get("/showbooking/status", userAuth, StatusBooking);
+app.get("/showbooking/status", userAuth, AdminStatusBooking);
 
 //dashboard
 app.get("/showbooking/dashboard", userAuth, Showbooking_Dashboard);

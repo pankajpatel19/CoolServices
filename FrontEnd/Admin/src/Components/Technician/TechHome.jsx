@@ -129,6 +129,7 @@ function TechHome() {
       {/* Main Content */}
       <MainContent
         booking={booking}
+        username={username}
         getStatusColor={getStatusColor}
         updatebooking={updatebooking}
       />

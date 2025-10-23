@@ -103,33 +103,66 @@ const getStatusBooking = async (req, res) => {
   const { status } = req.query;
 
   try {
-    const bookings = await Booking.find({
-      user: req.user.id,
-      status: status,
-    });
+    if (status === "all") {
+      const bookings = await Booking.find({ user: req.user.id });
 
-    if (bookings.length === 0) {
-      return res.status(404).json({ message: "Booking Not Found with Status" });
+      if (bookings.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "Booking Not Found with Status" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Fetched Succcessfully", bookings });
+    } else {
+      const bookings = await Booking.find({
+        $and: [{ status: status }, { user: req.user.id }],
+      });
+
+      if (bookings.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "Booking Not Found with Status" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Fetched Succcessfully", bookings });
     }
-
-    res.status(200).json({ message: "Fetched Succcessfully", bookings });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something Went Wrong" });
   }
 };
 
-const StatusBooking = async (req, res) => {
+const AdminStatusBooking = async (req, res) => {
   const { status } = req.query;
 
   try {
-    const bookings = await Booking.find({ status: status });
+    if (status === "all") {
+      const bookings = await Booking.find();
 
-    if (bookings.length === 0) {
-      return res.status(404).json({ message: "Booking Not Found with Status" });
+      if (bookings.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "Booking Not Found with Status" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Fetched Succcessfully", bookings });
+    } else {
+      const bookings = await Booking.find({ status: status });
+
+      if (bookings.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "Booking Not Found with Status" });
+      }
+
+      res.status(200).json({ message: "Fetched Succcessfully", bookings });
     }
-
-    res.status(200).json({ message: "Fetched Succcessfully", bookings });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something Went Wrong" });
@@ -147,5 +180,5 @@ module.exports = {
   searchData,
   historyBookingPDF,
   getStatusBooking,
-  StatusBooking,
+  AdminStatusBooking,
 };

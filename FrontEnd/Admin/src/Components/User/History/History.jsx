@@ -17,6 +17,7 @@ import { useHistoryData } from "../../../Contaxt/HistoryContaxt";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import Status from "./Status";
 
 function History() {
   const { history, loading, setHistory } = useHistoryData();
@@ -162,15 +163,7 @@ function History() {
           </div>
         </motion.div>
 
-        <div>
-          <select name="" id="" value={status} onChange={changeStatus}>
-            <option value="New">Select Status</option>
-            <option value="New">New</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Done">Done</option>
-          </select>
-        </div>
-        {/* <Status history={history} /> */}
+        <Status changeStatus={changeStatus} status={status} />
 
         {history.length > 0 ? (
           <div className="space-y-6">

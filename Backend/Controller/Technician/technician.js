@@ -1,5 +1,3 @@
-// require("dotenv").config();
-
 const Booking = require("../../Models/Booking");
 const User = require("../../Models/User");
 
@@ -34,17 +32,32 @@ const getTechnician = async (req, res) => {
 };
 
 const TechStatusBooking = async (req, res) => {
-  const { status } = req.query;
-  // console.log(status);
+  const { status, name } = req.query;
 
   try {
-    const bookings = await Booking.find({ status: status });
+    if (status === "all") {
+      const bookings = await Booking.find({ technician: name });
 
-    if (bookings.length === 0) {
-      return res.status(404).json({ message: "Booking Not Found with Status" });
+      if (bookings.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "Booking Not Found with Status" });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Fetched Succcessfully", bookings });
+    } else {
+      const bookings = await Booking.find({ status: status });
+
+      if (bookings.length === 0) {
+        return res
+          .status(404)
+          .json({ message: "Booking Not Found with Status" });
+      }
+
+      res.status(200).json({ message: "Fetched Succcessfully", bookings });
     }
-
-    res.status(200).json({ message: "Fetched Succcessfully", bookings });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Something Went Wrong" });

@@ -7,9 +7,12 @@ function HistoryFilter() {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get("http://localhost:1916/showbooking", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(
+        "https://coolservices.onrender.com/showbooking",
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       setstatus(response.data);
     } catch (error) {

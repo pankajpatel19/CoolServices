@@ -28,7 +28,7 @@ function History() {
   const downloadReciept = async (id) => {
     try {
       const res = await axios.get(
-        `http://localhost:1916/Home/history/${id}/pdf`,
+        `https://coolservices.onrender.com/Home/history/${id}/pdf`,
         {
           responseType: "blob",
         }

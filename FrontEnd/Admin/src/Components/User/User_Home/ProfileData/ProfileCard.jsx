@@ -22,7 +22,7 @@ function ProfileCard({ getRoleColor, user, handleLogout }) {
 
     try {
       const res = await axios.post(
-        "http://localhost:1916/profile/upload",
+        "https://coolservices.onrender.com/profile/upload",
         formData,
         {
           headers: {

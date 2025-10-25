@@ -113,7 +113,9 @@ function HeaderDash() {
 
   const handleLogout = async () => {
     setIsMenuOpen(false);
-    await axios.get("http://localhost:1916/logout", { withCredentials: true });
+    await axios.get("https://coolservices.onrender.com/logout", {
+      withCredentials: true,
+    });
     localStorage.removeItem("user");
     localStorage.removeItem("token");
 

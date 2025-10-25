@@ -31,18 +31,16 @@ function TechLocation() {
     link.crossOrigin = "";
     document.head.appendChild(link);
 
-    // Cleanup function to remove the link when the component unmounts
     return () => {
       document.head.removeChild(link);
     };
-  }, []); // Empty dependency array ensures this runs only once on mount
+  }, []);
 
-  // Effect to fetch locations
   useEffect(() => {
     const fetchLocations = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:1916/api/admin/technicians-locations"
+          "https://coolservices.onrender.com/api/admin/technicians-locations"
         );
         setLocations(res.data);
       } catch (err) {

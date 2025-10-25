@@ -26,9 +26,13 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:1916/signup", form, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        "https://coolservices.onrender.com/signup",
+        form,
+        {
+          withCredentials: true,
+        }
+      );
 
       navigate("/login");
       toast.success("register SuccessFullly");

@@ -28,7 +28,7 @@ function TechHome() {
   const fetchBookings = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:1916/api/techhome/getdata`,
+        `https://coolservices.onrender.com/api/techhome/getdata`,
         {
           params: { username },
         }
@@ -58,7 +58,9 @@ function TechHome() {
   };
 
   const handleLogout = async () => {
-    await axios.get("http://localhost:1916/logout", { withCredentials: true });
+    await axios.get("https://coolservices.onrender.com/logout", {
+      withCredentials: true,
+    });
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     toast.success("LogOut SuccessFully");
@@ -81,15 +83,18 @@ function TechHome() {
     }
     const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition((pos) => {
-        fetch("http://localhost:1916/api/technician/update-location", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            technicianId: Technician._id,
-            latitude: pos.coords.latitude,
-            longitude: pos.coords.longitude,
-          }),
-        });
+        fetch(
+          "https://coolservices.onrender.com/api/technician/update-location",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              technicianId: Technician._id,
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude,
+            }),
+          }
+        );
       });
     }, 10000);
 

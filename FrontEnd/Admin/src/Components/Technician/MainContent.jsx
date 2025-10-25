@@ -12,7 +12,7 @@ function MainContent({ booking, getStatusColor, updatebooking, username }) {
   const getStatusBooking = async (stts) => {
     try {
       const res = await axios.get(
-        `http://localhost:1916/api/status?status=${stts}&name=${username}`,
+        `https://coolservices.onrender.com/api/status?status=${stts}&name=${username}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

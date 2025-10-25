@@ -16,7 +16,7 @@ function BookData() {
       try {
         setIsLoading(true);
         const res = await axios.get(
-          `http://localhost:1916/showbooking/${item.id}`
+          `https://coolservices.onrender.com/showbooking/${item.id}`
         );
 
         setBooking(res.data);

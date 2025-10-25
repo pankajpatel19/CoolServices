@@ -21,8 +21,7 @@ function Login() {
 
     try {
       const res = await axios.post(
-        "http://localhost:1916/login",
-        // "https://coolservices.onrender.com/login" || "http://localhost:5173",
+        "https://coolservices.onrender.com/login",
         form,
         {
           withCredentials: true,

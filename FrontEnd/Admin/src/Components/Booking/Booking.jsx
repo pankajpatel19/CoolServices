@@ -51,9 +51,13 @@ const Booking = () => {
     setIsSubmitting(true);
 
     try {
-      await axios.post("http://localhost:1916/Home/addbooking", form, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      await axios.post(
+        "https://coolservices.onrender.com/Home/addbooking",
+        form,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
 
       showNotification("Booking Successfully");
       setIsSubmitting(false);

@@ -17,7 +17,7 @@ export const HistoryProvider = ({ children }) => {
       if (!userId) return;
       try {
         const res = await axios.get(
-          `http://localhost:1916/Home/history/${userId}`
+          `https://coolservices.onrender.com/Home/history/${userId}`
         );
 
         setHistory(res.data);

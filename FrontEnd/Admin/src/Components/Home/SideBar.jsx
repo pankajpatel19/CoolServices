@@ -4,20 +4,13 @@ import { Home, User, Settings, Mail, FileText, LogOut } from "lucide-react";
 const SideBar = () => {
   const navigationItems = [
     { href: "/Home", icon: Home, label: "Dashboard" },
-    // { href: "/Home/profile", icon: User, label: "Profile" },
     { href: "/Home/messages", icon: Mail, label: "Messages" },
     { href: "/Home/settings", icon: Settings, label: "Settings" },
     { href: "/Home/Complain", icon: FileText, label: "Complaint Form" },
-    // {
-    //   href: "https://wa.me/8511994480",
-    //   // icon: whatsapp,
-    //   label: "Complaint Form",
-    // },
   ];
 
   return (
     <div className="h-screen w-64 bg-gray-900 text-white flex flex-col -ml-5 -mt-5 -mb-6 sticky text-sm">
-      {/* Logo/Brand */}
       <div className="p-4 border-b border-gray-700">
         <a
           href="/"
@@ -27,7 +20,6 @@ const SideBar = () => {
         </a>
       </div>
 
-      {/* Navigation Links */}
       <nav className="flex-1 py-4">
         <ul className="space-y-1">
           {navigationItems.map((item) => (

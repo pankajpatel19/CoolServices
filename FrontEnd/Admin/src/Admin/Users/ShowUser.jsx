@@ -12,7 +12,7 @@ function ShowUser() {
     try {
       setError(null);
       const response = await axios.get(
-        "http://localhost:1916/api/admin/users",
+        "https://coolservices.onrender.com/api/admin/users",
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

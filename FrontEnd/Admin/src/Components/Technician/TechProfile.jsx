@@ -42,7 +42,7 @@ function TechProfile() {
   const handleUpdate = async () => {
     try {
       const res = await axios.patch(
-        "http://localhost:1916/updateprofile",
+        "https://coolservices.onrender.com/updateprofile",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },

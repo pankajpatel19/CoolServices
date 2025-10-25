@@ -13,7 +13,9 @@ function Unauthorized() {
   }, []);
 
   const handleLogout = async () => {
-    await axios.get("http://localhost:1916/logout", { withCredentials: true });
+    await axios.get("https://coolservices.onrender.com/logout", {
+      withCredentials: true,
+    });
     localStorage.removeItem("user");
     toast.success("LogOut SuccessFully");
     navigate("/login");

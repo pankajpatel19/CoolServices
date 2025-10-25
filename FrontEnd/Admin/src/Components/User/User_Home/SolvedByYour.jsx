@@ -30,9 +30,12 @@ function SolvedByYour() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post("http://localhost:1916/home/chat", {
-        data: input,
-      });
+      const res = await axios.post(
+        "https://coolservices.onrender.com/home/chat",
+        {
+          data: input,
+        }
+      );
 
       // Correctly get the 'text' property from the response
       const botReply = res.data.text;

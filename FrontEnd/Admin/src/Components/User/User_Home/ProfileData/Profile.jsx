@@ -17,7 +17,9 @@ function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(`http://localhost:1916/profile/${id}`);
+      const res = await axios.get(
+        `https://coolservices.onrender.com/profile/${id}`
+      );
 
       setUser(res.data.user);
     };

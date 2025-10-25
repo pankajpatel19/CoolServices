@@ -21,18 +21,24 @@ function Dashboard() {
     setInputRecord(true);
     setIsSearch(true);
 
-    const find = await axios.get(`http://localhost:1916/showbooking/search`, {
-      params: { startDate, endDate },
-    });
+    const find = await axios.get(
+      `https://coolservices.onrender.com/showbooking/search`,
+      {
+        params: { startDate, endDate },
+      }
+    );
     setRequestDate(find.data);
     setIsSearch(false);
   };
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get("http://localhost:1916/showbooking", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await axios.get(
+        "https://coolservices.onrender.com/showbooking",
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
       setbooking(response.data);
     } catch (error) {
       toast.error("Failed to fetch bookings");
@@ -76,7 +82,7 @@ function Dashboard() {
   const updateTechnician = async (id, val) => {
     try {
       const tech = await axios.patch(
-        `http://localhost:1916/updateTechnician/${id}`,
+        `https://coolservices.onrender.com/updateTechnician/${id}`,
         {
           technician: val,
         }
@@ -93,7 +99,7 @@ function Dashboard() {
   const getStatusBooking = async (stts) => {
     try {
       const res = await axios.get(
-        `http://localhost:1916/showbooking/status?status=${stts}`,
+        `https://coolservices.onrender.com/showbooking/status?status=${stts}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

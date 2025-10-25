@@ -24,7 +24,7 @@ function Data() {
       try {
         setIsLoading(true);
         const res = await axios.get(
-          "http://localhost:1916/showbooking/dashboard",
+          "https://coolservices.onrender.com/showbooking/dashboard",
           {
             headers: {
               Authorization: `Bearer ${localStorage.getItem("token")}`,

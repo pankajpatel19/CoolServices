@@ -13,9 +13,12 @@ function HandleTechnician() {
   const getTechnician = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:1916/handleTechnician", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await axios.get(
+        "https://coolservices.onrender.com/handleTechnician",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       settechnician(res.data);
       setError(null);
     } catch (error) {
@@ -39,7 +42,7 @@ function HandleTechnician() {
 
     try {
       const res = await axios.delete(
-        `http://localhost:1916/handleTechnician/${modal.techId}`,
+        `https://coolservices.onrender.com/handleTechnician/${modal.techId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

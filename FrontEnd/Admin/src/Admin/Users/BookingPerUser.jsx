@@ -28,7 +28,7 @@ function BookingPerUser() {
     try {
       setError(null);
       const response = await axios.get(
-        `http://localhost:1916/api/admin/getBookingPerUser/${id}`,
+        `https://coolservices.onrender.com/api/admin/getBookingPerUser/${id}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

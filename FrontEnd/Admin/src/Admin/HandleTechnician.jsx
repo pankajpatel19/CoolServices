@@ -1,12 +1,15 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
+import { motion, AnimatePresence } from "framer-motion";
 
 function HandleTechnician() {
   const [Technician, settechnician] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modal, setModal] = useState({ isOpen: false, techId: null }); // Modal state
   const token = localStorage.getItem("token");
+
   const getTechnician = async () => {
     try {
       setLoading(true);
@@ -23,26 +26,34 @@ function HandleTechnician() {
     }
   };
 
-  const deleteTech = async (id) => {
-    const confirm = window.confirm(
-      "Are you sure you want to delete this booking?"
-    );
-    if (!confirm) return;
+  const handleDeleteClick = (id) => {
+    setModal({ isOpen: true, techId: id });
+  };
+
+  const cancelDelete = () => {
+    setModal({ isOpen: false, techId: null });
+  };
+
+  const confirmDelete = async () => {
+    if (!modal.techId) return;
 
     try {
       const res = await axios.delete(
-        `http://localhost:1916/handleTechnician/${id}`,
+        `http://localhost:1916/handleTechnician/${modal.techId}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }
       );
       console.log(res.data);
-      getTechnician();
-      toast.success(res.data);
+      getTechnician(); // Refresh the list
+      toast.success(res.data.message || "Technician deleted successfully");
     } catch (error) {
       console.log("error", error);
-
-      toast.error(error);
+      toast.error(
+        error.response?.data?.message || "Failed to delete technician"
+      );
+    } finally {
+      setModal({ isOpen: false, techId: null }); // Close modal
     }
   };
 
@@ -89,6 +100,51 @@ function HandleTechnician() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
+
+      {/* Confirmation Modal */}
+      <AnimatePresence>
+        {modal.isOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+            onClick={cancelDelete}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 50 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 50 }}
+              className="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm"
+              onClick={(e) => e.stopPropagation()} // Prevent closing on modal click
+            >
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Confirm Deletion
+              </h2>
+              <p className="text-gray-600 mb-6">
+                Are you sure you want to delete this technician? This action
+                cannot be undone.
+              </p>
+              <div className="flex justify-end gap-3">
+                <button
+                  onClick={cancelDelete}
+                  className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={confirmDelete}
+                  className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                >
+                  Delete
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-12">
@@ -165,7 +221,7 @@ function HandleTechnician() {
                   <div className="space-y-4">
                     {/* Email */}
                     <div className="flex items-start">
-                      <div className="w-5 h-5 text-gray-400 mt-0.5 mr-3">
+                      <div className="w-5 h-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0">
                         <svg
                           fill="none"
                           stroke="currentColor"
@@ -179,7 +235,7 @@ function HandleTechnician() {
                           />
                         </svg>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
                           Email
                         </div>
@@ -191,7 +247,7 @@ function HandleTechnician() {
 
                     {/* Phone */}
                     <div className="flex items-start">
-                      <div className="w-5 h-5 text-gray-400 mt-0.5 mr-3">
+                      <div className="w-5 h-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0">
                         <svg
                           fill="none"
                           stroke="currentColor"
@@ -205,11 +261,11 @@ function HandleTechnician() {
                           />
                         </svg>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
                           Phone
                         </div>
-                        <div className="text-gray-800">
+                        <div className="text-gray-800 break-words">
                           {Tech.Phone || "Not provided"}
                         </div>
                       </div>
@@ -217,7 +273,7 @@ function HandleTechnician() {
 
                     {/* Join Date */}
                     <div className="flex items-start">
-                      <div className="w-5 h-5 text-gray-400 mt-0.5 mr-3">
+                      <div className="w-5 h-5 text-gray-400 mt-0.5 mr-3 flex-shrink-0">
                         <svg
                           fill="none"
                           stroke="currentColor"
@@ -231,11 +287,11 @@ function HandleTechnician() {
                           />
                         </svg>
                       </div>
-                      <div>
+                      <div className="min-w-0">
                         <div className="text-xs font-medium text-gray-500 uppercase tracking-wider mb-1">
                           Joined
                         </div>
-                        <div className="text-gray-800">
+                        <div className="text-gray-800 break-words">
                           {Tech.joinAt
                             ? formatDate(Tech.joinAt)
                             : "Not available"}
@@ -243,21 +299,20 @@ function HandleTechnician() {
                       </div>
                     </div>
                   </div>
-                  <div>
-                    <div
-                      className="text-gray-800 mt-3 bg-red-900 text-white w-20 p-2 text-center rounded-xl "
-                      onClick={() => deleteTech(Tech._id)}
-                    >
-                      DELETE
-                    </div>
-                  </div>
 
-                  {/* Status Badge */}
-                  <div className="mt-6 pt-4 border-t border-gray-100">
+                  {/* Actions: Delete Button and Status */}
+                  <div className="mt-6 pt-4 border-t border-gray-100 flex items-center justify-between">
                     <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       <div className="w-2 h-2 bg-green-400 rounded-full mr-2"></div>
                       Active
                     </span>
+
+                    <button
+                      className="text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 text-xs font-medium rounded-lg transition-colors duration-200"
+                      onClick={() => handleDeleteClick(Tech._id)}
+                    >
+                      DELETE
+                    </button>
                   </div>
                 </div>
               ))}

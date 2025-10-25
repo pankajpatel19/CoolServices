@@ -1,7 +1,13 @@
-import "leaflet/dist/leaflet.css";
-import L from "leaflet";
-import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "https://esm.sh/react";
+// Import Leaflet and React-Leaflet from a CDN
+import L from "https://esm.sh/leaflet@1.9.4";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Tooltip,
+} from "https://esm.sh/react-leaflet@4.2.1";
 import axios from "axios";
 
 // Custom icon for technician
@@ -15,6 +21,23 @@ const techIcon = new L.Icon({
 function TechLocation() {
   const [locations, setLocations] = useState([]);
 
+  // Effect to load Leaflet CSS
+  useEffect(() => {
+    // Inject Leaflet CSS into the document's head
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+    link.crossOrigin = "";
+    document.head.appendChild(link);
+
+    // Cleanup function to remove the link when the component unmounts
+    return () => {
+      document.head.removeChild(link);
+    };
+  }, []); // Empty dependency array ensures this runs only once on mount
+
+  // Effect to fetch locations
   useEffect(() => {
     const fetchLocations = async () => {
       try {

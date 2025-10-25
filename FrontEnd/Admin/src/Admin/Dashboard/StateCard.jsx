@@ -56,11 +56,12 @@ function StateCard({ booking }) {
                     stroke="currentColor"
                     viewBox="0 0 24 24"
                   >
+                    {/* Using a different icon for "New" as checkmark is duplicated */}
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={2}
-                      d="M5 13l4 4L19 7"
+                      d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.414a1 1 0 00-1.414-1.414L10 14.172l-2.586-2.586a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 00-1.414-1.414z"
                     />
                   </svg>
                 </div>

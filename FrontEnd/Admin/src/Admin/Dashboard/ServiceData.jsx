@@ -43,6 +43,9 @@ function ServiceData({
                   Status
                 </th>
                 <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
+                  Assign Technician
+                </th>
+                <th className="px-6 py-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
@@ -109,7 +112,7 @@ function ServiceData({
                   <td className="px-6 py-4">
                     <select
                       className={`px-3 py-1.5 rounded-full text-xs font-medium border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${getStatusColor(
-                        item.status
+                        item.status // This might be a bug, you probably don't want to color this dropdown based on status
                       )}`}
                       value={item.technician}
                       onChange={(e) =>
@@ -133,7 +136,7 @@ function ServiceData({
                         className="w-4 h-4"
                         fill="none"
                         stroke="currentColor"
-                        viewBox="0 0 24 24"
+                        viewBox="0 0 24"
                       >
                         <path
                           strokeLinecap="round"

@@ -47,6 +47,8 @@ const {
   historyBookingPDF,
   getStatusBooking,
   AdminStatusBooking,
+  getUsers,
+  getBookingPerUser,
 } = require("./Controller/Admin/Booking");
 const userAuth = require("./MiddleWare/UserAuth");
 const {
@@ -83,6 +85,9 @@ app.get("/showbooking/status", userAuth, AdminStatusBooking);
 
 //dashboard
 app.get("/showbooking/dashboard", userAuth, Showbooking_Dashboard);
+app.get("/handleTechnician", userAuth, handleTech);
+app.get("/api/admin/users", userAuth, getUsers);
+app.get("/api/admin/getBookingPerUser/:id", userAuth, getBookingPerUser);
 
 app.get("/showbooking/:id", bookData);
 //delete booking
@@ -97,7 +102,6 @@ app.post("/profile/upload", userAuth, upload.single("image"), updateImagePro);
 
 //technician
 app.get("/api/techhome/getdata", techniciandata);
-app.get("/handleTechnician", userAuth, handleTech);
 app.delete("/handleTechnician/:id", userAuth, deleteTech);
 app.post("/api/technician/update-location", updateLocation);
 app.get("/api/admin/technicians-locations", getAllLocations);

@@ -1,4 +1,5 @@
 const Booking = require("../../Models/Booking");
+const User = require("../../Models/User");
 const generateBookingPDF = require("../../utils/generateBookingPDF");
 const { sendBookEmail } = require("../../utils/Sendmails");
 
@@ -169,6 +170,25 @@ const AdminStatusBooking = async (req, res) => {
   }
 };
 
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({ userrole: "customer" });
+    res.status(200).json({ message: "User Fetched SuccessFuly", users });
+  } catch (error) {
+    console.log(error);
+
+    return res.status(500).json({ message: error });
+  }
+};
+
+const getBookingPerUser = async (req, res) => {
+  try {
+    const BookingPerUser = await Booking.find({ user: req.params.id });
+    res.status(200).json({ message: "fetch SuccessFully", BookingPerUser });
+  } catch (error) {
+    res.status(500).json({ message: error });
+  }
+};
 module.exports = {
   AddBooking,
   ShowBooking,
@@ -181,4 +201,6 @@ module.exports = {
   historyBookingPDF,
   getStatusBooking,
   AdminStatusBooking,
+  getUsers,
+  getBookingPerUser,
 };

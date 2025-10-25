@@ -141,7 +141,7 @@ function Nav() {
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <i className="fa-solid fa-cog mr-3 text-gray-600 w-5"></i>
-                    <span>My account</span>
+                    <Link to={`/Home`}>Home</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Wrench className="w-5 h-5 mr-3 text-gray-600" />

@@ -14,7 +14,6 @@ function Profile() {
   const token = localStorage.getItem("token");
 
   const { id } = useParams();
-  console.log(id);
 
   useEffect(() => {
     const fetchUser = async () => {

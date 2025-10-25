@@ -31,6 +31,8 @@ import AdminLayout from "../src/Layout/AdminLayout.jsx";
 import Call from "../src/Components/Technician/Call.jsx";
 import TechProfile from "../src/Components/Technician/TechProfile.jsx";
 import HistoryFilter from "../src/Components/User/History/HistoryFilter.jsx";
+import ShowUser from "../src/Admin/Users/ShowUser.jsx";
+import BookingPerUser from "../src/Admin/Users/BookingPerUser.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,6 +65,9 @@ const router = createBrowserRouter(
           <Route path="showbooking/:id" element={<BookData />} />
           <Route path="dashboard" element={<Data />} />
           <Route path="handleTechnician" element={<HandleTechnician />} />
+          <Route path="handleUser" element={<ShowUser />} />
+          <Route path="userComplain/:id" element={<BookingPerUser />} />
+
           <Route path="TechLocations" element={<TechLocation />} />
         </Route>
       </Route>

@@ -46,7 +46,7 @@ function History() {
   const getStatusBooking = async (stts) => {
     try {
       const res = await axios.get(
-        `http://localhost:1916/Home/history/status?status=${stts}`,
+        `https://coolservices.onrender.com/Home/history/status?status=${stts}`,
         {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         }

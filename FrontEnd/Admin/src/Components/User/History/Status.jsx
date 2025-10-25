@@ -4,7 +4,7 @@ import { CheckCircle } from "lucide-react";
 function Status({ status, changeStatus }) {
   return (
     <>
-      <div className="w-full max-w-md mb-5 ml-5">
+      <div className="w-full max-w-full sm:max-w-md mb-5 px-4 sm:px-0 sm:ml-5">
         <label className="block mb-2 text-sm font-semibold text-gray-700 flex items-center gap-2">
           <CheckCircle className="w-4 h-4 text-blue-600" />
           Update Status
@@ -15,7 +15,7 @@ function Status({ status, changeStatus }) {
             id="status"
             value={status}
             onChange={changeStatus}
-            className="w-full appearance-none bg-white border-2 border-gray-300 hover:border-blue-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3.5 pr-12 text-gray-800 font-medium cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none"
+            className="w-full appearance-none bg-white border-2 border-gray-300 hover:border-blue-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3.5 pr-12 text-sm sm:text-base text-gray-800 font-medium cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none"
           >
             <option value="" disabled>
               Select Status

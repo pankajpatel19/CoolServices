@@ -39,7 +39,6 @@ function Nav() {
     navigate("/login");
     window.location.reload();
   };
-  console.log(user);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));

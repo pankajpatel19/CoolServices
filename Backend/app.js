@@ -4,7 +4,7 @@ const groq = new Groq({ apiKey: process.env.GROQ_API });
 
 const express = require("express");
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 8888;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -19,7 +19,7 @@ app.use(cookie());
 const cors = require("cors");
 app.use(
   cors({
-    origin: "https://cool-services.vercel.app/",
+    origin: "https://cool-services.vercel.app",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

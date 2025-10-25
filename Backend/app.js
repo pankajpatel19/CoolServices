@@ -19,7 +19,8 @@ app.use(cookie());
 const cors = require("cors");
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin:
+      "https://vercel.com/pankajpatel19s-projects/cool-services/AS1fjyx7WSpoqV1HPQjMCvpaabcE",
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

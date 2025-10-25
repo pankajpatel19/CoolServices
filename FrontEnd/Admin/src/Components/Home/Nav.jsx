@@ -39,6 +39,7 @@ function Nav() {
     navigate("/login");
     window.location.reload();
   };
+  console.log(user);
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
@@ -139,7 +140,9 @@ function Nav() {
                 >
                   <MenuItem onClick={handleClose}>
                     <i className="fa-solid fa-user mr-3 text-gray-600 w-5"></i>
-                    <Link to={`profile/${user._id}`}>Profile</Link>
+                    {user?._id && (
+                      <Link to={`profile/${user._id}`}>Profile</Link>
+                    )}
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <i className="fa-solid fa-cog mr-3 text-gray-600 w-5"></i>
@@ -294,13 +297,16 @@ function Nav() {
           <div className="px-4 pt-2 pb-3 space-y-1">
             {token ? (
               <>
-                <Link
-                  to={`profile/${user._id}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
-                >
-                  <i className="fa-solid fa-user mr-3"></i>Profile
-                </Link>
+                {user?._id && (
+                  <Link
+                    to={`profile/${user._id}`}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
+                  >
+                    <i className="fa-solid fa-user mr-3"></i>Profile
+                  </Link>
+                )}
+
                 <Link
                   to="/Home/addbooking"
                   state={{ user }}

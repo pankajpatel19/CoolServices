@@ -4,3 +4,5 @@ Backend/.env
 #frontend
 FrontEnd/Admin/node_modules/
 FrontEnd/Admin/.env
+
+/CoolServices

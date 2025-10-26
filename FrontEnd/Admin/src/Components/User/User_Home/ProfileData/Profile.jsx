@@ -47,7 +47,7 @@ function Profile() {
   const handleUpdate = async () => {
     try {
       const res = await axios.patch(
-        "http://localhost:1916/updateprofile",
+        "https://coolservices.onrender.com/updateprofile",
         formData,
         {
           headers: { Authorization: `Bearer ${token}` },
@@ -136,7 +136,7 @@ function Profile() {
       {edit && (
         <div className="fixed inset-0 flex items-center justify-center  backdrop-blur-2xl z-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
+            <h2 className="text-xl font-bold mb-4">change Profile</h2>
 
             {/* Name */}
             <label className="block mb-3">

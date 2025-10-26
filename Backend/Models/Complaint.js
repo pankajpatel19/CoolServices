@@ -1,6 +1,10 @@
-import mongoose from "mongoose";
+const mongoose = require("mongoose");
 
 const complainSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   fullname: {
     type: String,
   },
@@ -14,7 +18,7 @@ const complainSchema = new mongoose.Schema({
     type: String,
   },
 });
-  
+
 const Complain = mongoose.model("Complain", complainSchema);
 
 module.exports = { Complain };

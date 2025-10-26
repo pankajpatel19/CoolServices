@@ -1,316 +1,312 @@
-import React, { useState } from "react";
-import {
-  AlertCircle,
-  Send,
-  User,
-  Mail,
-  MessageSquare,
-  FileText,
-  CheckCircle,
-  Sparkles,
-} from "lucide-react";
-import { motion } from "framer-motion";
+import { useState } from "react";
 import api from "../../../../../Utils/axios";
-function ComplainForm() {
+function ComplaintForm() {
   const [formData, setFormData] = useState({
-    name: "",
+    fullname: "",
     email: "",
     subject: "",
     message: "",
   });
-  const [notification, setNotification] = useState(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [notification, setNotification] = useState({ message: "", type: "" });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  const showNotification = (message, type = "success") => {
+  const showNotification = (message, type) => {
     setNotification({ message, type });
-    setTimeout(() => setNotification(null), 4000);
+    setTimeout(() => setNotification({ message: "", type: "" }), 4000);
   };
 
-  const handleSubmit = () => {
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      console.log("Form submitted:", formData);
-      showNotification("Complaint submitted successfully!");
+    if (
+      !formData.fullname.trim() ||
+      !formData.email.trim() ||
+      !formData.subject.trim() ||
+      !formData.message.trim()
+    ) {
+      showNotification("⚠️ Please fill out all fields!", "error");
       setIsSubmitting(false);
+      return;
+    }
 
-      // Reset form
+    try {
+      const res = await api.post("/Home/Complaint", formData, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      console.log("Complaint submitted:", res.data);
+      showNotification("✅ Complaint submitted successfully!", "success");
+
       setFormData({
-        name: "",
+        fullname: "",
         email: "",
         subject: "",
         message: "",
       });
-    }, 1000);
+    } catch (error) {
+      console.error("Error submitting complaint:", error);
+      showNotification("❌ Failed to submit complaint. Try again!", "error");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 via-orange-50 to-yellow-50 py-12 px-4 relative overflow-hidden">
-      {/* Enhanced Animated Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-96 h-96 bg-gradient-to-br from-red-400/20 to-orange-500/20 rounded-full blur-3xl animate-pulse"></div>
-        <div
-          className="absolute -bottom-40 -left-40 w-96 h-96 bg-gradient-to-br from-orange-400/20 to-yellow-500/20 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "2s" }}
-        ></div>
-        <div
-          className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-yellow-400/15 to-red-400/15 rounded-full blur-3xl animate-pulse"
-          style={{ animationDelay: "4s" }}
-        ></div>
-      </div>
-
-      {/* Enhanced Notification Toast */}
-      {notification && (
-        <motion.div
-          initial={{ x: 300, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          exit={{ x: 300, opacity: 0 }}
-          className="fixed top-8 right-8 z-50 px-7 py-5 rounded-2xl shadow-2xl backdrop-blur-xl bg-gradient-to-r from-green-500 to-emerald-600 text-white"
-          style={{
-            boxShadow:
-              "0 25px 50px -12px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1)",
-          }}
-        >
-          <div className="flex items-center gap-4">
-            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
-              <CheckCircle className="w-6 h-6" />
-            </div>
-            <span className="font-medium text-lg">{notification.message}</span>
-            <button
-              onClick={() => setNotification(null)}
-              className="ml-4 text-white/90 hover:text-white bg-white/20 hover:bg-white/30 rounded-lg p-2 transition-all duration-200"
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 p-4 sm:p-6">
+      <div className="max-w-2xl w-full bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-6 sm:p-10 border-2 border-emerald-100">
+        {/* Header Section */}
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-emerald-500 via-teal-500 to-cyan-600 rounded-2xl mb-5 shadow-xl rotate-3 hover:rotate-0 transition-transform duration-300">
+            <svg
+              className="w-10 h-10 text-white"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </button>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2.5}
+                d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z"
+              />
+            </svg>
           </div>
-        </motion.div>
-      )}
+          <h1 className="text-4xl sm:text-5xl font-extrabold bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent mb-3 tracking-tight">
+            Voice Your Concern
+          </h1>
+          <p className="text-gray-600 text-base sm:text-lg max-w-md mx-auto">
+            Your feedback matters. Let us know how we can improve your
+            experience.
+          </p>
+        </div>
 
-      <div className="relative max-w-3xl mx-auto">
-        <motion.div
-          initial={{ y: 30, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/40 overflow-hidden"
-        >
-          {/* Decorative Top Bar */}
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-red-500 via-orange-500 to-yellow-500"></div>
-
-          {/* Enhanced Header */}
-          <div className="relative bg-gradient-to-br from-red-500 via-red-600 to-orange-600 text-white p-8 sm:p-10 overflow-hidden">
-            {/* Decorative Elements */}
-            <div className="absolute top-0 right-0 w-40 h-40 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-
-            {/* Floating Sparkle */}
-            <div className="absolute top-6 right-6 text-yellow-300/30 animate-pulse">
-              <Sparkles className="w-8 h-8" />
-            </div>
-
-            <div className="relative flex items-start gap-5">
-              {/* Icon */}
-              <div className="w-16 h-16 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-xl flex-shrink-0">
-                <AlertCircle className="w-9 h-9" />
-              </div>
-
-              {/* Text */}
-              <div>
-                <h1 className="text-3xl sm:text-4xl font-bold mb-2">
-                  Submit a Complaint
-                </h1>
-                <p className="text-red-100 text-lg">
-                  We're here to help resolve your concerns quickly
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Enhanced Form */}
-          <div className="p-8 sm:p-10 space-y-7">
-            {/* Name Field */}
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.1, duration: 0.5 }}
-            >
-              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide flex items-center gap-2">
-                <User className="w-5 h-5 text-red-500" />
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Name & Email Row */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="relative">
+              <label className="block text-sm font-bold text-gray-800 mb-2 uppercase tracking-wide">
                 Full Name
               </label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleInputChange}
-                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-300 bg-white hover:border-gray-300 hover:shadow-md text-gray-800"
-                placeholder="Enter your full name"
-                required
-              />
-            </motion.div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500">
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <input
+                  type="text"
+                  name="fullname"
+                  placeholder="John Doe"
+                  value={formData.fullname}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all duration-300 hover:border-emerald-200 bg-gradient-to-br from-gray-50 to-white font-medium"
+                />
+              </div>
+            </div>
 
-            {/* Email Field */}
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide flex items-center gap-2">
-                <Mail className="w-5 h-5 text-red-500" />
+            <div className="relative">
+              <label className="block text-sm font-bold text-gray-800 mb-2 uppercase tracking-wide">
                 Email Address
               </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleInputChange}
-                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-300 bg-white hover:border-gray-300 hover:shadow-md text-gray-800"
-                placeholder="your.email@example.com"
-                required
-              />
-            </motion.div>
+              <div className="relative">
+                <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500">
+                  <svg
+                    className="w-5 h-5"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
+                    <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
+                  </svg>
+                </span>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="john@example.com"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                  className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all duration-300 hover:border-emerald-200 bg-gradient-to-br from-gray-50 to-white font-medium"
+                />
+              </div>
+            </div>
+          </div>
 
-            {/* Subject Field */}
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.3, duration: 0.5 }}
-            >
-              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide flex items-center gap-2">
-                <FileText className="w-5 h-5 text-red-500" />
-                Subject
-              </label>
+          {/* Subject Field */}
+          <div className="relative">
+            <label className="block text-sm font-bold text-gray-800 mb-2 uppercase tracking-wide">
+              Subject Line
+            </label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-emerald-500">
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+              </span>
               <input
                 type="text"
                 name="subject"
+                placeholder="What's this about?"
                 value={formData.subject}
-                onChange={handleInputChange}
-                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-300 bg-white hover:border-gray-300 hover:shadow-md text-gray-800"
-                placeholder="Brief summary of your complaint"
+                onChange={handleChange}
                 required
+                className="w-full pl-12 pr-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all duration-300 hover:border-emerald-200 bg-gradient-to-br from-gray-50 to-white font-medium"
               />
-            </motion.div>
-
-            {/* Message Field */}
-            <motion.div
-              initial={{ x: -20, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              transition={{ delay: 0.4, duration: 0.5 }}
-            >
-              <label className="block text-sm font-bold text-gray-700 mb-3 uppercase tracking-wide flex items-center gap-2">
-                <MessageSquare className="w-5 h-5 text-red-500" />
-                Detailed Message
-              </label>
-              <textarea
-                name="message"
-                value={formData.message}
-                onChange={handleInputChange}
-                rows={6}
-                className="w-full px-5 py-4 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-4 focus:ring-red-100 focus:border-red-500 transition-all duration-300 resize-y bg-white hover:border-gray-300 hover:shadow-md text-gray-800"
-                placeholder="Please describe your complaint in detail..."
-                required
-              />
-            </motion.div>
-
-            {/* Enhanced Submit Button */}
-            <motion.div
-              className="pt-6"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.5 }}
-            >
-              <button
-                onClick={handleSubmit}
-                disabled={isSubmitting}
-                className={`relative w-full text-white font-bold py-5 px-8 rounded-2xl transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl overflow-hidden group ${
-                  isSubmitting
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-gradient-to-r from-red-600 via-orange-600 to-red-600 hover:from-red-700 hover:via-orange-700 hover:to-red-700 transform hover:scale-105 hover:-translate-y-1"
-                }`}
-                style={{
-                  boxShadow: isSubmitting
-                    ? ""
-                    : "0 20px 40px -10px rgba(239, 68, 68, 0.5)",
-                }}
-              >
-                {/* Shine Effect */}
-                {!isSubmitting && (
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
-                )}
-
-                {isSubmitting ? (
-                  <>
-                    <div className="w-6 h-6 border-3 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    <span className="text-lg">Submitting...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send className="relative w-6 h-6 group-hover:translate-x-1 transition-transform duration-300" />
-                    <span className="relative text-lg">Submit Complaint</span>
-                  </>
-                )}
-              </button>
-            </motion.div>
-
-            {/* Enhanced Footer Note */}
-            <motion.div
-              className="pt-6 border-t-2 border-gray-200"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-            >
-              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-5 rounded-xl border border-blue-100">
-                <p className="text-sm text-gray-700 text-center font-medium flex items-center justify-center gap-2">
-                  <CheckCircle className="w-5 h-5 text-blue-600" />
-                  We'll respond to your complaint within 24-48 hours
-                </p>
-              </div>
-            </motion.div>
-
-            {/* Trust Indicators */}
-            <motion.div
-              className="grid grid-cols-3 gap-4 pt-4"
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.7, duration: 0.5 }}
-            >
-              <div className="text-center p-4 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl">
-                <div className="text-2xl font-bold text-red-600">Fast</div>
-                <div className="text-xs text-gray-600 mt-1">Response</div>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-xl">
-                <div className="text-2xl font-bold text-orange-600">100%</div>
-                <div className="text-xs text-gray-600 mt-1">Confidential</div>
-              </div>
-              <div className="text-center p-4 bg-gradient-to-br from-yellow-50 to-red-50 rounded-xl">
-                <div className="text-2xl font-bold text-yellow-600">24/7</div>
-                <div className="text-xs text-gray-600 mt-1">Available</div>
-              </div>
-            </motion.div>
+            </div>
           </div>
-        </motion.div>
+
+          {/* Message Field */}
+          <div className="relative">
+            <label className="block text-sm font-bold text-gray-800 mb-2 uppercase tracking-wide">
+              Your Message
+            </label>
+            <textarea
+              name="message"
+              rows="6"
+              placeholder="Tell us what happened and how we can help..."
+              value={formData.message}
+              onChange={handleChange}
+              required
+              className="w-full px-4 py-4 border-2 border-gray-200 rounded-2xl focus:ring-4 focus:ring-emerald-100 focus:border-emerald-500 outline-none transition-all duration-300 hover:border-emerald-200 resize-none bg-gradient-to-br from-gray-50 to-white font-medium leading-relaxed"
+            ></textarea>
+            <div className="text-right mt-2 text-xs text-gray-500 font-semibold">
+              {formData.message.length} characters
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={isSubmitting}
+            className={`w-full py-5 font-bold text-lg rounded-2xl transition-all duration-300 transform shadow-xl ${
+              isSubmitting
+                ? "bg-gray-300 cursor-not-allowed scale-100 text-gray-500"
+                : "bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-600 text-white hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] hover:from-emerald-600 hover:via-teal-600 hover:to-cyan-700"
+            }`}
+          >
+            {isSubmitting ? (
+              <span className="flex items-center justify-center gap-3">
+                <svg
+                  className="animate-spin h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Processing Your Complaint...
+              </span>
+            ) : (
+              <span className="flex items-center justify-center gap-2">
+                Submit Complaint
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2.5}
+                    d="M14 5l7 7m0 0l-7 7m7-7H3"
+                  />
+                </svg>
+              </span>
+            )}
+          </button>
+        </form>
+
+        {/* Notification */}
+        {notification.message && (
+          <div
+            className={`mt-8 p-5 rounded-2xl font-semibold shadow-lg border-2 animate-fadeIn ${
+              notification.type === "success"
+                ? "bg-gradient-to-r from-emerald-50 to-teal-50 text-emerald-800 border-emerald-300"
+                : "bg-gradient-to-r from-red-50 to-rose-50 text-red-800 border-red-300"
+            }`}
+          >
+            <div className="flex items-center gap-3">
+              {notification.type === "success" ? (
+                <div className="flex-shrink-0 w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              ) : (
+                <div className="flex-shrink-0 w-10 h-10 bg-red-500 rounded-full flex items-center justify-center">
+                  <svg
+                    className="w-6 h-6 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                </div>
+              )}
+              <p className="flex-1">{notification.message}</p>
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div className="mt-8 pt-6 border-t-2 border-gray-100 text-center">
+          <p className="text-sm text-gray-500">
+            Typical response time:{" "}
+            <span className="font-bold text-emerald-600">24-48 hours</span>
+          </p>
+        </div>
       </div>
     </div>
   );
 }
 
-export default ComplainForm;
+export default ComplaintForm;

@@ -33,6 +33,7 @@ import TechProfile from "../src/Components/Technician/TechProfile.jsx";
 import HistoryFilter from "../src/Components/User/History/HistoryFilter.jsx";
 import ShowUser from "../src/Admin/Users/ShowUser.jsx";
 import BookingPerUser from "../src/Admin/Users/BookingPerUser.jsx";
+import ShowComplaints from "../src/Components/User/User_Home/Complaints/ShowComplaints.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,6 +56,8 @@ const router = createBrowserRouter(
           <Route path="history/status" element={<HistoryFilter />} />
           <Route path="profile/:id" element={<Profile />} />
           <Route path="complain" element={<ComplainForm />} />
+          <Route path="complain/:id" element={<ShowComplaints />} />
+
           <Route path="solvedByYou" element={<SolvedByYour />} />
         </Route>
       </Route>

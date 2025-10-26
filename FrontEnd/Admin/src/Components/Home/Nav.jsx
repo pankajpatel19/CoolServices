@@ -156,6 +156,10 @@ function Nav() {
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <i className="fa-solid fa-comment mr-3 text-gray-600 w-5"></i>
+                    <Link to={`/Home/complain/${user._id}`}>Complaints</Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <i className="fa-solid fa-comment mr-3 text-gray-600 w-5"></i>
                     <Link to="/contactUs">Contact</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
@@ -297,15 +301,6 @@ function Nav() {
           <div className="px-4 pt-2 pb-3 space-y-1">
             {token ? (
               <>
-                <Link
-                  to="/Home"
-                  state={{ user }}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
-                >
-                  {/* <Home className="w-5 h-5 inline mr-3" /> */}
-                  Home
-                </Link>
                 {user?._id && (
                   <Link
                     to={`profile/${user._id}`}

@@ -64,6 +64,10 @@ const {
   getAllLocations,
 } = require("./Controller/Technician/TechnicianData.js");
 const { upload } = require("./MiddleWare/multer.js");
+const {
+  SubmitComplaints,
+  ShowComplaints,
+} = require("./Controller/Complain/complain.js");
 
 //login route
 app.post("/login", login);
@@ -77,6 +81,8 @@ app.post("/Home/addbooking", userAuth, AddBooking);
 app.get("/Home/history/status", userAuth, getStatusBooking);
 app.get("/Home/history/:id", history);
 app.get("/Home/history/:id/pdf", historyBookingPDF);
+app.post("/Home/Complaint", userAuth, SubmitComplaints);
+app.get("/Home/Complaint/:id", userAuth, ShowComplaints);
 
 //show
 app.get("/showbooking", userAuth, ShowBooking);

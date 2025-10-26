@@ -1,14 +1,8 @@
-import React, { useEffect, useState } from "https://esm.sh/react";
-// Import Leaflet and React-Leaflet from a CDN
-import L from "https://esm.sh/leaflet@1.9.4";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  Tooltip,
-} from "https://esm.sh/react-leaflet@4.2.1";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import L from "leaflet";
+import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import api from "../../../Utils/axios";
 
 // Custom icon for technician
 const techIcon = new L.Icon({
@@ -17,31 +11,14 @@ const techIcon = new L.Icon({
   iconAnchor: [17, 35],
   popupAnchor: [0, -35],
 });
-
 function TechLocation() {
   const [locations, setLocations] = useState([]);
-
-  // Effect to load Leaflet CSS
-  useEffect(() => {
-    // Inject Leaflet CSS into the document's head
-    const link = document.createElement("link");
-    link.rel = "stylesheet";
-    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
-    link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
-    link.crossOrigin = "";
-    document.head.appendChild(link);
-
-    return () => {
-      document.head.removeChild(link);
-    };
-  }, []);
 
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const res = await axios.get(
-          "https://coolservices.onrender.com/api/admin/technicians-locations"
-        );
+        const res = await api.get("/api/admin/technicians-locations");
+
         setLocations(res.data);
       } catch (err) {
         console.error("Error fetching locations:", err);
@@ -52,6 +29,19 @@ function TechLocation() {
     const interval = setInterval(fetchLocations, 5000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const link = document.createElement("link");
+    link.rel = "stylesheet";
+    link.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+    link.integrity = "sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=";
+    link.crossOrigin = "";
+    document.head.appendChild(link);
+
+    return () => {
+      document.head.removeChild(link);
+    };
   }, []);
 
   return (
@@ -71,8 +61,8 @@ function TechLocation() {
             <div className="flex items-center gap-3 bg-blue-50 px-4 py-3 rounded-xl border border-blue-100">
               <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
               <span className="text-sm font-semibold text-gray-700">
-                {locations.length} Active{" "}
-                {locations.length === 1 ? "Technician" : "Technicians"}
+                {locations?.length ?? 0}
+                {locations?.length === 1 ? "Technician" : "Technicians"}
               </span>
             </div>
           </div>
@@ -95,7 +85,7 @@ function TechLocation() {
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
             />
 
-            {locations.map((tech) => (
+            {locations?.map((tech) => (
               <Marker
                 key={tech._id}
                 position={[tech.latitude, tech.longitude]}

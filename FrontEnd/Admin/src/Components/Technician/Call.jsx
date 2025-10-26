@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import "react-toastify/dist/ReactToastify.css";
+import Api from "../../../Utils/axios.js";
 
 function Call() {
   const item = useParams();
@@ -15,9 +16,7 @@ function Call() {
     const fetchBooking = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(
-          `https://coolservices.onrender.com/showbooking/${item.id}`
-        );
+        const res = await Api.get(`/showbooking/${item.id}`);
 
         setBooking(res.data);
         toast.success("Booking details loaded successfully");

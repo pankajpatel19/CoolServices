@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-
+import api from "../../../../Utils/axios";
 function SolvedByYour() {
   const [data, setData] = useState([
     {
@@ -30,21 +30,16 @@ function SolvedByYour() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post(
-        "https://coolservices.onrender.com/home/chat",
-        {
-          data: input,
-        }
-      );
+      const res = await api.post("/home/chat", {
+        data: input,
+      });
 
-      // Correctly get the 'text' property from the response
       const botReply = res.data.text;
       setData((prev) => [...prev, { sender: "bot", text: botReply }]);
     } catch (error) {
       console.error(error);
       setData((prev) => [
         ...prev,
-        // Show error message from the bot, not the user
         { sender: "bot", text: "Something went wrong" },
       ]);
     } finally {

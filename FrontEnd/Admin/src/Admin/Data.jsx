@@ -14,7 +14,7 @@ import {
   Legend,
 } from "recharts";
 import axios from "axios";
-
+import api from "../../Utils/axios";
 function Data() {
   const [DashData, setDashData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
@@ -23,14 +23,11 @@ function Data() {
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true);
-        const res = await axios.get(
-          "https://coolservices.onrender.com/showbooking/dashboard",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+        const res = await api.get("/showbooking/dashboard", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
         setDashData(res.data);
       } catch (error) {

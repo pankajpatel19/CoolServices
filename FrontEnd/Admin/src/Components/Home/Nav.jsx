@@ -6,6 +6,7 @@ import logo from "../../assets/logo.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Wrench, Menu as MenuIcon, X } from "lucide-react";
+import Api from "../../../Utils/axios.js";
 
 //MUI import
 import Button from "@mui/material/Button";
@@ -30,7 +31,7 @@ function Nav() {
   };
 
   const handleLogout = async () => {
-    await axios.get("https://coolservices.onrender.com/logout", {
+    await Api.get("/logout", {
       withCredentials: true,
     });
     localStorage.removeItem("user");
@@ -155,7 +156,7 @@ function Nav() {
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <i className="fa-solid fa-comment mr-3 text-gray-600 w-5"></i>
-                    <Link to="contactUs">Contact</Link>
+                    <Link to="/contactUs">Contact</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <i className="fa-solid fa-calendar-check mr-3 text-gray-600 w-5"></i>

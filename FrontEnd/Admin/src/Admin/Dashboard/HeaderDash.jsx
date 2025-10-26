@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
+import Api from "../../../Utils/axios.js";
+import api from "../../../Utils/axios.js";
 
 const IconHome = () => (
   <svg
@@ -113,7 +115,7 @@ function HeaderDash() {
 
   const handleLogout = async () => {
     setIsMenuOpen(false);
-    await axios.get("https://coolservices.onrender.com/logout", {
+    await api.get("/logout", {
       withCredentials: true,
     });
     localStorage.removeItem("user");

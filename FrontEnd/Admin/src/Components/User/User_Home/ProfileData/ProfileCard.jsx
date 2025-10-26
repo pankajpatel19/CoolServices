@@ -3,6 +3,7 @@ import EditProfile from "./EditProfile";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import axios from "axios";
+import api from "../../../../../Utils/axios";
 
 function ProfileCard({ getRoleColor, user, handleLogout }) {
   const [file, setFile] = useState(null);
@@ -21,16 +22,12 @@ function ProfileCard({ getRoleColor, user, handleLogout }) {
     formData.append("image", file);
 
     try {
-      const res = await axios.post(
-        "https://coolservices.onrender.com/profile/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await api.post("/profile/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       setUpload(res.data.user.avatar);
       toast.success("Profile Changed");

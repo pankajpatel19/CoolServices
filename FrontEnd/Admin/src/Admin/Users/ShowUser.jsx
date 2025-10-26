@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Loader, AlertCircle, Users as UsersIcon } from "lucide-react";
 import Users from "./Users";
+import api from "../../../Utils/axios";
 
 function ShowUser() {
   const [users, setUsers] = useState([]);
@@ -11,12 +12,9 @@ function ShowUser() {
   const fetchUsers = async () => {
     try {
       setError(null);
-      const response = await axios.get(
-        "https://coolservices.onrender.com/api/admin/users",
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const response = await api.get("/api/admin/users", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       setUsers(response.data.users);
     } catch (err) {
       setError("Failed to fetch users. Please try again.");

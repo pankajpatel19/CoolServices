@@ -47,6 +47,8 @@ const router = createBrowserRouter(
       <Route element={<ProtectRoute allowedRoles={["customer"]} />}>
         <Route path="home" element={<UserHomeLayout />}>
           <Route index element={<UserHome />} />
+          <Route path="contactUs" element={<ContactUs />} />
+
           <Route path="addbooking" element={<Booking />} />
           <Route path="history/:id" element={<History />} />
           <Route path="history/upcoming" element={<Upcoming />} />

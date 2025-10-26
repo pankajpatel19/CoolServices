@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Api from "../../../Utils/axios.js";
 import axios from "axios";
 import {
   ArrowLeft,
@@ -17,6 +18,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import api from "../../../Utils/axios.js";
 
 const Booking = () => {
   const [form, setForm] = useState({
@@ -51,13 +53,9 @@ const Booking = () => {
     setIsSubmitting(true);
 
     try {
-      await axios.post(
-        "https://coolservices.onrender.com/Home/addbooking",
-        form,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      await api.post("/Home/addbooking", form, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       showNotification("Booking Successfully");
       setIsSubmitting(false);

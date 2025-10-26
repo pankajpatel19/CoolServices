@@ -7,6 +7,7 @@ import ServiceData from "./ServiceData";
 import StateCard from "./StateCard";
 import SearchBooks from "./SearchBooks";
 import Status from "../../Components/User/History/Status";
+import api from "../../../Utils/axios.js";
 
 function Dashboard() {
   const [booking, setbooking] = useState([]);
@@ -21,24 +22,18 @@ function Dashboard() {
     setInputRecord(true);
     setIsSearch(true);
 
-    const find = await axios.get(
-      `https://coolservices.onrender.com/showbooking/search`,
-      {
-        params: { startDate, endDate },
-      }
-    );
+    const find = await api.get("/showbooking/search", {
+      params: { startDate, endDate },
+    });
     setRequestDate(find.data);
     setIsSearch(false);
   };
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(
-        "https://coolservices.onrender.com/showbooking",
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const response = await api.get("/showbooking", {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       setbooking(response.data);
     } catch (error) {
       toast.error("Failed to fetch bookings");
@@ -52,9 +47,7 @@ function Dashboard() {
     );
     if (!confirm) return;
     try {
-      await axios.delete(
-        `https://coolservices.onrender.com/deletebooking/${id}`
-      );
+      await api.delete(`/deletebooking/${id}`);
       toast.success("Deleted successfully!");
       setTimeout(() => fetchBookings(), 500);
     } catch (error) {
@@ -65,12 +58,9 @@ function Dashboard() {
 
   const updatebooking = async (id, val) => {
     try {
-      await axios.patch(
-        `https://coolservices.onrender.com/updatebooking/${id}`,
-        {
-          status: val,
-        }
-      );
+      await api.patch(`/updatebooking/${id}`, {
+        status: val,
+      });
       toast.success("Updated successfully!");
       fetchBookings();
     } catch (error) {
@@ -81,12 +71,9 @@ function Dashboard() {
 
   const updateTechnician = async (id, val) => {
     try {
-      const tech = await axios.patch(
-        `https://coolservices.onrender.com/updateTechnician/${id}`,
-        {
-          technician: val,
-        }
-      );
+      const tech = await api.patch(`/updateTechnician/${id}`, {
+        technician: val,
+      });
 
       toast.success("Updated successfully!");
       fetchBookings();
@@ -98,12 +85,9 @@ function Dashboard() {
 
   const getStatusBooking = async (stts) => {
     try {
-      const res = await axios.get(
-        `https://coolservices.onrender.com/showbooking/status?status=${stts}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const res = await api.get(`/showbooking/status?status=${stts}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       toast.success(res.data.message);
       setbooking(res.data.bookings);
@@ -157,20 +141,21 @@ function Dashboard() {
       </div>
 
       {issearch && (
-        <div className="fixed inset-0 flex items-center justify-center  bg-opacity-50  backdrop-blur-2xl z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
+        <div className="fixed inset-0 flex items-center justify-center bg-opacity-50 backdrop-blur-2xl z-50 p-4">
+          <div className="bg-white p-4 sm:p-6 rounded-lg shadow-lg w-full max-w-md relative">
             <button
-              className="bg-red-600 w-5 h-5 text-center text-white"
+              className="absolute top-2 right-2 sm:top-4 sm:right-4 bg-red-600 w-8 h-8 flex items-center justify-center text-white rounded-md hover:bg-red-700 transition-colors"
               onClick={() => setIsSearch(false)}
             >
-              X
+              ✕
             </button>
-            <h2 className="text-3xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+
+            <h2 className="text-2xl sm:text-3xl font-bold text-center mb-6 sm:mb-8 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent pr-8">
               Find Records
             </h2>
 
-            <div className="flex flex-col sm:flex-row gap-6 items-end justify-center">
-              <div className="flex flex-col space-y-2 min-w-0 flex-1">
+            <div className="flex flex-col gap-4 sm:gap-6">
+              <div className="flex flex-col space-y-2">
                 <label
                   htmlFor="startdate"
                   className="text-sm font-semibold text-gray-700 uppercase tracking-wide"
@@ -183,11 +168,11 @@ function Dashboard() {
                   id="startdate"
                   value={startDate}
                   onChange={(e) => setstartDate(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-700 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-200 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:outline-none"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-xl text-gray-700 bg-white focus:border-blue-500 focus:ring-2 sm:focus:ring-4 focus:ring-blue-200 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:outline-none"
                 />
               </div>
 
-              <div className="flex flex-col space-y-2 min-w-0 flex-1">
+              <div className="flex flex-col space-y-2">
                 <label
                   htmlFor="enddate"
                   className="text-sm font-semibold text-gray-700 uppercase tracking-wide"
@@ -200,13 +185,13 @@ function Dashboard() {
                   id="enddate"
                   value={endDate}
                   onChange={(e) => setendDate(e.target.value)}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl text-gray-700 bg-white focus:border-blue-500 focus:ring-4 focus:ring-blue-200 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:outline-none"
+                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border-2 border-gray-200 rounded-xl text-gray-700 bg-white focus:border-blue-500 focus:ring-2 sm:focus:ring-4 focus:ring-blue-200 transition-all duration-300 hover:border-gray-300 hover:shadow-md focus:outline-none"
                 />
               </div>
 
               <button
                 onClick={Search}
-                className="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-4 focus:ring-blue-200 active:scale-95"
+                className="w-full px-6 sm:px-8 py-2.5 sm:py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 focus:outline-none focus:ring-2 sm:focus:ring-4 focus:ring-blue-200 active:scale-95"
               >
                 Search
               </button>

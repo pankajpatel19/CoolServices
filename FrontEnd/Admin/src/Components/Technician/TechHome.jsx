@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import TechnicianHeader from "./TechnicianHeader";
 import MainContent from "./MainContent";
+import api from "../../../Utils/axios";
 
 function TechHome() {
   const [booking, setbooking] = useState([]);
@@ -27,12 +28,9 @@ function TechHome() {
 
   const fetchBookings = async () => {
     try {
-      const response = await axios.get(
-        `https://coolservices.onrender.com/api/techhome/getdata`,
-        {
-          params: { username },
-        }
-      );
+      const response = await api.get(`/api/techhome/getdata`, {
+        params: { username },
+      });
 
       setbooking(response.data);
     } catch (error) {
@@ -43,12 +41,9 @@ function TechHome() {
 
   const updatebooking = async (id, val) => {
     try {
-      await axios.patch(
-        `https://coolservices.onrender.com/updatebooking/${id}`,
-        {
-          status: val,
-        }
-      );
+      await api.patch(`/updatebooking/${id}`, {
+        status: val,
+      });
       toast.success("Updated successfully!");
       fetchBookings();
     } catch (error) {
@@ -58,7 +53,7 @@ function TechHome() {
   };
 
   const handleLogout = async () => {
-    await axios.get("https://coolservices.onrender.com/logout", {
+    await api.get("/logout", {
       withCredentials: true,
     });
     localStorage.removeItem("user");
@@ -83,18 +78,15 @@ function TechHome() {
     }
     const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition((pos) => {
-        fetch(
-          "https://coolservices.onrender.com/api/technician/update-location",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              technicianId: Technician._id,
-              latitude: pos.coords.latitude,
-              longitude: pos.coords.longitude,
-            }),
-          }
-        );
+        fetch("http://localhost:10000/api/technician/update-location", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            technicianId: Technician._id,
+            latitude: pos.coords.latitude,
+            longitude: pos.coords.longitude,
+          }),
+        });
       });
     }, 10000);
 

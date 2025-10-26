@@ -18,7 +18,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Status from "./Status";
-
+import api from "../../../../Utils/axios";
 function History() {
   const { history, loading, setHistory } = useHistoryData();
   const [status, setStatus] = useState("");
@@ -27,12 +27,9 @@ function History() {
 
   const downloadReciept = async (id) => {
     try {
-      const res = await axios.get(
-        `https://coolservices.onrender.com/Home/history/${id}/pdf`,
-        {
-          responseType: "blob",
-        }
-      );
+      const res = await api.get(`/Home/history/${id}/pdf`, {
+        responseType: "blob",
+      });
 
       const pdfBlob = new Blob([res.data], { type: "application/pdf" });
       const pdfUrl = window.URL.createObjectURL(pdfBlob);
@@ -45,12 +42,9 @@ function History() {
 
   const getStatusBooking = async (stts) => {
     try {
-      const res = await axios.get(
-        `https://coolservices.onrender.com/Home/history/status?status=${stts}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const res = await api.get(`/Home/history/status?status=${stts}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       toast.success(res.data.message);
       setHistory(res.data.bookings);
     } catch (error) {

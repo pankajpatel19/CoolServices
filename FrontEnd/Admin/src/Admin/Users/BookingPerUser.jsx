@@ -16,6 +16,7 @@ import {
   ArrowLeft,
   ClipboardList,
 } from "lucide-react";
+import api from "../../../Utils/axios";
 
 function BookingPerUser() {
   const { id } = useParams();
@@ -27,12 +28,9 @@ function BookingPerUser() {
   const FetchBookingPerUser = async () => {
     try {
       setError(null);
-      const response = await axios.get(
-        `https://coolservices.onrender.com/api/admin/getBookingPerUser/${id}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const response = await api.get(`/api/admin/getBookingPerUser/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       setBooking(response.data.BookingPerUser);
     } catch (error) {
       setError("Failed to fetch bookings. Please try again.");

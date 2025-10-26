@@ -40,7 +40,6 @@ const updateLocation = async (req, res) => {
     return res.status(400).json({ message: "Missing required fields" });
   }
 
-  // Upsert: if exists → update, else create new
   const location = await TechnicianLocation.findOneAndUpdate(
     { technicianId },
     { latitude, longitude, updatedAt: Date.now() },

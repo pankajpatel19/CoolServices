@@ -19,7 +19,7 @@ app.use(cookie());
 const cors = require("cors");
 app.use(
   cors({
-    origin: "https://cool-services.vercel.app",
+    origin: ["https://cool-services.vercel.app", "http://localhost:5173"],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
@@ -115,7 +115,6 @@ app.post("/home/chat", async (req, res) => {
     const { data } = req.body;
     if (!data) return res.status(400).json({ error: "Message required" });
 
-    // Call the Groq API
     const chatCompletion = await groq.chat.completions.create({
       messages: [
         {
@@ -123,7 +122,7 @@ app.post("/home/chat", async (req, res) => {
           content: data,
         },
       ],
-      model: "llama-3.1-8b-instant", // A powerful and fast model
+      model: "llama-3.1-8b-instant",
     });
 
     const reply = chatCompletion.choices[0]?.message?.content || "";
@@ -146,49 +145,49 @@ app.listen(port, (req, res) => {
     .then(() => console.log("MongoDB connected"))
     .catch((err) => console.error("MongoDB connection error:", err));
 });
-//user location
-// const serviceArea = [
-//   "Navsari City",
-//   "Gandevi",
-//   "Chikhli",
-//   "Mollakhadi",
-//   "Vejalpur",
-//   "Bhimrad",
-//   "Dandi",
-//   "Khergam",
-//   "Pardi",
-//   "Amalsad",
-//   //ahmadabad
-//   "Vastrapur",
-//   "Navrangpura",
-//   "Satellite",
-//   "Bodakdev",
-//   "Paldi",
-//   "Maninagar",
-//   "Thaltej",
-//   "Naranpura",
-//   "Bapunagar",
-//   "Gota",
-//   "Ambawadi",
-//   "Ellisbridge",
-//   "Isanpur",
-//   "Odhav",
-//   "Vejalpur",
-//   "Kankaria",
-//   "Sarkhej",
-//   "Motera",
-//   "Gandhinagar Road",
-//   "Khodiyar",
-//   "Naroda",
-//   "New Ranip",
-//   "Old Ranip",
-//   "Juhapura",
-//   "Chandkheda",
-//   "Vejalpur",
-//   "Vasna",
-//   "Vishala",
-// ];
+// user location
+const serviceArea = [
+  "Navsari City",
+  "Gandevi",
+  "Chikhli",
+  "Mollakhadi",
+  "Vejalpur",
+  "Bhimrad",
+  "Dandi",
+  "Khergam",
+  "Pardi",
+  "Amalsad",
+  //ahmadabad
+  "Vastrapur",
+  "Navrangpura",
+  "Satellite",
+  "Bodakdev",
+  "Paldi",
+  "Maninagar",
+  "Thaltej",
+  "Naranpura",
+  "Bapunagar",
+  "Gota",
+  "Ambawadi",
+  "Ellisbridge",
+  "Isanpur",
+  "Odhav",
+  "Vejalpur",
+  "Kankaria",
+  "Sarkhej",
+  "Motera",
+  "Gandhinagar Road",
+  "Khodiyar",
+  "Naroda",
+  "New Ranip",
+  "Old Ranip",
+  "Juhapura",
+  "Chandkheda",
+  "Vejalpur",
+  "Vasna",
+  "Vishala",
+];
 
-// app.get("/home/userLocation", (req, res) => {
-//   res.json({ serviceArea });
-// });
+app.get("/home/userLocation", (req, res) => {
+  res.json({ serviceArea });
+});

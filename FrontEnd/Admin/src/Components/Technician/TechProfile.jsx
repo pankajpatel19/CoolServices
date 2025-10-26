@@ -6,6 +6,7 @@ import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import { useEffect } from "react";
 import EditProfile from "../User/User_Home/ProfileData/EditProfile";
+import api from "../../../Utils/axios";
 
 function TechProfile() {
   const [edit, setEdit] = useState(false);
@@ -41,13 +42,9 @@ function TechProfile() {
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.patch(
-        "https://coolservices.onrender.com/updateprofile",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await api.patch("/updateprofile", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setUser(res.data.user);
       setEdit(false);
@@ -58,7 +55,7 @@ function TechProfile() {
   };
 
   const handleLogout = async () => {
-    await axios.get("http://localhost:1916/logout", { withCredentials: true });
+    await api.get("/logout", { withCredentials: true });
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     toast.success("LogOut SuccessFully");
@@ -86,16 +83,12 @@ function TechProfile() {
     formData.append("image", file);
 
     try {
-      const res = await axios.post(
-        "http://localhost:1916/profile/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
+      const res = await api.post("/profile/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
 
       setUpload(res.data.user.avatar);
       toast.success("Profile Changed");

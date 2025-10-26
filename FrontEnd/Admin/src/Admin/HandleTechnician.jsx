@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
+import api from "../../Utils/axios";
 
 function HandleTechnician() {
   const [Technician, settechnician] = useState([]);
@@ -13,12 +14,9 @@ function HandleTechnician() {
   const getTechnician = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(
-        "https://coolservices.onrender.com/handleTechnician",
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await api.get("/handleTechnician", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
       settechnician(res.data);
       setError(null);
     } catch (error) {
@@ -41,12 +39,9 @@ function HandleTechnician() {
     if (!modal.techId) return;
 
     try {
-      const res = await axios.delete(
-        `https://coolservices.onrender.com/handleTechnician/${modal.techId}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const res = await api.delete(`/handleTechnician/${modal.techId}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
       console.log(res.data);
       getTechnician(); // Refresh the list
       toast.success(res.data.message || "Technician deleted successfully");

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
 import { replace, useLocation, useNavigate } from "react-router-dom";
+import api from "../../../Utils/axios";
 
 function Login() {
   const navigate = useNavigate();
@@ -20,13 +21,9 @@ function Login() {
     e.preventDefault();
 
     try {
-      const res = await axios.post(
-        "https://coolservices.onrender.com/login",
-        form,
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await api.post("/login", form, {
+        withCredentials: true,
+      });
       let { token, role, user } = res.data;
       console.log(res);
 

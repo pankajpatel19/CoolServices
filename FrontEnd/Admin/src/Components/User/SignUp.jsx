@@ -3,6 +3,7 @@ import { User, Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
+import api from "../../../Utils/axios";
 
 function SignUp() {
   const [form, setRegData] = useState({
@@ -26,13 +27,9 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      const res = await axios.post(
-        "https://coolservices.onrender.com/signup",
-        form,
-        {
-          withCredentials: true,
-        }
-      );
+      const res = await api.post("/signup", form, {
+        withCredentials: true,
+      });
 
       navigate("/login");
       toast.success("register SuccessFullly");

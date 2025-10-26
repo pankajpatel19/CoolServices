@@ -6,7 +6,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import ProfileCard from "./ProfileCard";
 import { useEffect } from "react";
-
+import api from "../../../../../Utils/axios";
 function Profile() {
   const [edit, setEdit] = useState(false);
   const [User, setUser] = useState({});
@@ -17,9 +17,7 @@ function Profile() {
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await axios.get(
-        `https://coolservices.onrender.com/profile/${id}`
-      );
+      const res = await api.get(`/profile/${id}`);
 
       setUser(res.data.user);
     };
@@ -46,13 +44,9 @@ function Profile() {
 
   const handleUpdate = async () => {
     try {
-      const res = await axios.patch(
-        "http://localhost:1916/updateprofile",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await api.patch("/updateprofile", formData, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setUser(res.data.user);
       setEdit(false);
@@ -63,7 +57,7 @@ function Profile() {
   };
 
   const handleLogout = async () => {
-    await axios.get("http://localhost:1916/logout", { withCredentials: true });
+    await api.get("/logout", { withCredentials: true });
     localStorage.removeItem("user");
     localStorage.removeItem("token");
 

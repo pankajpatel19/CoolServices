@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
 import Status from "../User/History/Status";
+import Api from "../../../Utils/axios.js";
 
 function MainContent({ booking, getStatusColor, updatebooking, username }) {
   const [status, setStatus] = useState("");
@@ -11,12 +11,9 @@ function MainContent({ booking, getStatusColor, updatebooking, username }) {
 
   const getStatusBooking = async (stts) => {
     try {
-      const res = await axios.get(
-        `https://coolservices.onrender.com/api/status?status=${stts}&name=${username}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const res = await Api.get(`/api/status?status=${stts}&name=${username}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
 
       toast.success(res.data.message);
       setServiceData(res.data.bookings);

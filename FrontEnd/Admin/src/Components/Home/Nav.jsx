@@ -302,7 +302,7 @@ function Nav() {
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
                 >
-                  <Wrench className="w-5 h-5 inline mr-3" />
+                  {/* <Home className="w-5 h-5 inline mr-3" /> */}
                   Home
                 </Link>
                 {user?._id && (

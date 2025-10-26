@@ -5,7 +5,19 @@ import { toast } from "react-toastify";
 import logo from "../../assets/logo.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Wrench, Menu as MenuIcon, X } from "lucide-react";
+import {
+  Wrench,
+  Menu as MenuIcon,
+  X,
+  MessageSquareWarning,
+  User,
+  Home,
+  CalendarDays,
+  Phone,
+  LogOut,
+  UserPlus,
+  LogIn,
+} from "lucide-react";
 import Api from "../../../Utils/axios.js";
 
 //MUI import
@@ -139,13 +151,13 @@ function Nav() {
                   }}
                 >
                   <MenuItem onClick={handleClose}>
-                    <i className="fa-solid fa-user mr-3 text-gray-600 w-5"></i>
+                    <User className="w-5 h-5 mr-3 text-gray-600" />
                     {user?._id && (
                       <Link to={`profile/${user._id}`}>Profile</Link>
                     )}
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <i className="fa-solid fa-cog mr-3 text-gray-600 w-5"></i>
+                    <Home className="w-5 h-5 mr-3 text-gray-600" />
                     <Link to={`/Home`}>Home</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
@@ -155,20 +167,20 @@ function Nav() {
                     </Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <i className="fa-solid fa-comment mr-3 text-gray-600 w-5"></i>
+                    <MessageSquareWarning className="w-5 h-5 mr-3 text-gray-600" />
                     <Link to={`/Home/complain/${user._id}`}>Complaints</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <i className="fa-solid fa-comment mr-3 text-gray-600 w-5"></i>
+                    <Phone className="w-5 h-5 mr-3 text-gray-600" />
                     <Link to="/contactUs">Contact</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
-                    <i className="fa-solid fa-calendar-check mr-3 text-gray-600 w-5"></i>
+                    <CalendarDays className="w-5 h-5 mr-3 text-gray-600" />
                     <Link to="/Home/history/upcoming">Upcoming Bookings</Link>
                   </MenuItem>
                   <div className="border-t border-gray-200 my-2 mx-2"></div>
                   <MenuItem onClick={handleLogout}>
-                    <i className="fa-solid fa-sign-out-alt mr-3 text-red-500 w-5"></i>
+                    <LogOut className="w-5 h-5 mr-3 text-gray-600" />
                     <span className="text-red-500 font-semibold">Logout</span>
                   </MenuItem>
                 </Menu>
@@ -305,9 +317,11 @@ function Nav() {
                   <Link
                     to={`profile/${user._id}`}
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
+                    className="block flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
                   >
-                    <i className="fa-solid fa-user mr-3"></i>Profile
+                    {" "}
+                    <User className="w-5 h-5 mr-3 text-gray-600" />
+                    Profile
                   </Link>
                 )}
 
@@ -321,28 +335,39 @@ function Nav() {
                   Book Service
                 </Link>
                 <Link
+                  to={`/Home/complain/${user._id}`}
+                  state={{ user }}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
+                >
+                  <MessageSquareWarning className="w-5 h-5 inline mr-3" />
+                  Complaints
+                </Link>
+                <Link
                   to="contactUs"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
+                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
                 >
-                  <i className="fa-solid fa-comment mr-3"></i>Contact
+                  <Phone className="w-5 h-5 mr-3 text-gray-600" />
+                  Contact
                 </Link>
                 <Link
                   to="/Home/history/upcoming"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
+                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
                 >
-                  <i className="fa-solid fa-calendar-check mr-3"></i>Upcoming
-                  Bookings
+                  <CalendarDays className="w-5 h-5 mr-3 text-gray-600" />
+                  Upcoming Bookings
                 </Link>
                 <button
                   onClick={() => {
                     handleLogout();
                     setMobileMenuOpen(false);
                   }}
-                  className="w-full text-left px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 font-semibold"
+                  className="flex w-full text-left px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 font-semibold"
                 >
-                  <i className="fa-solid fa-sign-out-alt mr-3"></i>Logout
+                  <LogOut className="w-5 h-5 mr-3 text-red-600" />
+                  Logout
                 </button>
               </>
             ) : (
@@ -351,52 +376,56 @@ function Nav() {
                   to="/"
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `block px-4 py-3 rounded-lg font-medium ${
+                    `flex px-4 py-3 rounded-lg font-medium ${
                       isActive
                         ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
                         : "text-gray-700 hover:bg-green-50 hover:text-green-600"
                     }`
                   }
                 >
+                  <Home className="w-5 h-5 mr-3 text-gray-600" />
                   Home
                 </NavLink>
                 <NavLink
                   to="/signup"
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `block px-4 py-3 rounded-lg font-medium ${
+                    `flex px-4 py-3 rounded-lg font-medium ${
                       isActive
                         ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
                         : "text-gray-700 hover:bg-green-50 hover:text-green-600"
                     }`
                   }
                 >
+                  <UserPlus className="w-5 h-5 mr-3 text-gray-600" />
                   Sign Up
                 </NavLink>
                 <NavLink
                   to="/login"
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `block px-4 py-3 rounded-lg font-medium ${
+                    `flex px-4 py-3 rounded-lg font-medium ${
                       isActive
                         ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
                         : "text-gray-700 hover:bg-green-50 hover:text-green-600"
                     }`
                   }
                 >
+                  <LogIn className="w-5 h-5 mr-3 text-gray-600" />
                   Login
                 </NavLink>
                 <NavLink
                   to="/contactUs"
                   onClick={() => setMobileMenuOpen(false)}
                   className={({ isActive }) =>
-                    `block px-4 py-3 rounded-lg font-medium ${
+                    `flex px-4 py-3 rounded-lg font-medium ${
                       isActive
                         ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
                         : "text-gray-700 hover:bg-green-50 hover:text-green-600"
                     }`
                   }
                 >
+                  <Phone className="w-5 h-5 mr-3 text-gray-600" />
                   Contact Us
                 </NavLink>
               </>

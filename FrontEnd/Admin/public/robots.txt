@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://cool-services.vercel.app/sitemap.xml

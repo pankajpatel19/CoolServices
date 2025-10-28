@@ -23,8 +23,10 @@ function ResetPassword() {
       console.log();
 
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/reset-password/${token}`,
-        { newPassword: password }
+        `https://cool-services.vercel.app/reset-password/${token}`,
+        {
+          newPassword: password,
+        }
       );
       setMessage(res.data.message);
       setTimeout(() => navigate("/login"), 2000);

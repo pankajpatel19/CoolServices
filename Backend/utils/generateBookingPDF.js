@@ -1,9 +1,9 @@
-const PDFDocument = require("pdfkit");
+import PDFDocument from "pdfkit";
 
-const generateBookingPDF = (booking, res) => {
+export const generateBookingPDF = (booking, res) => {
   const doc = new PDFDocument({ margin: 50 });
 
-  // Response headers
+  // Set response headers
   res.setHeader("Content-Type", "application/pdf");
   res.setHeader(
     "Content-Disposition",
@@ -12,35 +12,30 @@ const generateBookingPDF = (booking, res) => {
 
   doc.pipe(res);
 
-  // Colors
+  // 🎨 Colors
   const primaryColor = "#2563eb"; // Blue
   const secondaryColor = "#64748b"; // Gray
   const accentColor = "#059669"; // Green
   const lightGray = "#f8fafc";
 
-  // Header with background
+  // 🧾 Header
   doc.rect(0, 0, doc.page.width, 100).fill(primaryColor);
-
-  // Company Logo/Name (if you have one)
   doc
     .fontSize(24)
     .fillColor("white")
     .text("Cool Services", 50, 30, { align: "center" });
-
   doc
     .fontSize(12)
     .text("Professional Booking Services", 50, 55, { align: "center" });
 
-  // Reset position after header
   doc.y = 120;
 
-  // Title with decorative line
+  // 📄 Title
   doc
     .fillColor(primaryColor)
     .fontSize(28)
     .text("Booking Confirmation", { align: "center" });
 
-  // Decorative underline
   doc
     .strokeColor(primaryColor)
     .lineWidth(2)
@@ -50,7 +45,7 @@ const generateBookingPDF = (booking, res) => {
 
   doc.moveDown(2);
 
-  // Status badge
+  // ✅ Status Badge
   doc
     .rect(50, doc.y, 100, 25)
     .fill(accentColor)
@@ -60,15 +55,11 @@ const generateBookingPDF = (booking, res) => {
 
   doc.moveDown(2);
 
-  // Booking details section
+  // 📋 Booking Details
   const startY = doc.y;
-
-  // Left column - Booking Info
   doc.fillColor("#1f2937").fontSize(16).text("Booking Details", 50, startY);
-
   doc.moveDown(0.5);
 
-  // Details with better formatting
   const details = [
     { label: "Booking ID", value: booking._id },
     { label: "Customer Name", value: booking.name },
@@ -88,29 +79,25 @@ const generateBookingPDF = (booking, res) => {
   details.forEach((detail, index) => {
     const y = doc.y;
 
-    // Alternate row background
     if (index % 2 === 0) {
       doc.rect(50, y - 2, 500, 20).fill(lightGray);
     }
 
-    // Label
     doc
       .fillColor(secondaryColor)
       .fontSize(11)
       .text(detail.label + ":", 60, y + 2);
-
-    // Value
     doc
       .fillColor("#1f2937")
       .fontSize(12)
       .font("Helvetica-Bold")
       .text(detail.value, 200, y + 2);
 
-    doc.font("Helvetica"); // Reset font
+    doc.font("Helvetica");
     doc.moveDown(0.8);
   });
 
-  // Amount section with highlight
+  // 💰 Amount Section
   doc.moveDown(1);
   doc.rect(50, doc.y, 500, 40).fill(primaryColor);
 
@@ -118,16 +105,15 @@ const generateBookingPDF = (booking, res) => {
     .fillColor("white")
     .fontSize(14)
     .text("Total Amount Paid:", 60, doc.y + 12);
-
   doc
     .fontSize(18)
     .font("Helvetica-Bold")
-    .text(`₹${booking.amount || "0"} `, 400, doc.y - 18);
+    .text(`₹${booking.amount || "0"}`, 400, doc.y - 18);
 
-  doc.font("Helvetica"); // Reset font
+  doc.font("Helvetica");
   doc.moveDown(3);
 
-  // Additional info box
+  // ℹ️ Additional Info Box
   doc.strokeColor(primaryColor).lineWidth(1).rect(50, doc.y, 500, 80).stroke();
 
   doc
@@ -154,7 +140,7 @@ const generateBookingPDF = (booking, res) => {
 
   doc.moveDown(3);
 
-  // Thank you message
+  // 🙏 Thank You
   doc
     .fillColor(accentColor)
     .fontSize(16)
@@ -167,7 +153,7 @@ const generateBookingPDF = (booking, res) => {
     .font("Helvetica")
     .text("We look forward to serving you.", { align: "center" });
 
-  // Footer
+  // 📅 Footer
   doc
     .fontSize(8)
     .fillColor(secondaryColor)
@@ -180,7 +166,7 @@ const generateBookingPDF = (booking, res) => {
       { align: "center" }
     );
 
-  // Add a subtle border around the entire document
+  // 🧱 Border
   doc
     .strokeColor("#e5e7eb")
     .lineWidth(1)
@@ -189,5 +175,3 @@ const generateBookingPDF = (booking, res) => {
 
   doc.end();
 };
-
-module.exports = generateBookingPDF;

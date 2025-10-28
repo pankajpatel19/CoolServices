@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const adminschema = new mongoose.Schema({
+const adminSchema = new mongoose.Schema({
   Name: {
     type: String,
     required: [true, "Name is required"],
@@ -23,6 +23,6 @@ const adminschema = new mongoose.Schema({
   },
 });
 
-const Admin = mongoose.model("Admin", adminschema);
+const Admin = mongoose.model("Admin", adminSchema);
 
-module.exports = Admin;
+export default Admin;

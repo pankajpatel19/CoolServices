@@ -1,17 +1,17 @@
-const cloudinary = require("cloudinary");
-const fs = require("fs");
+import cloudinary from "cloudinary";
+import fs from "fs";
 
-cloudinary.config({
+cloudinary.v2.config({
   cloud_name: process.env.CLOUDINARY_NAME,
   api_key: process.env.CLOUDINARY_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
 });
 
-const uploadFile = async (localFilePath) => {
+export const uploadFile = async (localFilePath) => {
   try {
     if (!localFilePath) return null;
 
-    const response = await cloudinary.uploader.upload(localFilePath, {
+    const response = await cloudinary.v2.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
 
@@ -30,5 +30,3 @@ const uploadFile = async (localFilePath) => {
     return null;
   }
 };
-
-module.exports = { uploadFile };

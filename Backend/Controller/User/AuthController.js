@@ -1,15 +1,15 @@
-const User = require("../../Models/User.js");
-const Admin = require("../../Models/Admin.js");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const { SignUpEmail } = require("../../utils/Sendmails.js");
-const {
+import User from "../../Models/User.js";
+import Admin from "../../Models/Admin.js";
+import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { SignUpEmail } from "../../utils/Sendmails.js";
+import {
   userRegistrationSchema,
   loginRegisterSchema,
-} = require("../../MiddleWare/Joi.js");
-const { uploadFile } = require("../../utils/cloudinary.js");
+} from "../../MiddleWare/Joi.js";
+import { uploadFile } from "../../utils/cloudinary.js";
 
-const login = async (req, res) => {
+export const login = async (req, res) => {
   try {
     const { error, value } = loginRegisterSchema.validate(req.body);
     if (error) {
@@ -59,7 +59,7 @@ const login = async (req, res) => {
   }
 };
 
-const signup = async (req, res) => {
+export const signup = async (req, res) => {
   try {
     const { error, value } = userRegistrationSchema.validate(req.body);
     if (error) {
@@ -83,9 +83,11 @@ const signup = async (req, res) => {
 
     await newUser.save();
 
-    SignUpEmail(newUser).catch((err) =>
-      console.error("Signup email failed:", err)
-    );
+    try {
+      await SignUpEmail(newUser);
+    } catch (err) {
+      console.error("Signup email failed:", err);
+    }
 
     const token = jwt.sign({ email: newUser.email }, process.env.JWT_SECRET, {
       expiresIn: "1d",
@@ -107,7 +109,7 @@ const signup = async (req, res) => {
   }
 };
 
-const logout = (req, res) => {
+export const logout = (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
@@ -121,7 +123,7 @@ const logout = (req, res) => {
   }
 };
 
-const updateProfile = async (req, res) => {
+export const updateProfile = async (req, res) => {
   try {
     const { userName, email, phone, location } = req.body;
 
@@ -152,7 +154,7 @@ const updateProfile = async (req, res) => {
   }
 };
 
-const fetchUser = async (req, res) => {
+export const fetchUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id).select("-password");
 
@@ -167,7 +169,7 @@ const fetchUser = async (req, res) => {
   }
 };
 
-const updateImagePro = async (req, res) => {
+export const updateImagePro = async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: "No image uploaded" });
@@ -198,12 +200,4 @@ const updateImagePro = async (req, res) => {
     console.error("Update image error:", error);
     res.status(500).json({ message: "Internal Server Error", error });
   }
-};
-module.exports = {
-  login,
-  signup,
-  logout,
-  updateProfile,
-  fetchUser,
-  updateImagePro,
 };

@@ -1,5 +1,5 @@
-const jwt = require("jsonwebtoken");
-const User = require("../Models/User");
+import jwt from "jsonwebtoken";
+import User from "../Models/User.js";
 
 const userAuth = async (req, res, next) => {
   let token;
@@ -12,8 +12,9 @@ const userAuth = async (req, res, next) => {
   }
 
   if (!token) {
-    return res.status(401).json({ message: "Not Authorized ! login again" });
+    return res.status(401).json({ message: "Not Authorized! Login again" });
   }
+
   try {
     const decode = jwt.verify(token, process.env.JWT_SECRET);
 
@@ -28,4 +29,4 @@ const userAuth = async (req, res, next) => {
   }
 };
 
-module.exports = userAuth;
+export default userAuth;

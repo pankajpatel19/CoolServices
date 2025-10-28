@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 const technicianLocationSchema = new mongoose.Schema({
   technicianId: {
@@ -6,9 +6,18 @@ const technicianLocationSchema = new mongoose.Schema({
     ref: "User",
     required: true,
   },
-  latitude: { type: Number, required: true },
-  longitude: { type: Number, required: true },
-  updatedAt: { type: Date, default: Date.now },
+  latitude: {
+    type: Number,
+    required: true,
+  },
+  longitude: {
+    type: Number,
+    required: true,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 const TechnicianLocation = mongoose.model(
@@ -16,4 +25,4 @@ const TechnicianLocation = mongoose.model(
   technicianLocationSchema
 );
 
-module.exports = TechnicianLocation;
+export default TechnicianLocation;

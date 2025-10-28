@@ -1,9 +1,9 @@
-const TechnicianLocation = require("../../Models/TechnicianLocation");
-const User = require("../../Models/User");
-const Booking = require("../../Models/Booking");
-const { TechReminder } = require("../../utils/Sendmails");
+import TechnicianLocation from "../../Models/TechnicianLocation.js";
+import User from "../../Models/User.js";
+import Booking from "../../Models/Booking.js";
+import { TechReminder } from "../../utils/Sendmails.js";
 
-const handleTech = async (req, res) => {
+export const handleTech = async (req, res) => {
   try {
     const technicians = await User.find({ userrole: "technician" }).lean();
 
@@ -18,7 +18,7 @@ const handleTech = async (req, res) => {
   }
 };
 
-const deleteTech = async (req, res) => {
+export const deleteTech = async (req, res) => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.id);
 
@@ -33,7 +33,7 @@ const deleteTech = async (req, res) => {
   }
 };
 
-const UpdateTechnician = async (req, res) => {
+export const UpdateTechnician = async (req, res) => {
   try {
     const id = req.params.id;
     const { technician } = req.body;
@@ -52,9 +52,11 @@ const UpdateTechnician = async (req, res) => {
       return res.status(404).json({ message: "Booking not found" });
     }
 
-    TechReminder(updatedBooking).catch((err) =>
-      console.error("TechReminder failed:", err)
-    );
+    try {
+      await TechReminder(updatedBooking);
+    } catch (err) {
+      console.error("TechReminder failed:", err);
+    }
 
     res.status(200).json({
       message: "Technician assigned successfully",
@@ -66,7 +68,7 @@ const UpdateTechnician = async (req, res) => {
   }
 };
 
-const updateLocation = async (req, res) => {
+export const updateLocation = async (req, res) => {
   try {
     const { technicianId, latitude, longitude } = req.body;
 
@@ -90,7 +92,7 @@ const updateLocation = async (req, res) => {
   }
 };
 
-const getAllLocations = async (req, res) => {
+export const getAllLocations = async (req, res) => {
   try {
     const locations = await TechnicianLocation.find()
       .populate("technicianId", "phone userName")
@@ -105,12 +107,4 @@ const getAllLocations = async (req, res) => {
     console.error("Error fetching technician locations:", error);
     res.status(500).json({ message: "Error fetching locations", error });
   }
-};
-
-module.exports = {
-  handleTech,
-  deleteTech,
-  UpdateTechnician,
-  updateLocation,
-  getAllLocations,
 };

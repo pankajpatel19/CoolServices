@@ -1,9 +1,9 @@
-const Booking = require("../../Models/Booking");
-const User = require("../../Models/User");
-const generateBookingPDF = require("../../utils/generateBookingPDF");
-const { sendBookEmail } = require("../../utils/Sendmails");
+import Booking from "../../Models/Booking.js";
+import User from "../../Models/User.js";
+import { generateBookingPDF } from "../../utils/generateBookingPDF.js";
+import { sendBookEmail } from "../../utils/Sendmails.js";
 
-const Showbooking_Dashboard = async (req, res) => {
+export const Showbooking_Dashboard = async (req, res) => {
   try {
     const [total, newBooking, InProgress, Done] = await Promise.all([
       Booking.countDocuments(),
@@ -19,7 +19,7 @@ const Showbooking_Dashboard = async (req, res) => {
   }
 };
 
-const bookData = async (req, res) => {
+export const bookData = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {
@@ -32,7 +32,7 @@ const bookData = async (req, res) => {
   }
 };
 
-const AddBooking = async (req, res) => {
+export const AddBooking = async (req, res) => {
   try {
     const newBooking = new Booking({ ...req.body, user: req.user.id });
     await newBooking.save();
@@ -41,16 +41,17 @@ const AddBooking = async (req, res) => {
       console.error("Email send failed:", err)
     );
 
-    res
-      .status(201)
-      .json({ message: "Booking created successfully", newBooking });
+    res.status(201).json({
+      message: "Booking created successfully",
+      newBooking,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error creating booking", error });
   }
 };
 
-const ShowBooking = async (req, res) => {
+export const ShowBooking = async (req, res) => {
   try {
     const showdata = await Booking.find().sort({ date: -1 }).lean();
     res.status(200).json(showdata);
@@ -60,10 +61,9 @@ const ShowBooking = async (req, res) => {
   }
 };
 
-const DeleteBooking = async (req, res) => {
+export const DeleteBooking = async (req, res) => {
   try {
     const id = req.params.id;
-    console.log(id);
 
     const deleted = await Booking.findByIdAndDelete(id);
     if (!deleted) {
@@ -76,7 +76,7 @@ const DeleteBooking = async (req, res) => {
   }
 };
 
-const UpdateBooking = async (req, res) => {
+export const UpdateBooking = async (req, res) => {
   try {
     const { status } = req.body;
 
@@ -101,7 +101,7 @@ const UpdateBooking = async (req, res) => {
   }
 };
 
-const history = async (req, res) => {
+export const history = async (req, res) => {
   try {
     const historyData = await Booking.find({ user: req.params.id })
       .sort({ date: -1 })
@@ -120,7 +120,7 @@ const history = async (req, res) => {
   }
 };
 
-const historyBookingPDF = async (req, res) => {
+export const historyBookingPDF = async (req, res) => {
   try {
     const booking = await Booking.findById(req.params.id);
     if (!booking) {
@@ -133,7 +133,7 @@ const historyBookingPDF = async (req, res) => {
   }
 };
 
-const searchData = async (req, res) => {
+export const searchData = async (req, res) => {
   const { startDate, endDate } = req.query;
 
   if (!startDate || !endDate) {
@@ -159,7 +159,7 @@ const searchData = async (req, res) => {
   }
 };
 
-const getStatusBooking = async (req, res) => {
+export const getStatusBooking = async (req, res) => {
   const { status } = req.query;
 
   try {
@@ -174,7 +174,7 @@ const getStatusBooking = async (req, res) => {
     }
 
     const bookings = await Booking.find({
-      $and: [{ status: status }, { user: req.user.id }],
+      $and: [{ status }, { user: req.user.id }],
     }).lean();
 
     if (bookings.length === 0) {
@@ -190,7 +190,7 @@ const getStatusBooking = async (req, res) => {
   }
 };
 
-const AdminStatusBooking = async (req, res) => {
+export const AdminStatusBooking = async (req, res) => {
   const { status } = req.query;
 
   try {
@@ -203,7 +203,7 @@ const AdminStatusBooking = async (req, res) => {
       return res.status(200).json(bookings);
     }
 
-    const bookings = await Booking.find({ status: status }).lean();
+    const bookings = await Booking.find({ status }).lean();
     if (bookings.length === 0) {
       return res
         .status(404)
@@ -217,7 +217,7 @@ const AdminStatusBooking = async (req, res) => {
   }
 };
 
-const getUsers = async (req, res) => {
+export const getUsers = async (req, res) => {
   try {
     const users = await User.find({ userrole: "customer" }).lean();
     res.status(200).json(users);
@@ -227,7 +227,7 @@ const getUsers = async (req, res) => {
   }
 };
 
-const getBookingPerUser = async (req, res) => {
+export const getBookingPerUser = async (req, res) => {
   try {
     const BookingPerUser = await Booking.find({ user: req.params.id }).lean();
     if (BookingPerUser.length === 0) {
@@ -240,20 +240,4 @@ const getBookingPerUser = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Error fetching user bookings", error });
   }
-};
-
-module.exports = {
-  AddBooking,
-  ShowBooking,
-  Showbooking_Dashboard,
-  UpdateBooking,
-  DeleteBooking,
-  bookData,
-  history,
-  searchData,
-  historyBookingPDF,
-  getStatusBooking,
-  AdminStatusBooking,
-  getUsers,
-  getBookingPerUser,
 };

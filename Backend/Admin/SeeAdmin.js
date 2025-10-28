@@ -1,8 +1,9 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+import mongoose from "mongoose";
+import bcrypt from "bcrypt";
+import Admin from "../Models/Admin.js";
 
-const mongoose = require("mongoose");
-const Admin = require("../Models/Admin");
-const bcrypt = require("bcrypt");
+dotenv.config();
 
 const Murl = process.env.MONGO_URL;
 mongoose.connect(Murl);
@@ -17,9 +18,9 @@ const createAdmin = async () => {
     });
 
     await admin.save();
-    console.log("admin created");
+    console.log("Admin created successfully!");
   } catch (error) {
-    console.log(error);
+    console.error("Error creating admin:", error);
   } finally {
     mongoose.disconnect();
   }

@@ -1,6 +1,6 @@
-const Joi = require("joi");
+import Joi from "joi";
 
-const userRegistrationSchema = Joi.object({
+export const userRegistrationSchema = Joi.object({
   userName: Joi.string().min(3).required().messages({
     "string.min": "Username must be at least 3 characters long",
     "any.required": "Username is required",
@@ -39,7 +39,7 @@ const userRegistrationSchema = Joi.object({
   coverImage: Joi.string().uri().optional(),
 });
 
-const loginRegisterSchema = Joi.object({
+export const loginRegisterSchema = Joi.object({
   email: Joi.string()
     .email({ tlds: { allow: false } })
     .required()
@@ -52,6 +52,7 @@ const loginRegisterSchema = Joi.object({
     "string.min": "Password must be at least 6 characters long",
     "any.required": "Password is required",
   }),
+
   userrole: Joi.string()
     .valid("customer", "technician", "admin")
     .required()
@@ -59,5 +60,3 @@ const loginRegisterSchema = Joi.object({
       "any.required": "User role is required",
     }),
 });
-
-module.exports = { userRegistrationSchema, loginRegisterSchema };

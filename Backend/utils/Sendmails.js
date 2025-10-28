@@ -1,6 +1,5 @@
-const nodemailer = require("nodemailer");
-
-const transporter = nodemailer.createTransport({
+import nodemailer from "nodemailer";
+export const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
@@ -8,7 +7,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-const sendBookEmail = async (booking) => {
+export const sendBookEmail = async (booking) => {
   await transporter.sendMail({
     from: `"Service Booking" <${process.env.EMAIL_USER}>`,
     to: booking.email || process.env.ADMIN_EMAIL,
@@ -159,7 +158,7 @@ const sendBookEmail = async (booking) => {
   });
 };
 
-const SignUpEmail = async (register) => {
+export const SignUpEmail = async (register) => {
   await transporter.sendMail({
     from: `"Cool Service Store" <${process.env.EMAIL_USER}>`,
     to: register.email || process.env.ADMIN_EMAIL,
@@ -332,7 +331,7 @@ const SignUpEmail = async (register) => {
   });
 };
 
-const alertUser = async (data) => {
+export const alertUser = async (data) => {
   await transporter.sendMail({
     from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
     to: data.email || process.env.ADMIN_EMAIL,
@@ -647,7 +646,7 @@ const alertUser = async (data) => {
   });
 };
 
-const TechReminder = async (job) => {
+export const TechReminder = async (job) => {
   await transporter.sendMail({
     from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
     to: job.technicianEmail || process.env.ADMIN_EMAIL,
@@ -1024,5 +1023,3 @@ const TechReminder = async (job) => {
     `,
   });
 };
-
-module.exports = { sendBookEmail, SignUpEmail, alertUser, TechReminder };

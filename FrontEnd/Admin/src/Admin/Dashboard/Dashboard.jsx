@@ -90,7 +90,10 @@ function Dashboard() {
       });
 
       toast.success(res.data.message);
-      setbooking(res.data.bookings);
+      setbooking(res.data);
+      setTimeout(() => {
+        setStatus("");
+      }, 5000);
     } catch (error) {
       toast.error(error.response.data.message);
     }

@@ -22,8 +22,7 @@ import api from "../../../../Utils/axios";
 function History() {
   const { history, loading, setHistory } = useHistoryData();
   const [status, setStatus] = useState("");
-
-  // console.log(history);
+  console.log(history.length);
 
   const downloadReciept = async (id) => {
     try {
@@ -46,7 +45,8 @@ function History() {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       toast.success(res.data.message);
-      setHistory(res.data.bookings);
+
+      setHistory(res.data);
     } catch (error) {
       toast.error(error.response.data.message);
     }
@@ -169,7 +169,6 @@ function History() {
                 transition={{ delay: 0.1 * idx, duration: 0.5 }}
                 className="bg-white/90 backdrop-blur-xl rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-300 overflow-hidden border border-white/40 group hover:-translate-y-1"
               >
-                {/* Enhanced Card Header */}
                 <div
                   className={`${
                     item.status === "Done"
@@ -177,7 +176,6 @@ function History() {
                       : "bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"
                   } text-white px-6 sm:px-8 py-5 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 relative overflow-hidden`}
                 >
-                  {/* Decorative Pattern */}
                   <div className="absolute inset-0 opacity-10">
                     <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -translate-y-1/2 translate-x-1/2"></div>
                     <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full translate-y-1/2 -translate-x-1/2"></div>

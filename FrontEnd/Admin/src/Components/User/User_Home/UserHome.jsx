@@ -5,7 +5,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import StateCard from "./StateCard";
 import ComplainBox from "./Complaints/ComplainBox";
-import { User } from "lucide-react";
+import { User2 } from "lucide-react";
 
 function UserHome() {
   const [User, setUser] = useState("");
@@ -89,8 +89,10 @@ function UserHome() {
                     <div className="w-16 h-16 mt-5 sm:w-20 sm:h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                       <img
                         src={
-                          User.avatar || (
-                            <User className="w-5 h-5 text-gray-500" />
+                          User.avatar === "undefined" ? (
+                            <User2 className="w-1 h-2 " />
+                          ) : (
+                            User.avatar
                           )
                         }
                         className="w-full h-full object-cover"

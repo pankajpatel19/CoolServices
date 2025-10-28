@@ -24,6 +24,7 @@ const deleteTech = async (req, res) => {
 
 const UpdateTechnician = async (req, res) => {
   let id = req.params.id;
+  console.log(id);
 
   const updatebook = await Booking.findByIdAndUpdate(id, {
     technician: req.body.technician,

@@ -1,21 +1,19 @@
+import nodemailer from "nodemailer";
 import dotenv from "dotenv";
 dotenv.config();
-import nodemailer from "nodemailer";
-import { Resend } from "resend";
-const resend = new Resend(process.env.RESEND_API_KEY);
 
-// export const transporter = nodemailer.createTransport({
-//   host: "smtp.gmail.com",
-//   port: 465,
-//   secure: true, // 465 for SSL
-//   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
-//   },
-// });
+export const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // 465 for SSL
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 export const sendBookEmail = async (booking) => {
-  await resend.emails.send({
+  await transporter.sendMail({
     from: `"Service Booking" <${process.env.EMAIL_USER}>`,
     to: booking.email || process.env.ADMIN_EMAIL,
     subject: `Booking Confirmed - ${booking.appliance} Service`,
@@ -166,7 +164,7 @@ export const sendBookEmail = async (booking) => {
 };
 
 export const SignUpEmail = async (register) => {
-  await resend.emails.send({
+  await transporter.sendMail({
     from: `"Cool Service Store" <${process.env.EMAIL_USER}>`,
     to: register.email || process.env.ADMIN_EMAIL,
     subject: "Welcome to Cool Service Store! 🎉",
@@ -339,7 +337,7 @@ export const SignUpEmail = async (register) => {
 };
 
 export const alertUser = async (data) => {
-  await resend.emails.send({
+  await transporter.sendMail({
     from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
     to: data.email || process.env.ADMIN_EMAIL,
     subject: `Service Request Confirmed ✅ - #${data.requestId || "PENDING"}`,
@@ -654,7 +652,7 @@ export const alertUser = async (data) => {
 };
 
 export const TechReminder = async (job) => {
-  await resend.emails.send({
+  await transporter.sendMail({
     from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
     to: job.technicianEmail || process.env.ADMIN_EMAIL,
     subject: `🛠 New Job Assigned - Service #${job.id}`,
@@ -1032,22 +1030,15 @@ export const TechReminder = async (job) => {
 };
 
 export const forget = async (email, user, resetLink) => {
-  try {
-    await resend.emails.send({
-      from: "Cool Services <noreply@coolservices.com>", // You can customize this
-      to: email,
-      subject: "Password Reset Link",
-      html: `
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Password Reset Link",
+    html: `
         <h2>Password Reset Request</h2>
         <p>Hello ${user.userName},</p>
-        <p>Click the link below to reset your password. This link will expire in 10 minutes:</p>
-        <a href="${resetLink}" target="_blank">${resetLink}</a>
+        <p>Click below link to reset your password. This link will expire in 10 minutes:</p>
+        <a href="${resetLink}">${resetLink}</a>
       `,
-    });
-
-    console.log("✅ Password reset email sent to", email);
-  } catch (error) {
-    console.error("❌ Resend email error:", error);
-    throw new Error(error.message || "Email sending failed");
-  }
+  });
 };

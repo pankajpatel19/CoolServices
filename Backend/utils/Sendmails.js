@@ -1,6 +1,11 @@
 import nodemailer from "nodemailer";
+import dotenv from "dotenv";
+dotenv.config();
+
 export const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // 465 for SSL
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
@@ -1021,5 +1026,19 @@ export const TechReminder = async (job) => {
       </body>
       </html>
     `,
+  });
+};
+
+export const forget = async (email, user, resetLink) => {
+  await transporter.sendMail({
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: "Password Reset Link",
+    html: `
+        <h2>Password Reset Request</h2>
+        <p>Hello ${user.userName},</p>
+        <p>Click below link to reset your password. This link will expire in 10 minutes:</p>
+        <a href="${resetLink}">${resetLink}</a>
+      `,
   });
 };

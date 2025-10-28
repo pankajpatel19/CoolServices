@@ -32,6 +32,8 @@ const userSchema = new mongoose.Schema({
   coverImage: {
     type: String,
   },
+  resetPasswordToken: String,
+  resetPasswordExpires: Date,
 });
 
 const User = mongoose.model("User", userSchema);

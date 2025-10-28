@@ -50,18 +50,18 @@ import {
   SubmitComplaints,
   ShowComplaints,
 } from "./Controller/Complain/complain.js";
+import {
+  forgotPassword,
+  resetPassword,
+} from "./Controller/Password/forgot-Password.js";
 
-// 🔹 Load environment variables
 dotenv.config();
 
-// 🔹 Initialize Groq
 const groq = new Groq({ apiKey: process.env.GROQ_API });
 
-// 🔹 Initialize Express
 const app = express();
 const port = process.env.PORT || 8888;
 
-// 🔹 Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -74,10 +74,7 @@ app.use(
   })
 );
 
-// 🔹 MongoDB Connection
 const Murl = process.env.MONGO_URL;
-
-// ========== ROUTES ==========
 
 // Login / Auth routes
 app.post("/login", login);
@@ -148,51 +145,8 @@ app.post("/home/chat", async (req, res) => {
   }
 });
 
-// User location service
-const serviceArea = [
-  "Navsari City",
-  "Gandevi",
-  "Chikhli",
-  "Mollakhadi",
-  "Vejalpur",
-  "Bhimrad",
-  "Dandi",
-  "Khergam",
-  "Pardi",
-  "Amalsad",
-  "Vastrapur",
-  "Navrangpura",
-  "Satellite",
-  "Bodakdev",
-  "Paldi",
-  "Maninagar",
-  "Thaltej",
-  "Naranpura",
-  "Bapunagar",
-  "Gota",
-  "Ambawadi",
-  "Ellisbridge",
-  "Isanpur",
-  "Odhav",
-  "Vejalpur",
-  "Kankaria",
-  "Sarkhej",
-  "Motera",
-  "Gandhinagar Road",
-  "Khodiyar",
-  "Naroda",
-  "New Ranip",
-  "Old Ranip",
-  "Juhapura",
-  "Chandkheda",
-  "Vejalpur",
-  "Vasna",
-  "Vishala",
-];
-
-app.get("/home/userLocation", (req, res) => {
-  res.json({ serviceArea });
-});
+app.post("/forgot-password", forgotPassword);
+app.post("/reset-password/:token", resetPassword);
 
 // Start server
 app.listen(port, () => {

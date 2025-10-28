@@ -34,6 +34,8 @@ import HistoryFilter from "../src/Components/User/History/HistoryFilter.jsx";
 import ShowUser from "../src/Admin/Users/ShowUser.jsx";
 import BookingPerUser from "../src/Admin/Users/BookingPerUser.jsx";
 import ShowComplaints from "../src/Components/User/User_Home/Complaints/ShowComplaints.jsx";
+import ForgetPassword from "../src/Components/User/User_Home/ForgetPassword.jsx";
+import ResetPassword from "../src/Components/User/User_Home/ResetPassword.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -85,6 +87,8 @@ const router = createBrowserRouter(
 
         <Route path="getdata/TechProfile" element={<TechProfile />} />
       </Route>
+      <Route path="/forget-password" element={<ForgetPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
 
       <Route path="*" element={<NotFound />} />
       <Route path="/unauthorized" element={<Unauthorized />} />

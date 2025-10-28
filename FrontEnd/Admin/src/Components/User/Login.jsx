@@ -202,6 +202,19 @@ function Login() {
           transition={{ delay: 0.6, duration: 0.4 }}
           className="mt-6 text-center text-sm text-gray-600"
         >
+          <button
+            className="text-blue-600 hover:text-blue-700 font-medium ml-1"
+            onClick={() => navigate("/forget-password")}
+          >
+            Forget Password
+          </button>
+        </motion.div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.6, duration: 0.4 }}
+          className="mt-6 text-center text-sm text-gray-600"
+        >
           Don't have an account?
           <button
             className="text-blue-600 hover:text-blue-700 font-medium ml-1"

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Lock, CheckCircle } from "lucide-react";
+import api from "../../../../Utils/axios";
 
 function ResetPassword() {
   const { token } = useParams();
@@ -20,14 +20,9 @@ function ResetPassword() {
 
     setLoading(true);
     try {
-      console.log();
-
-      const res = await axios.post(
-        `https://cool-services.vercel.app/reset-password/${token}`,
-        {
-          newPassword: password,
-        }
-      );
+      const res = await api.post(`/reset-password/${token}`, {
+        newPassword: password,
+      });
       setMessage(res.data.message);
       setTimeout(() => navigate("/login"), 2000);
     } catch (error) {

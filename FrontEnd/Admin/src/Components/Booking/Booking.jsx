@@ -53,14 +53,14 @@ const Booking = () => {
     setIsSubmitting(true);
 
     try {
-      await api.post("/Home/addbooking", form, {
+      const res = await api.post("/Home/addbooking", form, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
       showNotification("Booking Successfully");
       setIsSubmitting(false);
-    } catch (e) {
-      console.log("gadbAD");
+    } catch (error) {
+      console.log(error?.message);
     }
     setForm({
       appliance: "",

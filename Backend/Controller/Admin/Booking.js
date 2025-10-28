@@ -34,14 +34,6 @@ const bookData = async (req, res) => {
 
 const AddBooking = async (req, res) => {
   try {
-    const { service, issueDate } = req.body;
-
-    if (!service || !issueDate) {
-      return res
-        .status(400)
-        .json({ message: "Missing required fields (service, issueDate)" });
-    }
-
     const newBooking = new Booking({ ...req.body, user: req.user.id });
     await newBooking.save();
 

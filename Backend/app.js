@@ -99,7 +99,7 @@ app.get("/showbooking/:id", bookData);
 //delete booking
 app.delete("/deletebooking/:id", userAuth, DeleteBooking);
 //update
-app.patch("/updatebooking/:id", userAuth, UpdateBooking);
+app.patch("/updatebooking/:id", UpdateBooking);
 app.patch("/updateTechnician/:id", UpdateTechnician);
 app.get("/profile/:id", fetchUser);
 

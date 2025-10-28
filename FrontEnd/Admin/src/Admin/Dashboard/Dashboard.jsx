@@ -47,25 +47,34 @@ function Dashboard() {
     );
     if (!confirm) return;
     try {
-      await api.delete(`/deletebooking/${id}`);
+      const res = await api.delete(`/deletebooking/${id}`, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+      });
+      console.log(res.data.message);
+
       toast.success("Deleted successfully!");
       setTimeout(() => fetchBookings(), 500);
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
+      toast.error(error.message);
     }
   };
 
   const updatebooking = async (id, val) => {
     try {
-      await api.patch(`/updatebooking/${id}`, {
-        status: val,
-      });
-      toast.success("Updated successfully!");
+      const res = await api.patch(
+        `/updatebooking/${id}`,
+
+        {
+          status: val,
+        }
+      );
+      console.log(res);
+
+      toast.success(res.data.message);
       fetchBookings();
     } catch (error) {
       console.log(error);
-      toast.error("Something went wrong");
+      toast.error(error.message);
     }
   };
 
@@ -75,7 +84,7 @@ function Dashboard() {
         technician: val,
       });
 
-      toast.success("Updated successfully!");
+      toast.success(tech.data.message);
       fetchBookings();
     } catch (error) {
       console.log(error);

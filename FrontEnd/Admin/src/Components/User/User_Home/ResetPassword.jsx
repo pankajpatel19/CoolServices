@@ -20,10 +20,8 @@ function ResetPassword() {
 
     setLoading(true);
     try {
-      console.log(token);
-
       const res = await axios.post(
-        `http://localhost:10000/reset-password/${token}`,
+        `${import.meta.env.FRONTEND_API_URL}/reset-password/${token}`,
         { newPassword: password }
       );
       setMessage(res.data.message);

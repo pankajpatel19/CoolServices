@@ -2,6 +2,8 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import User from "../../Models/User.js";
 import { forget } from "../../utils/Sendmails.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const forgotPassword = async (req, res) => {
   try {
@@ -18,7 +20,7 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    const resetLink = `http://localhost:5173/reset-password/${token}`;
+    const resetLink = `${process.env.FRONTEND_PRODUCTION_VERCEL}/reset-password/${token}`;
 
     await forget(email, user, resetLink);
 
@@ -35,7 +37,6 @@ export const resetPassword = async (req, res) => {
   try {
     const { token } = req.params;
     const { newPassword } = req.body;
-    console.log(token);
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);

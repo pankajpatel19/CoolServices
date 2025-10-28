@@ -1,19 +1,11 @@
-import nodemailer from "nodemailer";
+import sgMail from "@sendgrid/mail";
 import dotenv from "dotenv";
 dotenv.config();
 
-export const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // 465 for SSL
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS,
-  },
-});
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendBookEmail = async (booking) => {
-  await transporter.sendMail({
+  await sgMail.send({
     from: `"Service Booking" <${process.env.EMAIL_USER}>`,
     to: booking.email || process.env.ADMIN_EMAIL,
     subject: `Booking Confirmed - ${booking.appliance} Service`,
@@ -164,7 +156,7 @@ export const sendBookEmail = async (booking) => {
 };
 
 export const SignUpEmail = async (register) => {
-  await transporter.sendMail({
+  await sgMail.send({
     from: `"Cool Service Store" <${process.env.EMAIL_USER}>`,
     to: register.email || process.env.ADMIN_EMAIL,
     subject: "Welcome to Cool Service Store! 🎉",
@@ -337,7 +329,7 @@ export const SignUpEmail = async (register) => {
 };
 
 export const alertUser = async (data) => {
-  await transporter.sendMail({
+  await sgMail.send({
     from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
     to: data.email || process.env.ADMIN_EMAIL,
     subject: `Service Request Confirmed ✅ - #${data.requestId || "PENDING"}`,
@@ -652,7 +644,7 @@ export const alertUser = async (data) => {
 };
 
 export const TechReminder = async (job) => {
-  await transporter.sendMail({
+  await sgMail.send({
     from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
     to: job.technicianEmail || process.env.ADMIN_EMAIL,
     subject: `🛠 New Job Assigned - Service #${job.id}`,
@@ -1030,15 +1022,24 @@ export const TechReminder = async (job) => {
 };
 
 export const forget = async (email, user, resetLink) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Password Reset Link",
-    html: `
+  try {
+    await sgMail.send({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset Link",
+      html: `
         <h2>Password Reset Request</h2>
         <p>Hello ${user.userName},</p>
-        <p>Click below link to reset your password. This link will expire in 10 minutes:</p>
+        <p>Click the link below to reset your password. This link will expire in 10 minutes:</p>
         <a href="${resetLink}">${resetLink}</a>
       `,
-  });
+    });
+    console.log("Password reset email sent successfully!");
+  } catch (error) {
+    if (error.response) {
+      console.error(error.response.body);
+    } else {
+      console.error(error);
+    }
+  }
 };

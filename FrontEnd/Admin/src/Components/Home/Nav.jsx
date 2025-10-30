@@ -330,16 +330,23 @@ function Nav() {
 
                 <Link
                   to="/Home/addbooking"
-                  state={{ user }}
                   onClick={() => setMobileMenuOpen(false)}
                   className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
                 >
                   <Wrench className="w-5 h-5 inline mr-3" />
                   Book Service
                 </Link>
+
+                <Link
+                  to="/Home/Services"
+                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <Cog className="w-5 h-5 mr-3 text-gray-600" />
+                  Services We Provide
+                </Link>
                 <Link
                   to={`/Home/complain/${user._id}`}
-                  state={{ user }}
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
                 >

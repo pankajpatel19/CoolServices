@@ -179,10 +179,17 @@ function Customer() {
                 <div className="absolute -inset-3 bg-gradient-to-r from-green-400 to-green-600 rounded-2xl opacity-30 group-hover:opacity-50 blur transition-opacity duration-300"></div>
 
                 <a
-                  href="https://wa.me/8511994480"
+                  href={`https://wa.me/${
+                    import.meta.env.VITE_WP
+                  }?text=Hello%20I%20need%20help`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="relative inline-flex items-center gap-4 px-8 py-4 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white rounded-2xl font-bold text-lg transition-all duration-300 shadow-2xl border border-green-400/50 backdrop-blur-sm group"
+                  className="relative
+                  inline-flex items-center gap-4 px-8 py-4 bg-gradient-to-r
+                  from-green-500 to-green-600 hover:from-green-600
+                  hover:to-green-700 text-white rounded-2xl font-bold text-lg
+                  transition-all duration-300 shadow-2xl border
+                  border-green-400/50 backdrop-blur-sm group"
                 >
                   <motion.i
                     animate={{
@@ -196,14 +203,12 @@ function Customer() {
                     }}
                     className="fa-brands fa-whatsapp text-2xl drop-shadow-lg"
                   />
-
                   <div className="flex flex-col items-start">
                     <span className="text-sm opacity-90 font-medium">
                       Chat on
                     </span>
                     <span className="text-xl font-bold">WhatsApp</span>
                   </div>
-
                   {/* Animated arrow */}
                   <motion.div
                     animate={{ x: [0, 5, 0] }}

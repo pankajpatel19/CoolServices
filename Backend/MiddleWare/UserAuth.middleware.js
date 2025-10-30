@@ -1,9 +1,10 @@
 import jwt from "jsonwebtoken";
 import User from "../Models/User.model.js";
+import Admin from "../Models/Admin.model.js";
 
 const userAuth = async (req, res, next) => {
   let token;
-
+  let user;
   if (
     req.headers.authorization &&
     req.headers.authorization.startsWith("Bearer ")

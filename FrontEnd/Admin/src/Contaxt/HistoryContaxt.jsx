@@ -17,7 +17,12 @@ export const HistoryProvider = ({ children }) => {
       if (!userId) return;
       try {
         const res = await axios.get(
-          `https://coolservices.onrender.com/Home/history/${userId}`
+          `${import.meta.env.VITE_API_URL}/Home/history/${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
         );
 
         setHistory(res.data);

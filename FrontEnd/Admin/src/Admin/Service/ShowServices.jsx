@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 
 function ShowServices() {
   const [services, setServices] = useState([]);
+  const [role, setRole] = useState("");
   const [appliance, setAppliance] = useState("AC");
 
   const fetchServices = async () => {
@@ -14,7 +15,10 @@ function ShowServices() {
       const { data } = await api.get(
         `${
           import.meta.env.VITE_API_URL
-        }/services/appliance?appliance=${appliance}`
+        }/services/appliance?appliance=${appliance}`,
+        {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
       );
 
       setServices(data);
@@ -28,6 +32,8 @@ function ShowServices() {
   };
 
   useEffect(() => {
+    let token = JSON.parse(localStorage.getItem("user"));
+    setRole(token.role);
     fetchServices();
   }, [appliance]);
 
@@ -164,9 +170,15 @@ function ShowServices() {
                           </div>
                         </div>
 
-                        <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 active:scale-95 transition-all shadow-md hover:shadow-lg">
-                          Book Now
-                        </button>
+                        {role !== "admin" ? (
+                          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 active:scale-95 transition-all shadow-md hover:shadow-lg">
+                            Book Now
+                          </button>
+                        ) : (
+                          <button className="bg-gradient-to-r from-red-600 to-red-900 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-red-700 hover:to-red-900 transform hover:scale-105 active:scale-95 transition-all shadow-md hover:shadow-lg">
+                            Delete
+                          </button>
+                        )}
                       </div>
                     </div>
                   </div>

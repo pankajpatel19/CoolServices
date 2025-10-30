@@ -21,7 +21,6 @@ import api from "../../../../Utils/axios";
 function History() {
   const { history, loading, setHistory } = useHistoryData();
   const [status, setStatus] = useState("");
-  console.log(history.length);
 
   const downloadReciept = async (id) => {
     try {

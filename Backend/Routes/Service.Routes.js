@@ -6,7 +6,7 @@ import {
 } from "../Controller/ServiceController/service.controller.js";
 const router = Router();
 
-router.get("/appliance", getServicesByAppliance);
+router.get("/appliance", userAuth, getServicesByAppliance);
 router.post("/add", userAuth, addService);
 
 export default router;

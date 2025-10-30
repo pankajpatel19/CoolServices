@@ -11,7 +11,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [form, setform] = useState({ email: "", password: "", userrole: "" });
+  const [form, setform] = useState({ phone: "", password: "", userrole: "" });
 
   const handlechange = (e) => {
     setform({ ...form, [e.target.name]: e.target.value });
@@ -115,16 +115,17 @@ function Login() {
             transition={{ delay: 0.3, duration: 0.4 }}
           >
             <label
-              htmlFor="email"
+              htmlFor="phone"
               className="block text-sm font-medium text-gray-700 mb-2"
             >
-              Email Address
+              Phone
             </label>
             <input
-              type="email"
-              placeholder="Enter your email"
-              name="email"
-              value={form.email}
+              type="number"
+              placeholder="Enter your phone Number"
+              name="phone"
+              min={10}
+              value={form.name}
               onChange={handlechange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
             />

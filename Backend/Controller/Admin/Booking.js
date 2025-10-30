@@ -220,6 +220,7 @@ export const AdminStatusBooking = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const users = await User.find({ userrole: "customer" }).lean();
+
     res.status(200).json(users);
   } catch (error) {
     console.error(error);

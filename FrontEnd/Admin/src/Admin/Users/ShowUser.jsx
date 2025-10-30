@@ -15,7 +15,8 @@ function ShowUser() {
       const response = await api.get("/api/admin/users", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setUsers(response.data.users);
+
+      setUsers(response.data);
     } catch (err) {
       setError("Failed to fetch users. Please try again.");
       console.error("Error fetching users:", err);

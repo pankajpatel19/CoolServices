@@ -16,6 +16,10 @@ const adminSchema = new mongoose.Schema({
       "Please fill a valid email address",
     ],
   },
+  phone: {
+    type: Number,
+    required: [true, "Contact is required"],
+  },
   password: {
     type: String,
     required: [true, "Password is required"],

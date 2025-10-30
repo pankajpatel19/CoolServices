@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { User, Mail, Lock, Eye, EyeOff, Sparkles } from "lucide-react";
+import { User, Mail, Lock, Eye, EyeOff, Sparkles, Phone } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
@@ -9,6 +9,7 @@ function SignUp() {
   const [form, setRegData] = useState({
     userName: "",
     email: "",
+    phone: "",
     password: "",
     userrole: "",
   });
@@ -175,6 +176,30 @@ function SignUp() {
                     value={form.email}
                     onChange={handlechange}
                     placeholder="Enter your email address"
+                    required
+                    className={inputClasses}
+                  />
+                  <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 scale-x-0 group-focus-within:scale-x-100 transition-transform duration-300 origin-left"></div>
+                </div>
+              </div>
+              <div className="group">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-bold text-gray-700 mb-3 group-hover:text-emerald-600 transition-colors duration-200"
+                >
+                  Phone
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Phone className="h-5 w-5 text-gray-400 group-focus-within:text-emerald-500 transition-colors duration-300" />
+                  </div>
+                  <input
+                    type="text"
+                    name="phone"
+                    id="username"
+                    value={form.phone}
+                    onChange={handlechange}
+                    placeholder="Enter your username"
                     required
                     className={inputClasses}
                   />

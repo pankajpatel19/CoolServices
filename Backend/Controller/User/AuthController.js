@@ -16,14 +16,15 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { email, password } = value;
-
-    let user = await User.findOne({ email }).lean();
-    let role = user?.userrole;
-
-    if (!user) {
-      user = await Admin.findOne({ email }).lean();
+    const { phone, password, userrole } = value;
+    let user;
+    let role;
+    if (userrole === "admin") {
+      user = await Admin.findOne({ phone }).lean();
       if (user) role = "admin";
+    } else {
+      user = await User.findOne({ phone }).lean();
+      role = user?.userrole;
     }
 
     if (!user) {
@@ -36,7 +37,7 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { id: user._id, email: user.email, role },
+      { id: user._id, email: user.email, phone: user.phone, role },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
     );
@@ -66,7 +67,7 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { userName, email, password, userrole } = value;
+    const { userName, email, password, userrole, phone } = value;
 
     const existing = await User.findOne({ email });
     if (existing) {
@@ -77,6 +78,7 @@ export const signup = async (req, res) => {
     const newUser = new User({
       userName,
       email,
+      phone,
       password: hashPassword,
       userrole,
     });

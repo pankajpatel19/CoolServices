@@ -1,6 +1,6 @@
-import TechnicianLocation from "../../Models/TechnicianLocation.js";
-import User from "../../Models/User.js";
-import Booking from "../../Models/Booking.js";
+import TechnicianLocation from "../../Models/TechnicianLocation.model.js";
+import User from "../../Models/User.model.js";
+import Booking from "../../Models/Booking.model.js";
 import { TechReminder } from "../../utils/Sendmails.js";
 
 export const handleTech = async (req, res) => {

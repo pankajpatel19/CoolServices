@@ -4,7 +4,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-import { upload } from "./MiddleWare/multer.js";
+import { upload } from "./MiddleWare/multer.midlleware.js";
 import {
   login,
   signup,
@@ -12,7 +12,7 @@ import {
   updateProfile,
   fetchUser,
   updateImagePro,
-} from "./Controller/User/AuthController.js";
+} from "./Controller/User/user.controller.js";
 
 import {
   AddBooking,
@@ -28,15 +28,15 @@ import {
   AdminStatusBooking,
   getUsers,
   getBookingPerUser,
-} from "./Controller/Admin/Booking.js";
+} from "./Controller/Admin/Booking.controller.js";
 
-import userAuth from "./MiddleWare/UserAuth.js";
+import userAuth from "./MiddleWare/UserAuth.middleware.js";
 
 import {
   techniciandata,
   getTechnician,
   TechStatusBooking,
-} from "./Controller/Technician/technician.js";
+} from "./Controller/Technician/technician.controller.js";
 
 import {
   handleTech,
@@ -44,16 +44,16 @@ import {
   UpdateTechnician,
   updateLocation,
   getAllLocations,
-} from "./Controller/Technician/TechnicianData.js";
+} from "./Controller/Technician/TechnicianData.controller.js";
 
 import {
   SubmitComplaints,
   ShowComplaints,
-} from "./Controller/Complain/complain.js";
+} from "./Controller/Complain/complain.controller.js";
 import {
   forgotPassword,
   resetPassword,
-} from "./Controller/Password/forgot-Password.js";
+} from "./Controller/Password/forgot-Password.controller.js";
 
 dotenv.config();
 

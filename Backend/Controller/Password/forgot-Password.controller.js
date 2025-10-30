@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import User from "../../Models/User.js";
+import User from "../../Models/User.model.js";
 import { forget } from "../../utils/Sendmails.js";
 import dotenv from "dotenv";
 dotenv.config();

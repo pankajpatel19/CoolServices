@@ -1,12 +1,12 @@
-import User from "../../Models/User.js";
-import Admin from "../../Models/Admin.js";
+import User from "../../Models/User.model.js";
+import Admin from "../../Models/Admin.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { SignUpEmail } from "../../utils/Sendmails.js";
 import {
   userRegistrationSchema,
   loginRegisterSchema,
-} from "../../MiddleWare/Joi.js";
+} from "../../MiddleWare/Joi.middleware.js";
 import { uploadFile } from "../../utils/cloudinary.js";
 
 export const login = async (req, res) => {

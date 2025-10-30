@@ -1,5 +1,5 @@
-import Booking from "../../Models/Booking.js";
-import User from "../../Models/User.js";
+import Booking from "../../Models/Booking.model.js";
+import User from "../../Models/User.model.js";
 
 export const techniciandata = async (req, res) => {
   const { username } = req.query;

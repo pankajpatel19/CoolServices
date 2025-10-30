@@ -1,5 +1,5 @@
-import Booking from "../../Models/Booking.js";
-import User from "../../Models/User.js";
+import Booking from "../../Models/Booking.model.js";
+import User from "../../Models/User.model.js";
 import { generateBookingPDF } from "../../utils/generateBookingPDF.js";
 import { sendBookEmail } from "../../utils/Sendmails.js";
 

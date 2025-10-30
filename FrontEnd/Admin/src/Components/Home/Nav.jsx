@@ -17,6 +17,7 @@ import {
   LogOut,
   UserPlus,
   LogIn,
+  Cog,
 } from "lucide-react";
 import Api from "../../../Utils/axios.js";
 
@@ -162,9 +163,11 @@ function Nav() {
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Wrench className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to="/Home/addbooking" state={{ user }}>
-                      Book Service
-                    </Link>
+                    <Link to="/Home/addbooking">Book Service</Link>
+                  </MenuItem>
+                  <MenuItem onClick={handleClose}>
+                    <Cog className="w-5 h-5 mr-3 text-gray-600" />
+                    <Link to="/Home/Services">Services We Provide</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <MessageSquareWarning className="w-5 h-5 mr-3 text-gray-600" />

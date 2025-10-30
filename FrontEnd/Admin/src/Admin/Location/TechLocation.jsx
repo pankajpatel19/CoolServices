@@ -17,7 +17,7 @@ function TechLocation() {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const res = await api.get("/api/admin/technicians-locations");
+        const res = await api.get("/admin/technicians-locations");
 
         setLocations(res.data);
       } catch (err) {

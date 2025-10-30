@@ -36,6 +36,8 @@ import BookingPerUser from "../src/Admin/Users/BookingPerUser.jsx";
 import ShowComplaints from "../src/Components/User/User_Home/Complaints/ShowComplaints.jsx";
 import ForgetPassword from "../src/Components/User/User_Home/ForgetPassword.jsx";
 import ResetPassword from "../src/Components/User/User_Home/ResetPassword.jsx";
+import AddService from "../src/Admin/Service/AddService.jsx";
+import ShowServices from "../src/Admin/Service/ShowServices.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -74,6 +76,8 @@ const router = createBrowserRouter(
           <Route path="handleTechnician" element={<HandleTechnician />} />
           <Route path="handleUser" element={<ShowUser />} />
           <Route path="userComplain/:id" element={<BookingPerUser />} />
+          <Route path="addService" element={<AddService />} />
+          <Route path="showService" element={<ShowServices />} />
 
           <Route path="TechLocations" element={<TechLocation />} />
         </Route>

@@ -1,4 +1,3 @@
-import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
@@ -23,17 +22,14 @@ function BookingPerUser() {
   const navigate = useNavigate();
   const [booking, setBooking] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const FetchBookingPerUser = async () => {
     try {
-      setError(null);
-      const response = await api.get(`/api/admin/getBookingPerUser/${id}`, {
+      const response = await api.get(`/admin/getBookingPerUser/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      setBooking(response.data.BookingPerUser);
+      setBooking(response.data);
     } catch (error) {
-      setError("Failed to fetch bookings. Please try again.");
       console.error(error);
     } finally {
       setLoading(false);
@@ -76,28 +72,6 @@ function BookingPerUser() {
           <p className="text-gray-600 text-lg font-medium">
             Loading bookings...
           </p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
-        <div className="max-w-4xl mx-auto">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-6 flex items-start gap-4">
-            <AlertCircle className="w-6 h-6 text-red-600 flex-shrink-0 mt-0.5" />
-            <div>
-              <h3 className="font-semibold text-red-900">Error</h3>
-              <p className="text-red-800 mt-1">{error}</p>
-              <button
-                onClick={FetchBookingPerUser}
-                className="mt-4 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors font-medium"
-              >
-                Try Again
-              </button>
-            </div>
-          </div>
         </div>
       </div>
     );

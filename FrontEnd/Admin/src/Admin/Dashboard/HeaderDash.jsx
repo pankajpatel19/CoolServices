@@ -1,10 +1,9 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
-import Api from "../../../Utils/axios.js";
 import api from "../../../Utils/axios.js";
+import { FanIcon, ShowerHead } from "lucide-react";
 
 const IconHome = () => (
   <svg
@@ -161,6 +160,18 @@ function HeaderDash() {
       handler: () => navigateAndClose("/admin/TechLocations"),
       icon: <IconLocation />,
       style: "bg-purple-600 hover:bg-purple-700",
+    },
+    {
+      label: "Add Service",
+      handler: () => navigateAndClose("/admin/addService"),
+      icon: <FanIcon />,
+      style: "bg-yellow-600 hover:bg-orange-700",
+    },
+    {
+      label: "Show Service",
+      handler: () => navigateAndClose("/admin/showService"),
+      icon: <ShowerHead />,
+      style: "bg-yellow-600 hover:bg-orange-700",
     },
   ];
 

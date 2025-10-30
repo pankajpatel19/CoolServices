@@ -28,7 +28,7 @@ function TechHome() {
 
   const fetchBookings = async () => {
     try {
-      const response = await api.get(`/api/techhome/getdata`, {
+      const response = await api.get(`/techhome/getdata`, {
         params: { username },
       });
 
@@ -78,7 +78,7 @@ function TechHome() {
     }
     const interval = setInterval(() => {
       navigator.geolocation.getCurrentPosition((pos) => {
-        fetch("http://localhost:10000/api/technician/update-location", {
+        fetch(`${import.meta.env.VITE_API_URL}/technician/update-location`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

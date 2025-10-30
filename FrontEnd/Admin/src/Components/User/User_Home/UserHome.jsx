@@ -219,6 +219,44 @@ function UserHome() {
                     />
                   </svg>
                 </Link>
+
+                <Link
+                  to="/Home/Services"
+                  className="relative flex-1 bg-white text-gray-800 px-8 py-5 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl hover:-translate-y-1 overflow-hidden"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+                  <svg
+                    className="relative w-6 h-6 group-hover:scale-110 transition-transform duration-300 text-gray-600 group-hover:text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                  <span className="relative group-hover:text-blue-700 transition-colors duration-300">
+                    Services We Provide
+                  </span>
+
+                  <svg
+                    className="relative w-5 h-5 group-hover:translate-x-1 transition-transform duration-300 text-gray-600 group-hover:text-blue-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2.5}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </Link>
               </motion.div>
 
               <motion.div

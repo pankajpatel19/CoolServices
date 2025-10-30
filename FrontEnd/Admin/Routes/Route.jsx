@@ -53,8 +53,8 @@ const router = createBrowserRouter(
         <Route path="home" element={<UserHomeLayout />}>
           <Route index element={<UserHome />} />
           <Route path="contactUs" element={<ContactUs />} />
-          <Route path="Services" element={<ShowServices />} />
           <Route path="addbooking" element={<Booking />} />
+          <Route path="Services" element={<ShowServices />} />
           <Route path="history/:id" element={<History />} />
           <Route path="history/upcoming" element={<Upcoming />} />
           <Route path="history/status" element={<HistoryFilter />} />

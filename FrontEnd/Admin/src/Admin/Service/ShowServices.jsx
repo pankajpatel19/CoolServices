@@ -1,6 +1,8 @@
 import React from "react";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 import api from "../../../Utils/axios";
+import { ArrowLeft } from "lucide-react";
 import { useState, useEffect } from "react";
 
 function ShowServices() {
@@ -21,12 +23,26 @@ function ShowServices() {
     }
   };
 
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   useEffect(() => {
     fetchServices();
   }, [appliance]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6 lg:p-8">
+      <motion.button
+        onClick={handleGoBack}
+        initial={{ x: -20, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="group flex items-center gap-3 mb-8 px-6 py-3.5 bg-gradient-to-r from-gray-700 to-gray-800 hover:from-gray-800 hover:to-gray-900 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
+      >
+        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-2 transition-transform duration-300" />
+        <span>Back </span>
+      </motion.button>
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="bg-white rounded-2xl shadow-lg p-6 mb-8">

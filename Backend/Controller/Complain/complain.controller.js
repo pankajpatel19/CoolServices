@@ -18,16 +18,7 @@ export const SubmitComplaints = async (req, res) => {
 
 export const ShowComplaints = async (req, res) => {
   try {
-    const redisComplaints = await redisCLient.get("complaints");
-    console.log(redisComplaints);
-
-    if (redisComplaints) {
-      return res.status(200).json(JSON.parse(redisComplaints));
-    }
-
     const complaint = await Complain.find({ user: req.params.id });
-
-    await redisCLient.set("complaints", JSON.stringify(complaint));
 
     res.status(200).json({
       success: true,

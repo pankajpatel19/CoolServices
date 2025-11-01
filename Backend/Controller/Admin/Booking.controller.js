@@ -62,7 +62,7 @@ export const ShowBooking = async (req, res) => {
     }
 
     const showdata = await Booking.find().sort({ date: -1 }).lean();
-    await redisCLient.set("all_Bookings", JSON.stringify(showdata));
+    await redisCLient.setEx("all_Bookings", 30, JSON.stringify(showdata));
 
     res.status(200).json(showdata);
   } catch (error) {
@@ -218,7 +218,7 @@ export const getUsers = async (req, res) => {
       return res.status(200).json(JSON.parse(redisUser));
     }
     const users = await User.find({ userrole: "customer" }).lean();
-    await redisCLient.set("users", JSON.stringify(users));
+    await redisCLient.setEx("users", 30, JSON.stringify(users));
 
     res.status(200).json(users);
   } catch (error) {
@@ -229,19 +229,12 @@ export const getUsers = async (req, res) => {
 
 export const getBookingPerUser = async (req, res) => {
   try {
-    const redisBookingPerUSer = await redisCLient.get("BookingPerUser");
-
-    if (redisBookingPerUSer) {
-      return res.status(200).json(JSON.parse(redisBookingPerUSer));
-    }
-
     const BookingPerUser = await Booking.find({ user: req.params.id }).lean();
     if (BookingPerUser.length === 0) {
       return res
         .status(404)
         .json({ message: "No bookings found for this user" });
     }
-    await redisCLient.set("BookingPerUser", JSON.stringify(BookingPerUser));
     res.status(200).json(BookingPerUser);
   } catch (error) {
     console.error(error);

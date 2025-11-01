@@ -17,7 +17,7 @@ export const handleTech = async (req, res) => {
     if (!technicians || technicians.length === 0) {
       return res.status(404).json({ message: "No technicians found" });
     }
-    await redisCLient.set("Technicians", JSON.stringify(technicians));
+    await redisCLient.setEx("Technicians", 60, JSON.stringify(technicians));
 
     res.status(200).json(technicians);
   } catch (error) {

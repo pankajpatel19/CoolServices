@@ -28,7 +28,7 @@ export const getServicesByAppliance = async (req, res) => {
     }
     const services = await Service.find({ appliance });
 
-    await redisCLient.set("ProvidedService", JSON.stringify(services));
+    await redisCLient.setEx("ProvidedService", 60, JSON.stringify(services));
     res.json(services);
   } catch (err) {
     res.status(500).json({ message: err.message });

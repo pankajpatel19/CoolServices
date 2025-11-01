@@ -19,7 +19,11 @@ export const techniciandata = async (req, res) => {
       return res.status(404).json({ message: "Data not found" });
     }
     console.log(techdata);
-    await redisCLient.set("Technician_Bookings", JSON.stringify(techdata));
+    await redisCLient.setEx(
+      "Technician_Bookings",
+      60,
+      JSON.stringify(techdata)
+    );
 
     res.status(200).json(techdata);
   } catch (error) {
@@ -44,7 +48,7 @@ export const getTechnician = async (req, res) => {
     if (!tech) {
       return res.status(404).json({ message: "Technician not found" });
     }
-    await redisCLient.set("handle_Technician", JSON.stringify(tech));
+    await redisCLient.setEx("handle_Technician", 60, JSON.stringify(tech));
     res.status(200).json({
       message: "Fetching details successfully",
       tech,

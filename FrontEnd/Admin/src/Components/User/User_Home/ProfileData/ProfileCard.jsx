@@ -2,7 +2,6 @@ import { Shield } from "lucide-react";
 import EditProfile from "./EditProfile";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
-import axios from "axios";
 import api from "../../../../../Utils/axios";
 
 function ProfileCard({ getRoleColor, user, handleLogout }) {

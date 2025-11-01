@@ -12,15 +12,15 @@ import {
   CheckCircle,
   Wrench,
 } from "lucide-react";
-import { useHistoryData } from "../../../Contaxt/HistoryContaxt";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Status from "./Status";
 import api from "../../../../Utils/axios";
 function History() {
-  const { history, loading, setHistory } = useHistoryData();
+  const [history, setHistory] = useState([]);
   const [status, setStatus] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const downloadReciept = async (id) => {
     try {
@@ -39,14 +39,17 @@ function History() {
 
   const getStatusBooking = async (stts) => {
     try {
+      setLoading(true);
+
       const res = await api.get(`/Home/history/status?status=${stts}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
       toast.success(res.data.message);
-
       setHistory(res.data);
     } catch (error) {
       toast.error(error.response.data.message);
+    } finally {
+      setLoading(false);
     }
   };
 

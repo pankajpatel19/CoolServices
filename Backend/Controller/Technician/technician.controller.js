@@ -1,3 +1,4 @@
+import redisCLient from "../../config/redis.config.js";
 import Booking from "../../Models/Booking.model.js";
 import User from "../../Models/User.model.js";
 
@@ -5,11 +6,20 @@ export const techniciandata = async (req, res) => {
   const { username } = req.query;
 
   try {
+    const redis_Technician_Bookings = await redisCLient.get(
+      "Technician_Bookings"
+    );
+    if (redis_Technician_Bookings) {
+      const techBookings = JSON.parse(redis_Technician_Bookings);
+      return res.status(200).json(techBookings);
+    }
     const techdata = await Booking.find({ technician: username });
 
     if (!techdata || techdata.length === 0) {
       return res.status(404).json({ message: "Data not found" });
     }
+    console.log(techdata);
+    await redisCLient.set("Technician_Bookings", JSON.stringify(techdata));
 
     res.status(200).json(techdata);
   } catch (error) {
@@ -20,12 +30,21 @@ export const techniciandata = async (req, res) => {
 
 export const getTechnician = async (req, res) => {
   try {
+    const redisTechnician = await redisCLient.get("handle_Technician");
+
+    if (redisTechnician) {
+      const tech = JSON.parse(redisTechnician);
+      return res
+        .status(200)
+        .json({ message: "Fetching Details SuccessFully", tech });
+    }
+
     const tech = await User.findById(req.user.id);
 
     if (!tech) {
       return res.status(404).json({ message: "Technician not found" });
     }
-
+    await redisCLient.set("handle_Technician", JSON.stringify(tech));
     res.status(200).json({
       message: "Fetching details successfully",
       tech,

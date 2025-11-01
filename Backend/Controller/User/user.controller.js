@@ -8,6 +8,7 @@ import {
   loginRegisterSchema,
 } from "../../MiddleWare/Joi.middleware.js";
 import { uploadFile } from "../../utils/cloudinary.js";
+import redisCLient from "../../config/redis.config.js";
 
 export const login = async (req, res) => {
   try {
@@ -19,6 +20,7 @@ export const login = async (req, res) => {
     const { phone, password, userrole } = value;
     let user;
     let role;
+
     if (userrole === "admin") {
       user = await Admin.findOne({ phone }).lean();
       if (user) role = "admin";
@@ -67,9 +69,9 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: error.details[0].message });
     }
 
-    const { userName, email, password, userrole, phone } = value;
+    const { userName, email, password, phone } = value;
 
-    const existing = await User.findOne({ email });
+    const existing = await User.findOne({ phone });
     if (existing) {
       return res.status(409).json({ message: "User already exists" });
     }
@@ -80,7 +82,6 @@ export const signup = async (req, res) => {
       email,
       phone,
       password: hashPassword,
-      userrole,
     });
 
     await newUser.save();
@@ -111,7 +112,7 @@ export const signup = async (req, res) => {
   }
 };
 
-export const logout = (req, res) => {
+export const logout = async (req, res) => {
   try {
     res.clearCookie("token", {
       httpOnly: true,
@@ -158,12 +159,19 @@ export const updateProfile = async (req, res) => {
 
 export const fetchUser = async (req, res) => {
   try {
+    const redisprofileuser = await redisCLient.get("userProfile");
+
+    if (redisprofileuser) {
+      const user = JSON.parse(redisprofileuser);
+      return res.status(200).json({ message: "Profile Fetched", user });
+    }
+
     const user = await User.findById(req.params.id).select("-password");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
+    await redisCLient.set("userProfile", JSON.stringify(user));
     res.status(200).json({ message: "User profile fetched", user });
   } catch (error) {
     console.error("Fetch user error:", error);

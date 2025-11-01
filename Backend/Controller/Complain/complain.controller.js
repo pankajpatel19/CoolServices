@@ -1,3 +1,4 @@
+import redisCLient from "../../config/redis.config.js";
 import { Complain } from "../../Models/Complaint.model.js";
 
 export const SubmitComplaints = async (req, res) => {
@@ -17,7 +18,15 @@ export const SubmitComplaints = async (req, res) => {
 
 export const ShowComplaints = async (req, res) => {
   try {
+    const redisComplaints = await redisCLient.get("complaints");
+
+    if (redisComplaints) {
+      return res.status(200).json(JSON.parse(redisComplaints));
+    }
+
     const complaint = await Complain.find({ user: req.params.id });
+
+    await redisCLient.set("complaints", JSON.stringify(complaint));
 
     res.status(200).json({
       success: true,

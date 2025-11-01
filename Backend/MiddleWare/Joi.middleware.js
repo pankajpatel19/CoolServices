@@ -28,13 +28,6 @@ export const userRegistrationSchema = Joi.object({
       "string.pattern.base": "Phone number must only contain digits",
     }),
 
-  userrole: Joi.string()
-    .valid("customer", "technician", "admin")
-    .required()
-    .messages({
-      "any.required": "User role is required",
-    }),
-
   avatar: Joi.string().uri().optional(),
   coverImage: Joi.string().uri().optional(),
 });

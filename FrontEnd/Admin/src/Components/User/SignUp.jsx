@@ -11,7 +11,6 @@ function SignUp() {
     email: "",
     phone: "",
     password: "",
-    userrole: "",
   });
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -243,18 +242,7 @@ function SignUp() {
                   <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-emerald-500 to-teal-500 scale-x-0 group-focus-within:scale-x-100 transition-transform duration-300 origin-left"></div>
                 </div>
               </div>
-              <div>
-                <select
-                  name="userrole"
-                  value={form.userrole}
-                  onChange={handlechange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 appearance-none cursor-pointer"
-                >
-                  <option value="">Select Role </option>
-                  <option value="customer">Customer</option>
-                  <option value="technician">Technician</option>
-                </select>
-              </div>
+
               {/* Submit Button */}
               <div className="pt-4">
                 <button

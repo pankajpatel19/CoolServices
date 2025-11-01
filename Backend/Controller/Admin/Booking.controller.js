@@ -1,3 +1,5 @@
+import { json } from "express";
+import redisCLient from "../../config/redis.config.js";
 import Booking from "../../Models/Booking.model.js";
 import User from "../../Models/User.model.js";
 import { generateBookingPDF } from "../../utils/generateBookingPDF.js";
@@ -53,7 +55,15 @@ export const AddBooking = async (req, res) => {
 
 export const ShowBooking = async (req, res) => {
   try {
+    const redisBooking = await redisCLient.get("all_Bookings");
+
+    if (redisBooking) {
+      return res.status(200).json(JSON.parse(redisBooking));
+    }
+
     const showdata = await Booking.find().sort({ date: -1 }).lean();
+    await redisCLient.set("all_Bookings", JSON.stringify(showdata));
+
     res.status(200).json(showdata);
   } catch (error) {
     console.error(error);
@@ -98,25 +108,6 @@ export const UpdateBooking = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error updating booking", error });
-  }
-};
-
-export const history = async (req, res) => {
-  try {
-    const historyData = await Booking.find({ user: req.params.id })
-      .sort({ date: -1 })
-      .lean();
-
-    if (!historyData || historyData.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No bookings found for this user" });
-    }
-
-    res.status(200).json(historyData);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching booking history", error });
   }
 };
 
@@ -167,7 +158,9 @@ export const getStatusBooking = async (req, res) => {
       const bookings = await Booking.find({ user: req.user.id }).lean();
 
       if (bookings.length === 0) {
-        return res.status(404).json({ message: "No bookings found" });
+        return res
+          .status(404)
+          .json({ message: "No bookings found , book a service " });
       }
 
       return res.status(200).json(bookings);
@@ -219,7 +212,13 @@ export const AdminStatusBooking = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   try {
+    const redisUser = await redisCLient.get("users");
+
+    if (redisUser) {
+      return res.status(200).json(JSON.parse(redisUser));
+    }
     const users = await User.find({ userrole: "customer" }).lean();
+    await redisCLient.set("users", JSON.stringify(users));
 
     res.status(200).json(users);
   } catch (error) {
@@ -230,12 +229,19 @@ export const getUsers = async (req, res) => {
 
 export const getBookingPerUser = async (req, res) => {
   try {
+    const redisBookingPerUSer = await redisCLient.get("BookingPerUser");
+
+    if (redisBookingPerUSer) {
+      return res.status(200).json(JSON.parse(redisBookingPerUSer));
+    }
+
     const BookingPerUser = await Booking.find({ user: req.params.id }).lean();
     if (BookingPerUser.length === 0) {
       return res
         .status(404)
         .json({ message: "No bookings found for this user" });
     }
+    await redisCLient.set("BookingPerUser", JSON.stringify(BookingPerUser));
     res.status(200).json(BookingPerUser);
   } catch (error) {
     console.error(error);

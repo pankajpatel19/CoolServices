@@ -34,6 +34,7 @@ function Dashboard() {
       const response = await api.get("/showbooking", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+
       setbooking(response.data);
     } catch (error) {
       toast.error("Failed to fetch bookings");

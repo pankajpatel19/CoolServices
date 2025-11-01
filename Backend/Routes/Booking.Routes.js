@@ -6,7 +6,6 @@ import {
   DeleteBooking,
   UpdateBooking,
   bookData,
-  history,
   searchData,
   historyBookingPDF,
   getStatusBooking,
@@ -22,7 +21,7 @@ router.post("/Home/addbooking", userAuth, AddBooking);
 
 router.get("/Home/history/status", userAuth, getStatusBooking);
 
-router.get("/Home/history/:id", userAuth, history);
+// router.get("/Home/history/:id", userAuth, history);
 
 router.get("/Home/history/:id/pdf", historyBookingPDF);
 

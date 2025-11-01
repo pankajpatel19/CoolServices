@@ -2,14 +2,22 @@ import TechnicianLocation from "../../Models/TechnicianLocation.model.js";
 import User from "../../Models/User.model.js";
 import Booking from "../../Models/Booking.model.js";
 import { TechReminder } from "../../utils/Sendmails.js";
+import redisCLient from "../../config/redis.config.js";
 
 export const handleTech = async (req, res) => {
   try {
+    const redisTechnician = await redisCLient.get("Technicians");
+
+    if (redisTechnician) {
+      return res.status(200).json(JSON.parse(redisTechnician));
+    }
+
     const technicians = await User.find({ userrole: "technician" }).lean();
 
     if (!technicians || technicians.length === 0) {
       return res.status(404).json({ message: "No technicians found" });
     }
+    await redisCLient.set("Technicians", JSON.stringify(technicians));
 
     res.status(200).json(technicians);
   } catch (error) {

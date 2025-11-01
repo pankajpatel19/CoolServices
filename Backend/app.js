@@ -30,7 +30,6 @@ app.use(
   })
 );
 
-const Murl = process.env.MONGO_URL;
 import ServiceRoutes from "./Routes/Service.Routes.js";
 import UserRoutes from "./Routes/User.Routes.js";
 import BookingRoutes from "./Routes/Booking.Routes.js";
@@ -74,6 +73,8 @@ app.post("/forgot-password", forgotPassword);
 app.post("/reset-password/:token", resetPassword);
 
 // Start server
+const Murl = process.env.MONGO_URL;
+
 app.listen(port, () => {
   console.log(`Server started on http://localhost:${port}`);
   mongoose

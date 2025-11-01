@@ -19,6 +19,7 @@ export const SubmitComplaints = async (req, res) => {
 export const ShowComplaints = async (req, res) => {
   try {
     const redisComplaints = await redisCLient.get("complaints");
+    console.log(redisComplaints);
 
     if (redisComplaints) {
       return res.status(200).json(JSON.parse(redisComplaints));

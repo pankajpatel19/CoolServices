@@ -19,7 +19,7 @@ import Status from "./Status";
 import api from "../../../../Utils/axios";
 function History() {
   const [history, setHistory] = useState([]);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("all");
   const [loading, setLoading] = useState(false);
 
   const downloadReciept = async (id) => {

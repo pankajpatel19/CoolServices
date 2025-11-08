@@ -21,14 +21,19 @@ export const getServicesByAppliance = async (req, res) => {
   try {
     const { appliance } = req.query;
 
-    const redisProvide = await redisCLient.get("ProvidedService");
+    const redisProvide = await redisCLient.get(`applience : ${appliance}`);
 
     if (redisProvide) {
       return res.status(200).json(JSON.parse(redisProvide));
     }
     const services = await Service.find({ appliance });
 
-    await redisCLient.setEx("ProvidedService", 60, JSON.stringify(services));
+    await redisCLient.setEx(
+      `applience : ${appliance}`,
+      21600,
+      JSON.stringify(services)
+    );
+
     res.json(services);
   } catch (err) {
     res.status(500).json({ message: err.message });

@@ -15,22 +15,22 @@ export const HistoryProvider = ({ children }) => {
   useEffect(() => {
     const fetchHistory = async () => {
       if (!userId) return;
-      try {
-        const res = await axios.get(
-          `${import.meta.env.VITE_API_URL}/Home/history/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          }
-        );
+      // try {
+      //   const res = await axios.get(
+      //     `${import.meta.env.VITE_API_URL}/Home/history/${userId}`,
+      //     {
+      //       headers: {
+      //         Authorization: `Bearer ${localStorage.getItem("token")}`,
+      //       },
+      //     }
+      //   );
 
-        setHistory(res.data);
-      } catch (err) {
-        console.error("Error fetching history:", err);
-      } finally {
-        setLoading(false);
-      }
+      //   setHistory(res.data);
+      // } catch (err) {
+      //   console.error("Error fetching history:", err);
+      // } finally {
+      //   setLoading(false);
+      // }
     };
 
     fetchHistory();

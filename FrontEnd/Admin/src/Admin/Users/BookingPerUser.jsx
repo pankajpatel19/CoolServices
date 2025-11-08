@@ -16,6 +16,7 @@ import {
   ClipboardList,
 } from "lucide-react";
 import api from "../../../Utils/axios";
+import { toast, ToastContainer } from "react-toastify";
 
 function BookingPerUser() {
   const { id } = useParams();
@@ -28,9 +29,11 @@ function BookingPerUser() {
       const response = await api.get(`/admin/getBookingPerUser/${id}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
+
       setBooking(response.data);
     } catch (error) {
-      console.error(error);
+      toast.error(error.response.data.message);
+      console.error(error.response.data.message);
     } finally {
       setLoading(false);
     }
@@ -79,6 +82,7 @@ function BookingPerUser() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 p-6">
+      <ToastContainer />
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8 flex items-center justify-between">

@@ -4,6 +4,7 @@ import Booking from "../../Models/Booking.model.js";
 import User from "../../Models/User.model.js";
 import { generateBookingPDF } from "../../utils/generateBookingPDF.js";
 import { sendBookEmail } from "../../utils/Sendmails.js";
+import client from "../../config/redis.config.js";
 
 export const Showbooking_Dashboard = async (req, res) => {
   try {
@@ -62,7 +63,7 @@ export const ShowBooking = async (req, res) => {
     }
 
     const showdata = await Booking.find().sort({ date: -1 }).lean();
-    await redisCLient.setEx("all_Bookings", 30, JSON.stringify(showdata));
+    await redisCLient.setEx("all_Bookings", 21600, JSON.stringify(showdata));
 
     res.status(200).json(showdata);
   } catch (error) {
@@ -76,6 +77,8 @@ export const DeleteBooking = async (req, res) => {
     const id = req.params.id;
 
     const deleted = await Booking.findByIdAndDelete(id);
+
+    await redisCLient.del("all_Bookings");
     if (!deleted) {
       return res.status(404).json({ message: "Booking not found" });
     }
@@ -93,6 +96,11 @@ export const UpdateBooking = async (req, res) => {
     if (!status) {
       return res.status(400).json({ message: "Status field is required" });
     }
+    const redisBooking = await redisCLient.get("all_Bookings");
+
+    if (redisBooking) {
+      return res.status(200).json(JSON.parse(redisBooking));
+    }
 
     const updated = await Booking.findByIdAndUpdate(
       req.params.id,
@@ -103,6 +111,7 @@ export const UpdateBooking = async (req, res) => {
     if (!updated) {
       return res.status(404).json({ message: "Booking not found" });
     }
+    await redisCLient.setEx("all_Bookings", 21600, JSON.stringify(updated));
 
     res.status(200).json({ message: "Booking updated successfully", updated });
   } catch (error) {
@@ -218,7 +227,7 @@ export const getUsers = async (req, res) => {
       return res.status(200).json(JSON.parse(redisUser));
     }
     const users = await User.find({ userrole: "customer" }).lean();
-    await redisCLient.setEx("users", 30, JSON.stringify(users));
+    await redisCLient.setEx("users", 21600, JSON.stringify(users));
 
     res.status(200).json(users);
   } catch (error) {
@@ -228,13 +237,26 @@ export const getUsers = async (req, res) => {
 };
 
 export const getBookingPerUser = async (req, res) => {
+  const { id } = req.params;
   try {
-    const BookingPerUser = await Booking.find({ user: req.params.id }).lean();
+    const redisBookingPerUser = await redisCLient.get(`booking:user:${id}`);
+
+    if (redisBookingPerUser) {
+      return res.status(200).json(JSON.parse(redisBookingPerUser));
+    }
+
+    const BookingPerUser = await Booking.find({ user: id }).lean();
     if (BookingPerUser.length === 0) {
       return res
         .status(404)
         .json({ message: "No bookings found for this user" });
     }
+    await redisCLient.setEx(
+      `booking:user:${id}`,
+      21600,
+      JSON.stringify(BookingPerUser)
+    );
+
     res.status(200).json(BookingPerUser);
   } catch (error) {
     console.error(error);

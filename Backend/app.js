@@ -23,10 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [
-      `${process.env.FRONTEND_PRODUCTION_VERCEL}`,
-      `${process.env.FRONTEND_HOST}`,
-    ],
+    origin: [process.env.FRONTEND_PRODUCTION_VERCEL, process.env.FRONTEND_HOST],
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

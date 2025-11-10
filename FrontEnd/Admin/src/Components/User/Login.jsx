@@ -78,12 +78,7 @@ function Login() {
         className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 w-full max-w-md"
       >
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="text-center mb-8"
-        >
+        <div className="text-center mb-8">
           <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <svg
               className="w-6 h-6 text-blue-600"
@@ -105,15 +100,11 @@ function Login() {
           <p className="text-gray-600 text-sm">
             Please sign in to your account
           </p>
-        </motion.div>
+        </div>
 
         <form onSubmit={handleform} className="space-y-6">
           {/* Email Field */}
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.3, duration: 0.4 }}
-          >
+          <div>
             <label
               htmlFor="phone"
               className="block text-sm font-medium text-gray-700 mb-2"
@@ -127,16 +118,12 @@ function Login() {
               min={10}
               value={form.name}
               onChange={handlechange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+              className="w-100 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
             />
-          </motion.div>
+          </div>
 
           {/* Password Field */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.4 }}
-          >
+          <div>
             <label
               htmlFor="password"
               className="block text-sm font-medium text-gray-700 mb-2"
@@ -151,12 +138,8 @@ function Login() {
               onChange={handlechange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
             />
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.4, duration: 0.4 }}
-          >
+          </div>
+          <div>
             <select
               name="userrole"
               value={form.userrole}
@@ -168,14 +151,9 @@ function Login() {
               <option value="technician">Technician</option>
               <option value="admin">Admin</option>
             </select>
-          </motion.div>
+          </div>
           {/* Login Button */}
-          <motion.button
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             type="submit"
             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
           >
@@ -193,29 +171,19 @@ function Login() {
               />
             </svg>
             Sign In
-          </motion.button>
+          </button>
         </form>
 
         {/* Footer */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.4 }}
-          className="mt-6 text-center text-sm text-gray-600"
-        >
+        <div className="mt-6 text-center text-sm text-gray-600">
           <button
             className="text-blue-600 hover:text-blue-700 font-medium ml-1"
             onClick={() => navigate("/forget-password")}
           >
             Forget Password
           </button>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.6, duration: 0.4 }}
-          className="mt-6 text-center text-sm text-gray-600"
-        >
+        </div>
+        <div className="mt-6 text-center text-sm text-gray-600">
           Don't have an account?
           <button
             className="text-blue-600 hover:text-blue-700 font-medium ml-1"
@@ -223,7 +191,11 @@ function Login() {
           >
             Sign up
           </button>
-        </motion.div>
+        </div>
+        <hr style={{ marginTop: "10px", opacity: "0.2" }} />
+        <div className="place-items-center">
+          <p className="mt-2">Continue With Google</p>
+        </div>
       </motion.div>
     </div>
   );

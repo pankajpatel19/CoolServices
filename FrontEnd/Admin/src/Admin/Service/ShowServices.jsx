@@ -104,14 +104,12 @@ function ShowServices() {
                     key={service._id}
                     className="bg-white shadow-xl rounded-2xl border-2 border-transparent hover:border-blue-300 hover:shadow-2xl transition-all duration-300 overflow-hidden group relative"
                   >
-                    {/* --- Popular Badge --- */}
                     {service.isPopular && (
                       <div className="absolute top-4 right-[-1px] bg-amber-400 text-amber-900 text-xs font-bold px-4 py-1 rounded-l-full shadow-md z-10">
                         ★ Popular
                       </div>
                     )}
 
-                    {/* --- Media Section (Video or Image) --- */}
                     <div className="relative overflow-hidden bg-gray-200">
                       {service.videoUrl ? (
                         <video
@@ -158,7 +156,6 @@ function ShowServices() {
                         </div>
                       </div>
 
-                      {/* --- Footer --- */}
                       <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
                         <div>
                           <p className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">

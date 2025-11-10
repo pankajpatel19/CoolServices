@@ -35,12 +35,16 @@ import UserRoutes from "./Routes/User.Routes.js";
 import BookingRoutes from "./Routes/Booking.Routes.js";
 import TechnicianRoutes from "./Routes/Technician.Routes.js";
 import ComplaintRoutes from "./Routes/Complain.Routes.js";
+// import { authcheck, redirect } from "./Controller/google OAuth/redirect.js";
 
 app.use("/api", UserRoutes);
 app.use("/api", BookingRoutes);
 app.use("/api", TechnicianRoutes);
 app.use("/api/services", ServiceRoutes);
 app.use("/api", ComplaintRoutes);
+
+// app.get("/auth/google", redirect);
+// app.get("/auth/google/callback", authcheck);
 
 // Chat route
 app.post("/home/chat", async (req, res) => {
@@ -69,8 +73,8 @@ app.post("/home/chat", async (req, res) => {
   }
 });
 
-app.post("/forgot-password", forgotPassword);
-app.post("/reset-password/:token", resetPassword);
+app.post("/api/forgot-password", forgotPassword);
+app.post("/api/reset-password/:token", resetPassword);
 
 // Start server
 

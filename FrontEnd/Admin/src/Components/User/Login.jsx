@@ -3,8 +3,7 @@ import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import { useState } from "react";
-import axios from "axios";
-import { replace, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import api from "../../../Utils/axios";
 
 function Login() {
@@ -192,10 +191,12 @@ function Login() {
             Sign up
           </button>
         </div>
-        <hr style={{ marginTop: "10px", opacity: "0.2" }} />
+        {/* <hr style={{ marginTop: "10px", opacity: "0.2" }} />
         <div className="place-items-center">
-          <p className="mt-2">Continue With Google</p>
-        </div>
+          <a href="http://localhost:10000/auth/google">
+            <i className="fa-brands fa-google"></i>
+          </a>
+        </div> */}
       </motion.div>
     </div>
   );

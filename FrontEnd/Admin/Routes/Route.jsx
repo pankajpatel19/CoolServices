@@ -38,6 +38,7 @@ import ForgetPassword from "../src/Components/User/User_Home/ForgetPassword.jsx"
 import ResetPassword from "../src/Components/User/User_Home/ResetPassword.jsx";
 import AddService from "../src/Admin/Service/AddService.jsx";
 import ShowServices from "../src/Admin/Service/ShowServices.jsx";
+import AuthSuccess from "../src/Components/User/AuthSuccess.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -47,6 +48,8 @@ const router = createBrowserRouter(
 
         <Route path="signup" element={<SignUp />} />
         <Route path="login" element={<Login />} />
+        <Route path="auth-success" element={<AuthSuccess />} />
+
         <Route path="contactUs" element={<ContactUs />} />
       </Route>
       <Route element={<ProtectRoute allowedRoles={["customer"]} />}>
@@ -91,6 +94,7 @@ const router = createBrowserRouter(
 
         <Route path="getdata/TechProfile" element={<TechProfile />} />
       </Route>
+
       <Route path="/forget-password" element={<ForgetPassword />} />
       <Route path="/reset-password/:token" element={<ResetPassword />} />
 

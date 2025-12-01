@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import api from "../../Utils/axios";
+import { Link } from "react-router-dom";
 
 function HandleTechnician() {
   const [Technician, settechnician] = useState([]);
@@ -146,6 +147,12 @@ function HandleTechnician() {
             Our Technicians
           </h1>
           <div className="w-24 h-1 bg-blue-600 mx-auto rounded"></div>
+          <Link
+            to={"/Admin/Addtechnician"}
+            className="float-right bg-zinc-800 rounded-2xl p-2 text-sm text-white "
+          >
+            Add Technician
+          </Link>
         </div>
 
         {/* Empty State */}

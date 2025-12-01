@@ -163,7 +163,7 @@ function Nav() {
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <MessageSquareWarning className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to={`/Home/complain/${user._id}`}>Complaints</Link>
+                    <Link to={`/Home/complain/${user.id}`}>Complaints</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Phone className="w-5 h-5 mr-3 text-gray-600" />

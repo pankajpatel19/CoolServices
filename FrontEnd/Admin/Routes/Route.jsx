@@ -4,14 +4,14 @@ import {
   Route,
 } from "react-router-dom";
 import RootLayout from "../src/Layout/RootLayout";
-import SignUp from "../src/Components/User/SignUp";
-import Login from "../src/Components/User/Login";
+import SignUp from "../src/Components/Home/SignUp.jsx";
+import Login from "../src/Components/Home/Login.jsx";
 import Data from "../src/Admin/Data";
 import Home from "../src/Components/Home/Home";
 import NotFound from "../src/Components/Home/NotFound";
 import Booking from "../src/Components/Booking/Booking";
 import Dashboard from "../src/Admin/Dashboard/Dashboard.jsx";
-import ContactUs from "../src/Components/User/ContactUs";
+import ContactUs from "../src/Components/Home/ContactUs.jsx";
 import UserHomeLayout from "../src/Layout/UserHomeLayout";
 import UserHome from "../src/Components/User/User_Home/UserHome";
 import ProtectRoute from "../src/ProtectedRoutes/ProtectRoute.jsx";
@@ -39,11 +39,11 @@ import ResetPassword from "../src/Components/User/User_Home/ResetPassword.jsx";
 import AddService from "../src/Admin/Service/Service/AddService.jsx";
 import ShowServices from "../src/Admin/Service/Service/ShowServices.jsx";
 import AuthSuccess from "../src/Components/User/AuthSuccess.jsx";
-import Complete_Payment from "../src/Admin/Service/Payment_Success/Complete_Payment.jsx";
+import Complete_Payment from "../src/Admin/Service/Payment_Success/Final Payment/Complete_Payment.jsx";
 import AddAddress from "../src/Admin/Service/Payment_Success/AddAddress.jsx";
 import ShowAddreses from "../src/Admin/Service/Payment_Success/ShowAddreses.jsx";
-import Selected_Address from "../src/Admin/Service/Payment_Success/Selected_Address.jsx";
 import Payment from "../src/Admin/Service/Payment_Success/Final Payment/Payment.jsx";
+import AddTechnician from "../src/Admin/TechNician/AddTechnician.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -86,6 +86,8 @@ const router = createBrowserRouter(
           <Route path="showbooking/:id" element={<BookData />} />
           <Route path="dashboard" element={<Data />} />
           <Route path="handleTechnician" element={<HandleTechnician />} />
+          <Route path="Addtechnician" element={<AddTechnician />} />
+
           <Route path="handleUser" element={<ShowUser />} />
           <Route path="userComplain/:id" element={<BookingPerUser />} />
           <Route path="addService" element={<AddService />} />

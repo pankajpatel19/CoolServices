@@ -3,6 +3,7 @@ import { useHistoryData } from "../../../Contaxt/HistoryContaxt";
 
 function Upcoming() {
   const { history, loading } = useHistoryData();
+  console.log(history);
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);

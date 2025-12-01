@@ -2,14 +2,16 @@ import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import api from "../../../../Utils/axios";
 import { ArrowLeft } from "lucide-react";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { serviceContext } from "../../../Contaxt/SetServiceContext";
 
 function ShowServices() {
   const [services, setServices] = useState([]);
   const [role, setRole] = useState(null);
   const [appliance, setAppliance] = useState("AC");
   const navigate = useNavigate();
+  const { setService } = useContext(serviceContext);
 
   const fetchServices = async () => {
     try {
@@ -25,9 +27,15 @@ function ShowServices() {
     }
   };
 
+  const toAddress = (service) => {
+    setService(service);
+    navigate(`/Home/show_address`);
+  };
+
   useEffect(() => {
     let token = JSON.parse(localStorage.getItem("user"));
     setRole(token);
+
     fetchServices();
   }, [appliance]);
 
@@ -169,7 +177,7 @@ function ShowServices() {
                         {role.role !== "admin" ? (
                           <button
                             className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 active:scale-95 transition-all shadow-md hover:shadow-lg"
-                            onClick={() => navigate(`/Home/show_address`)}
+                            onClick={() => toAddress(service)}
                           >
                             Book Now
                           </button>

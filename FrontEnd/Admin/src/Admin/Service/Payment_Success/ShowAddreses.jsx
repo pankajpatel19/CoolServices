@@ -8,7 +8,7 @@ import {
   MapPinned,
   Plus,
 } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import api from "../../../../Utils/axios";
 import { toast, ToastContainer } from "react-toastify";
 
@@ -16,6 +16,9 @@ function ShowAddresses() {
   const [addresses, setAddresses] = useState([]);
   const [id, setId] = useState("");
   const [selectedAddress, setSelectedAddress] = useState(null);
+
+  const location = useLocation();
+  const service = location.state?.service;
 
   const handleDelete = async (id) => {
     try {

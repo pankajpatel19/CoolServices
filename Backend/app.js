@@ -40,6 +40,7 @@ import {
   payment,
   verifyPayment,
 } from "./Controller/payment/razorpay.controller.js";
+import userAuth from "./MiddleWare/UserAuth.middleware.js";
 
 // import { authcheck, redirect } from "./Controller/google OAuth/redirect.js";
 
@@ -53,8 +54,8 @@ app.use("/api/customer", AddressRoutes);
 // app.get("/auth/google", redirect);
 // app.get("/auth/google/callback", authcheck);
 
-app.post("/api/create-order", payment);
-app.post("/api/verify-order", verifyPayment);
+app.post("/api/create-order", userAuth, payment);
+app.post("/api/verify-order", userAuth, verifyPayment);
 
 // Chat route
 app.post("/home/chat", async (req, res) => {

@@ -1,12 +1,15 @@
 import crypto from "crypto";
 import { razorpay } from "../../config/razorpay.config.js";
+import Service from "../../Models/Services.model.js";
+import Payment from "../../Models/Payment.model.js";
 
 export const payment = async (req, res) => {
   try {
     const { amount, serviceId } = req.body;
 
+    const service = await Service.findById(serviceId);
     const options = {
-      amount: amount * 100,
+      amount: service.price * 100,
       currency: "INR",
       receipt: `reciept_${Date.now()}`,
       notes: { serviceId, user: 123 },
@@ -21,14 +24,13 @@ export const payment = async (req, res) => {
   }
 };
 
-export const verifyPayment = (req, res) => {
+export const verifyPayment = async (req, res) => {
   try {
     const {
       razorpay_order_id,
       razorpay_payment_id,
       razorpay_signature,
       service_id,
-      amount,
     } = req.body;
 
     const sign = `${razorpay_order_id}|${razorpay_payment_id}`;
@@ -36,6 +38,16 @@ export const verifyPayment = (req, res) => {
       .createHmac("sha256", process.env.RAZORPAY_SECRET)
       .update(sign)
       .digest("hex");
+
+    const newPayment = new Payment({
+      user: req.user.id,
+      service: service_id,
+      razorpay_order_id,
+      razorpay_payment_id,
+      razorpay_signature,
+    });
+
+    await newPayment.save();
 
     if (expectedSign === razorpay_signature) {
       return res

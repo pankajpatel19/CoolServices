@@ -41,9 +41,7 @@ function History() {
     try {
       setLoading(true);
 
-      const res = await api.get(`/Home/history/status?status=${stts}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await api.get(`/Home/history/status?status=${stts}`);
       toast.success(res.data.message);
       setHistory(res.data);
     } catch (error) {

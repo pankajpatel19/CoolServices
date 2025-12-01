@@ -23,13 +23,11 @@ function Login() {
       const res = await api.post("/login", form, {
         withCredentials: true,
       });
-      let { token, role, user } = res.data;
-      console.log(res);
-
-      localStorage.setItem("token", token);
+      let { role, user } = res.data;
 
       localStorage.setItem("user", JSON.stringify({ ...user, role }));
 
+      toast.success("login SuccessFullly");
       let redirect = location.state?.from?.pathname;
 
       if (!redirect) {
@@ -43,9 +41,6 @@ function Login() {
       }
 
       navigate(redirect, { replace: true });
-      window.location.reload();
-
-      toast.success("login SuccessFullly");
     } catch (error) {
       console.log(error);
 
@@ -114,7 +109,8 @@ function Login() {
               type="number"
               placeholder="Enter your phone Number"
               name="phone"
-              min={10}
+              minLength={10}
+              maxLength={10}
               value={form.name}
               onChange={handlechange}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"

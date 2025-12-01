@@ -31,9 +31,7 @@ function Dashboard() {
 
   const fetchBookings = async () => {
     try {
-      const response = await api.get("/showbooking", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await api.get("/showbooking");
 
       setbooking(response.data);
     } catch (error) {
@@ -48,9 +46,7 @@ function Dashboard() {
     );
     if (!confirm) return;
     try {
-      const res = await api.delete(`/deletebooking/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await api.delete(`/deletebooking/${id}`);
       console.log(res.data.message);
 
       toast.success("Deleted successfully!");
@@ -95,9 +91,7 @@ function Dashboard() {
 
   const getStatusBooking = async (stts) => {
     try {
-      const res = await api.get(`/showbooking/status?status=${stts}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await api.get(`/showbooking/status?status=${stts}`);
 
       toast.success(res.data.message);
       setbooking(res.data);

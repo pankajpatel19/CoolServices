@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
@@ -6,6 +5,7 @@ import { motion } from "framer-motion";
 import StateCard from "./StateCard";
 import ComplainBox from "./Complaints/ComplainBox";
 import { User2 } from "lucide-react";
+import api from "../../../../Utils/axios";
 
 function UserHome() {
   const [User, setUser] = useState("");
@@ -13,12 +13,17 @@ function UserHome() {
 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    if (user) {
-      setUser(user);
+  const currUser = async () => {
+    try {
+      const res = await api.get("/currentUser");
+      setUser(res.data);
+    } catch (error) {
+      console.log(error);
     }
+  };
+
+  useEffect(() => {
+    currUser();
     setIsLoading(false);
   }, []);
 

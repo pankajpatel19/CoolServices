@@ -11,9 +11,7 @@ function MainContent({ booking, getStatusColor, updatebooking, username }) {
 
   const getStatusBooking = async (stts) => {
     try {
-      const res = await Api.get(`/status?status=${stts}&name=${username}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await Api.get(`/status?status=${stts}&name=${username}`);
 
       toast.success(res.data.message);
       setServiceData(res.data.bookings);

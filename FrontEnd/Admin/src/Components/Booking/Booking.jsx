@@ -53,9 +53,7 @@ const Booking = () => {
     setIsSubmitting(true);
 
     try {
-      const res = await api.post("/Home/addbooking", form, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await api.post("/Home/addbooking", form);
 
       showNotification("Booking Successfully");
       setIsSubmitting(false);

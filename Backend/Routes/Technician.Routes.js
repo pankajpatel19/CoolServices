@@ -16,15 +16,15 @@ const router = Router();
 
 router.get("/handleTechnician", userAuth, handleTech);
 
-router.patch("/updateTechnician/:id", UpdateTechnician);
+router.patch("/updateTechnician/:id", userAuth, UpdateTechnician);
 
-router.get("/techhome/getdata", techniciandata);
+router.get("/techhome/getdata", userAuth, techniciandata);
 
 router.delete("/handleTechnician/:id", userAuth, deleteTech);
 
-router.post("/technician/update-location", updateLocation);
+router.post("/technician/update-location", userAuth, updateLocation);
 
-router.get("/admin/technicians-locations", getAllLocations);
+router.get("/admin/technicians-locations", userAuth, getAllLocations);
 
 router.get("/Techprofile", userAuth, getTechnician);
 

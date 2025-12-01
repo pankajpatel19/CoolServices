@@ -46,10 +46,7 @@ function Profile() {
     try {
       const res = await axios.patch(
         "http://localhost:1916/updateprofile",
-        formData,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        formData
       );
 
       setUser(res.data.user);
@@ -63,8 +60,6 @@ function Profile() {
   const handleLogout = async () => {
     await api.get("/logout", { withCredentials: true });
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
-
     toast.success("LogOut SuccessFully");
     navigate("/login");
     window.location.reload();

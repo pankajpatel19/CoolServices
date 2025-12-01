@@ -10,9 +10,7 @@ function ShowComplaints() {
 
   const fetchComplaints = async () => {
     try {
-      const res = await api.get(`/Home/Complaint/${id}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await api.get(`/Home/Complaint/${id}`);
       setComplaints(res.data.complaint);
     } catch (error) {
       console.log(error);

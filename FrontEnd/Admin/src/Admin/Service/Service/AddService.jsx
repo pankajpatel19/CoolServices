@@ -45,10 +45,7 @@ export default function AddService() {
 
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/services/add`,
-        payload,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
+        payload
       );
 
       toast.success(response.data.message);

@@ -35,6 +35,12 @@ import UserRoutes from "./Routes/User.Routes.js";
 import BookingRoutes from "./Routes/Booking.Routes.js";
 import TechnicianRoutes from "./Routes/Technician.Routes.js";
 import ComplaintRoutes from "./Routes/Complain.Routes.js";
+import AddressRoutes from "./Routes/Address.Routes.js";
+import {
+  payment,
+  verifyPayment,
+} from "./Controller/payment/razorpay.controller.js";
+
 // import { authcheck, redirect } from "./Controller/google OAuth/redirect.js";
 
 app.use("/api", UserRoutes);
@@ -42,9 +48,13 @@ app.use("/api", BookingRoutes);
 app.use("/api", TechnicianRoutes);
 app.use("/api/services", ServiceRoutes);
 app.use("/api", ComplaintRoutes);
+app.use("/api/customer", AddressRoutes);
 
 // app.get("/auth/google", redirect);
 // app.get("/auth/google/callback", authcheck);
+
+app.post("/api/create-order", payment);
+app.post("/api/verify-order", verifyPayment);
 
 // Chat route
 app.post("/home/chat", async (req, res) => {

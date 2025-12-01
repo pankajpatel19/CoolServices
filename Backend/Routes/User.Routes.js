@@ -8,13 +8,15 @@ import {
   updateProfile,
   fetchUser,
   updateImagePro,
+  currentuser,
 } from "../Controller/User/user.controller.js";
 const router = Router();
 // Login / Auth routes
 router.post("/login", login);
 router.post("/signup", signup);
 router.get("/logout", logout);
-router.get("/profile/:id", fetchUser);
+router.get("/currentUser", userAuth, currentuser);
+router.get("/profile/:id", userAuth, fetchUser);
 router.patch("/updateprofile", userAuth, updateProfile);
 router.post(
   "/profile/upload",

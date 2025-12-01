@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { toast } from "react-toastify";
 import logo from "../../assets/logo.png";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import {
   Wrench,
   Menu as MenuIcon,
@@ -19,16 +18,15 @@ import {
   LogIn,
   Cog,
 } from "lucide-react";
-import Api from "../../../Utils/axios.js";
 
 //MUI import
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import api from "../../../Utils/axios.js";
 
 function Nav() {
   const [user, setUser] = useState();
-  const [token, setToken] = useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -44,21 +42,17 @@ function Nav() {
   };
 
   const handleLogout = async () => {
-    await Api.get("/logout", {
+    await api.get("/logout", {
       withCredentials: true,
     });
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
     toast.success("LogOut SuccessFully");
     navigate("/login");
-    window.location.reload();
   };
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    const token = localStorage.getItem("token");
 
-    setToken(token);
     setUser(user);
   }, []);
 
@@ -93,7 +87,7 @@ function Nav() {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-2">
-            {token ? (
+            {user ? (
               <motion.div
                 className="relative"
                 whileHover={{ scale: 1.05 }}
@@ -153,9 +147,7 @@ function Nav() {
                 >
                   <MenuItem onClick={handleClose}>
                     <User className="w-5 h-5 mr-3 text-gray-600" />
-                    {user?._id && (
-                      <Link to={`profile/${user._id}`}>Profile</Link>
-                    )}
+                    {user?.id && <Link to={`profile/${user.id}`}>Profile</Link>}
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Home className="w-5 h-5 mr-3 text-gray-600" />
@@ -314,7 +306,7 @@ function Nav() {
           className="md:hidden border-t border-gray-200 bg-white"
         >
           <div className="px-4 pt-2 pb-3 space-y-1">
-            {token ? (
+            {user ? (
               <>
                 {user?._id && (
                   <Link

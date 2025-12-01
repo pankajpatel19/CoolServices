@@ -39,9 +39,7 @@ function ComplaintForm() {
     }
 
     try {
-      const res = await api.post("/Home/Complaint", formData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await api.post("/Home/Complaint", formData);
       console.log("Complaint submitted:", res.data);
       showNotification("✅ Complaint submitted successfully!", "success");
 

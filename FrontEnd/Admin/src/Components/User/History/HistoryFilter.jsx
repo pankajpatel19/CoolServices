@@ -7,9 +7,7 @@ function HistoryFilter() {
 
   const fetchBookings = async () => {
     try {
-      const response = await api.get("/showbooking", {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const response = await api.get("/showbooking");
 
       setstatus(response.data);
     } catch (error) {

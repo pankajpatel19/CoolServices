@@ -36,9 +36,14 @@ import BookingPerUser from "../src/Admin/Users/BookingPerUser.jsx";
 import ShowComplaints from "../src/Components/User/User_Home/Complaints/ShowComplaints.jsx";
 import ForgetPassword from "../src/Components/User/User_Home/ForgetPassword.jsx";
 import ResetPassword from "../src/Components/User/User_Home/ResetPassword.jsx";
-import AddService from "../src/Admin/Service/AddService.jsx";
-import ShowServices from "../src/Admin/Service/ShowServices.jsx";
+import AddService from "../src/Admin/Service/Service/AddService.jsx";
+import ShowServices from "../src/Admin/Service/Service/ShowServices.jsx";
 import AuthSuccess from "../src/Components/User/AuthSuccess.jsx";
+import Complete_Payment from "../src/Admin/Service/Payment_Success/Complete_Payment.jsx";
+import AddAddress from "../src/Admin/Service/Payment_Success/AddAddress.jsx";
+import ShowAddreses from "../src/Admin/Service/Payment_Success/ShowAddreses.jsx";
+import Selected_Address from "../src/Admin/Service/Payment_Success/Selected_Address.jsx";
+import Payment from "../src/Admin/Service/Payment_Success/Final Payment/Payment.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -64,8 +69,12 @@ const router = createBrowserRouter(
           <Route path="profile/:id" element={<Profile />} />
           <Route path="complain" element={<ComplainForm />} />
           <Route path="complain/:id" element={<ShowComplaints />} />
-
           <Route path="solvedByYou" element={<SolvedByYour />} />
+          <Route path="showService" element={<ShowServices />} />
+          <Route path="Complete_Payment" element={<Complete_Payment />} />
+          <Route path="add_Address" element={<AddAddress />} />
+          <Route path="show_address" element={<ShowAddreses />} />
+          <Route path="selected_address/:id" element={<Payment />} />
         </Route>
       </Route>
 
@@ -81,6 +90,7 @@ const router = createBrowserRouter(
           <Route path="userComplain/:id" element={<BookingPerUser />} />
           <Route path="addService" element={<AddService />} />
           <Route path="showService" element={<ShowServices />} />
+          <Route path="Complete_Payment" element={<Complete_Payment />} />
 
           <Route path="TechLocations" element={<TechLocation />} />
         </Route>

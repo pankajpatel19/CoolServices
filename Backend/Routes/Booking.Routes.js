@@ -23,7 +23,7 @@ router.get("/Home/history/status", userAuth, getStatusBooking);
 
 // router.get("/Home/history/:id", userAuth, history);
 
-router.get("/Home/history/:id/pdf", historyBookingPDF);
+router.get("/Home/history/:id/pdf", userAuth, historyBookingPDF);
 
 router.get("/showbooking", userAuth, ShowBooking);
 
@@ -37,9 +37,9 @@ router.get("/admin/users", userAuth, getUsers);
 
 router.get("/admin/getBookingPerUser/:id", userAuth, getBookingPerUser);
 
-router.get("/showbooking/:id", bookData);
+router.get("/showbooking/:id", userAuth, bookData);
 router.delete("/deletebooking/:id", userAuth, DeleteBooking);
 
-router.patch("/updatebooking/:id", UpdateBooking);
+router.patch("/updatebooking/:id", userAuth, UpdateBooking);
 
 export default router;

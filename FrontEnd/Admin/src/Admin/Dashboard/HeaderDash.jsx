@@ -118,7 +118,6 @@ function HeaderDash() {
       withCredentials: true,
     });
     localStorage.removeItem("user");
-    localStorage.removeItem("token");
 
     toast.success("LogOut SuccessFully");
     navigate("/login");

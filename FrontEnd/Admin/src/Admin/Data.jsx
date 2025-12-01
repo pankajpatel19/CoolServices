@@ -23,11 +23,7 @@ function Data() {
     const fetchDashboardData = async () => {
       try {
         setIsLoading(true);
-        const res = await api.get("/showbooking/dashboard", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
+        const res = await api.get("/showbooking/dashboard");
 
         setDashData(res.data);
       } catch (error) {

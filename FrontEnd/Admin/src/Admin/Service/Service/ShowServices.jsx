@@ -1,24 +1,22 @@
-import React from "react";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
-import api from "../../../Utils/axios";
+import api from "../../../../Utils/axios";
 import { ArrowLeft } from "lucide-react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function ShowServices() {
   const [services, setServices] = useState([]);
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState(null);
   const [appliance, setAppliance] = useState("AC");
+  const navigate = useNavigate();
 
   const fetchServices = async () => {
     try {
       const { data } = await api.get(
         `${
           import.meta.env.VITE_API_URL
-        }/services/appliance?appliance=${appliance}`,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
+        }/services/appliance?appliance=${appliance}`
       );
 
       setServices(data);
@@ -27,18 +25,19 @@ function ShowServices() {
     }
   };
 
+  useEffect(() => {
+    let token = JSON.parse(localStorage.getItem("user"));
+    setRole(token);
+    fetchServices();
+  }, [appliance]);
+
   const handleGoBack = () => {
     window.history.back();
   };
 
-  useEffect(() => {
-    let token = JSON.parse(localStorage.getItem("user"));
-    setRole(token.role);
-    fetchServices();
-  }, [appliance]);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 p-6 lg:p-8">
+      <ToastContainer />
       <motion.button
         onClick={handleGoBack}
         initial={{ x: -20, opacity: 0 }}
@@ -167,8 +166,11 @@ function ShowServices() {
                           </div>
                         </div>
 
-                        {role !== "admin" ? (
-                          <button className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 active:scale-95 transition-all shadow-md hover:shadow-lg">
+                        {role.role !== "admin" ? (
+                          <button
+                            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-semibold px-6 py-2.5 rounded-lg hover:from-blue-700 hover:to-indigo-700 transform hover:scale-105 active:scale-95 transition-all shadow-md hover:shadow-lg"
+                            onClick={() => navigate(`/Home/show_address`)}
+                          >
                             Book Now
                           </button>
                         ) : (

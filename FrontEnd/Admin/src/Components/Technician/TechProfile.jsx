@@ -42,9 +42,7 @@ function TechProfile() {
 
   const handleUpdate = async () => {
     try {
-      const res = await api.patch("/updateprofile", formData, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.patch("/updateprofile", formData);
 
       setUser(res.data.user);
       setEdit(false);

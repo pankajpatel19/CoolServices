@@ -14,9 +14,7 @@ function HandleTechnician() {
   const getTechnician = async () => {
     try {
       setLoading(true);
-      const res = await api.get("/handleTechnician", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await api.get("/handleTechnician");
       settechnician(res.data);
       setError(null);
     } catch (error) {
@@ -39,9 +37,7 @@ function HandleTechnician() {
     if (!modal.techId) return;
 
     try {
-      const res = await api.delete(`/handleTechnician/${modal.techId}`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-      });
+      const res = await api.delete(`/handleTechnician/${modal.techId}`);
       console.log(res.data);
       getTechnician(); // Refresh the list
       toast.success(res.data.message || "Technician deleted successfully");

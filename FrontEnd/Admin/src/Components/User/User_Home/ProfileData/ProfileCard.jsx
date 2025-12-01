@@ -24,7 +24,6 @@ function ProfileCard({ getRoleColor, user, handleLogout }) {
       const res = await api.post("/profile/upload", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
 

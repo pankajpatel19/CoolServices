@@ -1,75 +1,73 @@
 import "react-toastify/dist/ReactToastify.css";
-import { toast } from "react-toastify";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import api from "../../../Utils/axios";
+
+// -------------------------
+// ZOD SCHEMA
+// -------------------------
+const loginSchema = z.object({
+  phone: z
+    .string()
+    .min(10, "Phone must be 10 digits")
+    .max(10, "Phone must be 10 digits"),
+  password: z.string().min(4, "Password is required"),
+  userrole: z.enum(["customer", "technician", "admin"], {
+    errorMap: () => ({ message: "Role is required" }),
+  }),
+});
 
 function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [form, setform] = useState({ phone: "", password: "", userrole: "" });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: { phone: "", password: "", userrole: "" },
+  });
 
-  const handlechange = (e) => {
-    setform({ ...form, [e.target.name]: e.target.value });
-  };
-
-  const handleform = async (e) => {
-    e.preventDefault();
-
+  const onSubmit = async (data) => {
     try {
-      const res = await api.post("/login", form, {
-        withCredentials: true,
-      });
-      let { role, user } = res.data;
+      const res = await api.post("/login", data, { withCredentials: true });
 
+      const { role, user } = res.data;
       localStorage.setItem("user", JSON.stringify({ ...user, role }));
 
-      toast.success("login SuccessFullly");
-      let redirect = location.state?.from?.pathname;
+      toast.success("Login Successfully");
 
+      let redirect = location.state?.from?.pathname;
       if (!redirect) {
-        if (role === "customer") {
-          redirect = "/Home";
-        } else if (role === "technician") {
-          redirect = "/techhome";
-        } else if (role === "admin") {
-          redirect = "/admin/showbooking";
-        }
+        redirect =
+          role === "customer"
+            ? "/Home"
+            : role === "technician"
+            ? "/techhome"
+            : "/admin/showbooking";
       }
 
       navigate(redirect, { replace: true });
     } catch (error) {
-      console.log(error);
-
-      toast.error(error.response.data.message);
-    }
-
-    if (!form) {
-      return <h1>Please Wait!!!!</h1>;
+      toast.error(error?.response?.data?.message || "Login Failed");
     }
   };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex justify-center items-center p-4">
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar={false}
-        closeOnClick={true}
-        pauseOnHover={true}
-        toastClassName="!bg-white !border !border-gray-200 !shadow-lg !rounded-lg"
-        bodyClassName="!text-sm !font-medium"
-        progressClassName="!bg-blue-500"
-      />
+      <ToastContainer position="top-center" autoClose={3000} />
 
       <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 100, duration: 0.6 }}
-        className="bg-white p-8 rounded-xl shadow-lg border border-gray-100 w-full max-w-md"
+        transition={{ type: "spring", stiffness: 100 }}
+        className="bg-white p-8 rounded-xl shadow-lg  w-full max-w-md"
       >
         {/* Header */}
         <div className="text-center mb-8">
@@ -96,89 +94,83 @@ function Login() {
           </p>
         </div>
 
-        <form onSubmit={handleform} className="space-y-6">
-          {/* Email Field */}
+        {/* FORM */}
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          {/* Phone */}
           <div>
-            <label
-              htmlFor="phone"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <label className="text-sm font-medium text-gray-700 mb-2 block">
               Phone
             </label>
             <input
-              type="number"
-              placeholder="Enter your phone Number"
-              name="phone"
-              minLength={10}
-              maxLength={10}
-              value={form.name}
-              onChange={handlechange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+              type="text"
+              placeholder="Enter your phone number"
+              {...register("phone")}
+              className="w-full px-4 py-3  rounded-lg focus:ring-2 focus:ring-blue-500"
             />
+            {errors.phone && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.phone.message}
+              </p>
+            )}
           </div>
 
-          {/* Password Field */}
+          {/* Password */}
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 mb-2"
-            >
+            <label className="text-sm font-medium text-gray-700 mb-2 block">
               Password
             </label>
             <input
               type="password"
               placeholder="Enter your password"
-              name="password"
-              value={form.password}
-              onChange={handlechange}
-              className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors"
+              {...register("password")}
+              className="w-full px-4 py-3  rounded-lg focus:ring-2 focus:ring-blue-500"
             />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
           </div>
+
+          {/* Role */}
           <div>
             <select
-              name="userrole"
-              value={form.userrole}
-              onChange={handlechange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 appearance-none cursor-pointer"
+              {...register("userrole")}
+              className="w-full px-3 py-3  rounded-lg focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Select Role </option>
+              <option value="">Select Role</option>
               <option value="customer">Customer</option>
               <option value="technician">Technician</option>
               <option value="admin">Admin</option>
             </select>
+
+            {errors.userrole && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.userrole.message}
+              </p>
+            )}
           </div>
-          {/* Login Button */}
+
+          {/* Submit Button */}
           <button
             type="submit"
-            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200 flex items-center justify-center gap-2"
+            disabled={isSubmitting}
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg flex items-center justify-center"
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
-              />
-            </svg>
-            Sign In
+            {isSubmitting ? "Processing..." : "Sign In"}
           </button>
         </form>
 
         {/* Footer */}
         <div className="mt-6 text-center text-sm text-gray-600">
           <button
-            className="text-blue-600 hover:text-blue-700 font-medium ml-1"
+            className="text-blue-600 hover:text-blue-700 font-medium"
             onClick={() => navigate("/forget-password")}
           >
-            Forget Password
+            Forget Password?
           </button>
         </div>
-        <div className="mt-6 text-center text-sm text-gray-600">
+        <div className="mt-4 text-center text-sm text-gray-600">
           Don't have an account?
           <button
             className="text-blue-600 hover:text-blue-700 font-medium ml-1"
@@ -187,12 +179,6 @@ function Login() {
             Sign up
           </button>
         </div>
-        {/* <hr style={{ marginTop: "10px", opacity: "0.2" }} />
-        <div className="place-items-center">
-          <a href="http://localhost:10000/auth/google">
-            <i className="fa-brands fa-google"></i>
-          </a>
-        </div> */}
       </motion.div>
     </div>
   );

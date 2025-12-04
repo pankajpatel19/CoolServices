@@ -17,9 +17,6 @@ function Status({ status, changeStatus }) {
             onChange={changeStatus}
             className="w-full appearance-none bg-white border-2 border-gray-300 hover:border-blue-400 focus:border-blue-500 focus:ring-4 focus:ring-blue-100 rounded-xl px-4 py-3.5 pr-12 text-sm sm:text-base text-gray-800 font-medium cursor-pointer transition-all duration-300 shadow-sm hover:shadow-md focus:outline-none"
           >
-            <option value="" disabled>
-              Select Status
-            </option>
             <option value="all">🆕 All</option>
             <option value="New">🆕 New</option>
             <option value="In Progress">⚙️ In Progress</option>

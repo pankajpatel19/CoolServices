@@ -20,7 +20,7 @@ export const forgotPassword = async (req, res) => {
     user.resetPasswordExpires = Date.now() + 10 * 60 * 1000;
     await user.save();
 
-    const resetLink = `${process.env.FRONTEND_PRODUCTION_VERCEL}/reset-password/${token}`;
+    const resetLink = `${process.env.FRONTEND_HOST}/reset-password/${token}`;
 
     await forget(email, user, resetLink);
 

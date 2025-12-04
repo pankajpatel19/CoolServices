@@ -63,9 +63,9 @@ const router = createBrowserRouter(
           <Route path="contactUs" element={<ContactUs />} />
           <Route path="addbooking" element={<Booking />} />
           <Route path="Services" element={<ShowServices />} />
-          <Route path="history/:id" element={<History />} />
           <Route path="history/upcoming" element={<Upcoming />} />
           <Route path="history/status" element={<HistoryFilter />} />
+          <Route path="history/:id" element={<History />} />
           <Route path="profile/:id" element={<Profile />} />
           <Route path="complain" element={<ComplainForm />} />
           <Route path="complain/:id" element={<ShowComplaints />} />

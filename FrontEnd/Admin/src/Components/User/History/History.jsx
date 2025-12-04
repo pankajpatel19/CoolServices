@@ -13,7 +13,7 @@ import {
   Wrench,
 } from "lucide-react";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Status from "./Status";
 import api from "../../../../Utils/axios";
@@ -61,6 +61,9 @@ function History() {
   const handleGoBack = () => {
     window.history.back();
   };
+  useEffect(() => {
+    getStatusBooking();
+  }, []);
 
   if (loading) {
     return (

@@ -1,10 +1,8 @@
-import { json } from "express";
 import redisCLient from "../../config/redis.config.js";
 import Booking from "../../Models/Booking.model.js";
 import User from "../../Models/User.model.js";
 import { generateBookingPDF } from "../../utils/generateBookingPDF.js";
 import { sendBookEmail } from "../../utils/Sendmails.js";
-import client from "../../config/redis.config.js";
 
 export const Showbooking_Dashboard = async (req, res) => {
   try {
@@ -56,14 +54,13 @@ export const AddBooking = async (req, res) => {
 
 export const ShowBooking = async (req, res) => {
   try {
-    const redisBooking = await redisCLient.get("all_Bookings");
+    // const redisBooking = await redisCLient.get("all_Bookings");
 
-    if (redisBooking) {
-      return res.status(200).json(JSON.parse(redisBooking));
-    }
+    // if (redisBooking) {
+    //   return res.status(200).json(JSON.parse(redisBooking));
+    // }
 
     const showdata = await Booking.find().sort({ date: -1 }).lean();
-    await redisCLient.setEx("all_Bookings", 21600, JSON.stringify(showdata));
 
     res.status(200).json(showdata);
   } catch (error) {
@@ -92,14 +89,10 @@ export const DeleteBooking = async (req, res) => {
 export const UpdateBooking = async (req, res) => {
   try {
     const { status } = req.body;
+    console.log(status);
 
     if (!status) {
       return res.status(400).json({ message: "Status field is required" });
-    }
-    const redisBooking = await redisCLient.get("all_Bookings");
-
-    if (redisBooking) {
-      return res.status(200).json(JSON.parse(redisBooking));
     }
 
     const updated = await Booking.findByIdAndUpdate(
@@ -161,6 +154,7 @@ export const searchData = async (req, res) => {
 
 export const getStatusBooking = async (req, res) => {
   const { status } = req.query;
+  console.log(status);
 
   try {
     if (status === "all") {

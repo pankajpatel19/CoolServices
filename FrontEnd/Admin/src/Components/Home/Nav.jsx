@@ -338,7 +338,7 @@ function Nav() {
                   Services We Provide
                 </Link>
                 <Link
-                  to={`/Home/complain/${user._id}`}
+                  to={`/Home/complain/${user.id}`}
                   onClick={() => setMobileMenuOpen(false)}
                   className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
                 >

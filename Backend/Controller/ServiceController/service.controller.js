@@ -31,7 +31,7 @@ export const getServicesByAppliance = async (req, res) => {
     await redisCLient.setEx(
       `applience : ${appliance}`,
       21600,
-      JSON.stringify(services)
+      JSON.stringify(services),
     );
 
     res.json(services);

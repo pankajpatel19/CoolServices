@@ -2,6 +2,8 @@ import React from "react";
 import { Clock, Tag, Star, Wrench, CheckCircle } from "lucide-react";
 
 function PaymentService({ service }) {
+  console.log(service);
+
   return (
     <>
       <div className="max-w-5xl mx-auto p-4">

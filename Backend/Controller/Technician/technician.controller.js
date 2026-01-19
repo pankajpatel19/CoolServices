@@ -6,24 +6,11 @@ export const techniciandata = async (req, res) => {
   const { username } = req.query;
 
   try {
-    const redis_Technician_Bookings = await redisCLient.get(
-      "Technician_Bookings"
-    );
-    if (redis_Technician_Bookings) {
-      const techBookings = JSON.parse(redis_Technician_Bookings);
-      return res.status(200).json(techBookings);
-    }
     const techdata = await Booking.find({ technician: username });
 
     if (!techdata || techdata.length === 0) {
       return res.status(404).json({ message: "Data not found" });
     }
-    console.log(techdata);
-    await redisCLient.setEx(
-      "Technician_Bookings",
-      60,
-      JSON.stringify(techdata)
-    );
 
     res.status(200).json(techdata);
   } catch (error) {
@@ -61,6 +48,7 @@ export const getTechnician = async (req, res) => {
 
 export const TechStatusBooking = async (req, res) => {
   const { status, name } = req.query;
+  console.log(status);
 
   try {
     if (status === "all") {

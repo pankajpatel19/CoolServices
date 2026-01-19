@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # CoolServices
 🎯 Service Booking Web Application
 

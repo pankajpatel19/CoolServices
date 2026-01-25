@@ -39,7 +39,7 @@ export const AddBooking = async (req, res) => {
     await newBooking.save();
 
     sendBookEmail(newBooking).catch((err) =>
-      console.error("Email send failed:", err)
+      console.error("Email send failed:", err),
     );
 
     res.status(201).json({
@@ -89,7 +89,6 @@ export const DeleteBooking = async (req, res) => {
 export const UpdateBooking = async (req, res) => {
   try {
     const { status } = req.body;
-    console.log(status);
 
     if (!status) {
       return res.status(400).json({ message: "Status field is required" });
@@ -98,7 +97,7 @@ export const UpdateBooking = async (req, res) => {
     const updated = await Booking.findByIdAndUpdate(
       req.params.id,
       { status },
-      { new: true }
+      { new: true },
     );
 
     if (!updated) {
@@ -154,7 +153,6 @@ export const searchData = async (req, res) => {
 
 export const getStatusBooking = async (req, res) => {
   const { status } = req.query;
-  console.log(status);
 
   try {
     if (status === "all") {
@@ -248,7 +246,7 @@ export const getBookingPerUser = async (req, res) => {
     await redisCLient.setEx(
       `booking:user:${id}`,
       21600,
-      JSON.stringify(BookingPerUser)
+      JSON.stringify(BookingPerUser),
     );
 
     res.status(200).json(BookingPerUser);

@@ -27,7 +27,7 @@ app.use(
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  })
+  }),
 );
 
 import ServiceRoutes from "./Routes/Service.Routes.js";
@@ -42,17 +42,12 @@ import {
 } from "./Controller/payment/razorpay.controller.js";
 import userAuth from "./MiddleWare/UserAuth.middleware.js";
 
-// import { authcheck, redirect } from "./Controller/google OAuth/redirect.js";
-
 app.use("/api", UserRoutes);
 app.use("/api", BookingRoutes);
 app.use("/api", TechnicianRoutes);
 app.use("/api/services", ServiceRoutes);
 app.use("/api", ComplaintRoutes);
 app.use("/api/customer", AddressRoutes);
-
-// app.get("/auth/google", redirect);
-// app.get("/auth/google/callback", authcheck);
 
 app.post("/api/create-order", userAuth, payment);
 app.post("/api/verify-order", userAuth, verifyPayment);
@@ -78,7 +73,7 @@ app.post("/home/chat", async (req, res) => {
   } catch (error) {
     console.error(
       "Error with groq API:",
-      error.response ? error.response.data : error.message
+      error.response ? error.response.data : error.message,
     );
     res.status(500).json({ error: "Something went wrong" });
   }

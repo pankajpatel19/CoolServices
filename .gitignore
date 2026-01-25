@@ -1,7 +1,7 @@
 Backend/node_modules/
 Backend/.env
 Backend/Controller/google_OAuth
-
+Backend/Admin/
 #frontend
 FrontEnd/Admin/node_modules/
 FrontEnd/Admin/.env

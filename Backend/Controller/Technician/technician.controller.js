@@ -48,7 +48,6 @@ export const getTechnician = async (req, res) => {
 
 export const TechStatusBooking = async (req, res) => {
   const { status, name } = req.query;
-  console.log(status);
 
   try {
     if (status === "all") {

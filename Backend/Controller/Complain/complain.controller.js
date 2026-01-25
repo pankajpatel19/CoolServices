@@ -5,8 +5,6 @@ export const SubmitComplaints = async (req, res) => {
   try {
     const complaint = new Complain({ ...req.body, user: req.user.id });
 
-    console.log(req.body);
-
     await complaint.save();
 
     res

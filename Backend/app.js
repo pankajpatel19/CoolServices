@@ -3,6 +3,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import helmet from "helmet";
 
 import {
   forgotPassword,
@@ -17,7 +18,7 @@ dotenv.config();
 const groq = new Groq({ apiKey: process.env.GROQ_API });
 
 const port = process.env.PORT || 8888;
-
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());

@@ -57,13 +57,13 @@ export const login = async (req, res) => {
       {
         upsert: true,
         new: true,
-      }
+      },
     );
 
     res.cookie("accessToken", accessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "None" : "Lax",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "Lax",
     });
 
     res.cookie("refreshToken", refreshToken, {
@@ -167,7 +167,7 @@ export const Refresh = async (req, res) => {
       process.env.JWT_SECRET,
       {
         expiresIn: "15m",
-      }
+      },
     );
     res.cookie("accessToken", newAccessToken, {
       httpOnly: true,
@@ -194,7 +194,7 @@ export const currentuser = async (req, res) => {
   try {
     const { id } = req.user;
     const currUser = await User.findById(id).select(
-      "-password -resetPasswordExpires -resetPasswordToken"
+      "-password -resetPasswordExpires -resetPasswordToken",
     );
 
     return res.status(201).json(currUser);
@@ -217,7 +217,7 @@ export const updateProfile = async (req, res) => {
           address: location,
         },
       },
-      { new: true }
+      { new: true },
     ).select("-password");
 
     if (!updatedUser) {
@@ -272,7 +272,7 @@ export const updateImagePro = async (req, res) => {
     const updatedUser = await User.findByIdAndUpdate(
       req.user.id,
       { avatar },
-      { new: true }
+      { new: true },
     ).select("-password");
 
     if (!updatedUser) {

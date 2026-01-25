@@ -12,6 +12,7 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+    unique: true,
   },
   password: {
     type: String,
@@ -19,6 +20,7 @@ const userSchema = new mongoose.Schema({
   phone: {
     type: Number,
     default: "0000000000",
+    unique: true,
   },
   joinAt: {
     type: Date,

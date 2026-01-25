@@ -42,6 +42,7 @@ import {
   verifyPayment,
 } from "./Controller/payment/razorpay.controller.js";
 import userAuth from "./MiddleWare/UserAuth.middleware.js";
+import connectDB from "./config/db.config.js";
 
 app.use("/api", UserRoutes);
 app.use("/api", BookingRoutes);
@@ -85,11 +86,8 @@ app.post("/api/reset-password/:token", resetPassword);
 
 // Start server
 
-const Murl = process.env.MONGO_URL;
+// const Murl = process.env.MONGO_URL;
 app.listen(port, () => {
   console.log(`Server started on http://localhost:${port}`);
-  mongoose
-    .connect(Murl)
-    .then(() => console.log("MongoDB connected"))
-    .catch((err) => console.error("MongoDB connection error:", err));
+  connectDB();
 });

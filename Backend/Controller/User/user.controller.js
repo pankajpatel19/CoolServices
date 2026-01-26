@@ -60,17 +60,14 @@ export const login = async (req, res) => {
       },
     );
 
-    res.cookie("accessToken", accessToken, {
+    const cookieOptions = {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "Lax",
-    });
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
+    };
 
-    res.cookie("refreshToken", refreshToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "none" : "Lax",
-    });
+    res.cookie("accessToken", accessToken, cookieOptions);
+    res.cookie("refreshToken", refreshToken, cookieOptions);
 
     const senitizeUser = {
       id: user._id,

@@ -4,27 +4,38 @@ import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
-
 import {
   forgotPassword,
   resetPassword,
 } from "./Controller/Password/forgot-Password.controller.js";
-
-const app = express();
-
 import dotenv from "dotenv";
 dotenv.config();
 
-const groq = new Groq({ apiKey: process.env.GROQ_API });
+const app = express();
 
+const groq = new Groq({ apiKey: process.env.GROQ_API });
 const port = process.env.PORT || 8888;
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+
+const allowedOrigins = [
+  "https://cool-services.vercel.app",
+  "http://localhost:5173",
+];
 app.use(
   cors({
-    origin: ["https://cool-services.vercel.app", "http://localhost:5173"],
+    origin: function (origin, callback) {
+      // allow non-browser requests (Postman, curl)
+      if (!origin) return callback(null, true);
+
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

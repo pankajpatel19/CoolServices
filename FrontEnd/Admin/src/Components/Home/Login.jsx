@@ -40,7 +40,7 @@ function Login() {
 
       const { role, user } = res.data;
       console.log(role);
-
+      localStorage.setItem("user", JSON.stringify({ user, role }));
       toast.success("Login Successfully");
 
       let redirect = location.state?.from?.pathname;

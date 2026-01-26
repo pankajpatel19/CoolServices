@@ -24,7 +24,6 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import api from "../../../Utils/axios.js";
-import currentUser from "../../../Utils/currentUser.js";
 
 function Nav() {
   const [user, setUser] = useState();
@@ -51,9 +50,12 @@ function Nav() {
   };
 
   useEffect(() => {
-    currentUser().then((user) => {
-      setUser(user);
-    });
+    const currentUser = JSON.parse(localStorage.getItem("user"));
+    if (currentUser) {
+      setUser(currentUser.user);
+    } else {
+      setUser(null);
+    }
   }, []);
 
   return (

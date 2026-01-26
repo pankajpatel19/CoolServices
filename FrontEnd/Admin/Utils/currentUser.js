@@ -1,11 +1,19 @@
-import api from "../Utils/axios.js";
+// import api from "../Utils/axios.js";
 
-async function currentUser(params) {
-  try {
-    const response = await api.get("/currentUser", { withCredentials: true });
-    return response.data;
-  } catch (error) {
-    console.log("Error fetching current user:", error);
-  }
-}
-export default currentUser;
+// const currentUser = async () => {
+//   try {
+//     const res = await api.get("/currentUser", {
+//       withCredentials: true,
+//     });
+
+//     return res.data?.user || null;
+//   } catch (error) {
+//     // 401 = not logged in (normal case)
+//     if (error?.response?.status !== 401) {
+//       console.error("currentUser error:", error);
+//     }
+//     return null;
+//   }
+// };
+
+// export default currentUser;

@@ -24,6 +24,7 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import api from "../../../Utils/axios.js";
+import currentUser from "../../../Utils/currentUser.js";
 
 function Nav() {
   const [user, setUser] = useState();
@@ -45,15 +46,14 @@ function Nav() {
     await api.get("/logout", {
       withCredentials: true,
     });
-    localStorage.removeItem("user");
     toast.success("LogOut SuccessFully");
     navigate("/login");
   };
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-
-    setUser(user);
+    currentUser().then((user) => {
+      setUser(user);
+    });
   }, []);
 
   return (

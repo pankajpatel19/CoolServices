@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import api from "../../Utils/axios";
+import currentUser from "../../Utils/currentUser";
 
 const HistoryContext = createContext();
 
@@ -9,8 +10,12 @@ export const HistoryProvider = ({ children }) => {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?.id;
+  let user;
+  currentUser().then((data) => {
+    user = data;
+  });
+
+  const userId = user?._id;
 
   useEffect(() => {
     const fetchHistory = async () => {

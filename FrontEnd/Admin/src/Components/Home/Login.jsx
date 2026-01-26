@@ -39,7 +39,7 @@ function Login() {
       const res = await api.post("/login", data, { withCredentials: true });
 
       const { role, user } = res.data;
-      localStorage.setItem("user", JSON.stringify({ ...user, role }));
+      console.log(role);
 
       toast.success("Login Successfully");
 
@@ -49,8 +49,8 @@ function Login() {
           role === "customer"
             ? "/Home"
             : role === "technician"
-            ? "/techhome"
-            : "/admin/showbooking";
+              ? "/techhome"
+              : "/admin/showbooking";
       }
 
       navigate(redirect, { replace: true });

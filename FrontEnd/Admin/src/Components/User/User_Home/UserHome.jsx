@@ -94,10 +94,10 @@ function UserHome() {
                     <div className="w-16 h-16 mt-5 sm:w-20 sm:h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
                       <img
                         src={
-                          User.avatar === "undefined" ? (
+                          User?.avatar === "undefined" ? (
                             <User2 className="w-1 h-2 " />
                           ) : (
-                            User.avatar
+                            User?.avatar
                           )
                         }
                         className="w-full h-full object-cover"
@@ -123,10 +123,10 @@ function UserHome() {
                     {User?.userrole === "technician"
                       ? User.userName
                       : User?.userrole === "customer"
-                      ? User.userName
-                      : User?.userrole === "user"
-                      ? User.userName
-                      : "Guest"}
+                        ? User.userName
+                        : User?.userrole === "user"
+                          ? User.userName
+                          : "Guest"}
                     <span className="text-4xl">👋</span>
                   </motion.div>
                 </div>

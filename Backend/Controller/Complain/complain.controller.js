@@ -1,32 +1,34 @@
-import redisCLient from "../../config/redis.config.js";
 import { Complain } from "../../Models/Complaint.model.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
 
-export const SubmitComplaints = async (req, res) => {
+export const SubmitComplaints = async (req, res, next) => {
   try {
-    const complaint = new Complain({ ...req.body, user: req.user.id });
+    const { subject, description, bookingId } = req.body;
 
-    await complaint.save();
+    if (!subject || !description) {
+      return res.status(400).json(new ApiResponse(400, null, "Subject and description are required"));
+    }
 
-    res
-      .status(200)
-      .json({ success: true, message: "Complaint submitted successfully" });
+    const complaint = await Complain.create({
+      ...req.body,
+      user: req.user?.id || req.user?._id,
+    });
+
+    return res.status(201).json(new ApiResponse(201, complaint, "Complaint submitted successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error" });
+    next(error);
   }
 };
 
-export const ShowComplaints = async (req, res) => {
+export const ShowComplaints = async (req, res, next) => {
   try {
-    const complaint = await Complain.find({ user: req.params.id });
+    const userId = req.params.id || req.user?.id || req.user?._id;
+    const complaints = await Complain.find({ user: userId });
 
-    res.status(200).json({
-      success: true,
-      message: "Complaint submitted successfully",
-      complaint,
-    });
+    return res.status(200).json(
+      new ApiResponse(200, complaints, "Complaints fetched successfully")
+    );
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ success: false, message: "Server error" });
+    next(error);
   }
 };

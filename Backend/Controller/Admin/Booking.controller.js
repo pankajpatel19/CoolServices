@@ -3,8 +3,9 @@ import Booking from "../../Models/Booking.model.js";
 import User from "../../Models/User.model.js";
 import { generateBookingPDF } from "../../utils/generateBookingPDF.js";
 import { sendBookEmail } from "../../utils/Sendmails.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
 
-export const Showbooking_Dashboard = async (req, res) => {
+export const Showbooking_Dashboard = async (req, res, next) => {
   try {
     const [total, newBooking, InProgress, Done] = await Promise.all([
       Booking.countDocuments(),
@@ -13,245 +14,244 @@ export const Showbooking_Dashboard = async (req, res) => {
       Booking.countDocuments({ status: "Done" }),
     ]);
 
-    res.status(200).json({ total, newBooking, InProgress, Done });
+    return res.status(200).json(
+      new ApiResponse(200, { total, newBooking, InProgress, Done }, "Dashboard stats fetched")
+    );
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching dashboard data", error });
+    next(error);
   }
 };
 
-export const bookData = async (req, res) => {
+export const bookData = async (req, res, next) => {
   try {
-    const booking = await Booking.findById(req.params.id);
+    const booking = await Booking.findById(req.params.id).populate("user", "userName email phone");
     if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
+      return res.status(404).json(new ApiResponse(404, null, "Booking not found"));
     }
-    res.status(200).json(booking);
+    return res.status(200).json(new ApiResponse(200, booking, "Booking details fetched"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching booking", error });
+    next(error);
   }
 };
 
-export const AddBooking = async (req, res) => {
+export const AddBooking = async (req, res, next) => {
   try {
-    const newBooking = new Booking({ ...req.body, user: req.user.id });
-    await newBooking.save();
+    const { productType, address, phone, date } = req.body;
+    if (!productType || !address || !phone) {
+      return res.status(400).json(new ApiResponse(400, null, "Missing required booking fields"));
+    }
 
+    const newBooking = await Booking.create({
+      ...req.body,
+      user: req.user?.id || req.user?._id,
+      status: "New"
+    });
+
+    // Fire and forget email
     sendBookEmail(newBooking).catch((err) =>
-      console.error("Email send failed:", err),
+      console.warn("[BookingEmail] Failed to send:", err.message)
     );
 
-    res.status(201).json({
-      message: "Booking created successfully",
-      newBooking,
-    });
+    // Invalidate caches
+    await redisCLient.del("all_Bookings");
+    if (req.user?.id) await redisCLient.del(`booking:user:${req.user.id}`);
+
+    return res.status(201).json(new ApiResponse(201, newBooking, "Booking created successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error creating booking", error });
+    next(error);
   }
 };
 
-export const ShowBooking = async (req, res) => {
+export const ShowBooking = async (req, res, next) => {
   try {
-    // const redisBooking = await redisCLient.get("all_Bookings");
+    const cacheKey = "all_Bookings";
+    const cachedBookings = await redisCLient.get(cacheKey);
 
-    // if (redisBooking) {
-    //   return res.status(200).json(JSON.parse(redisBooking));
-    // }
+    if (cachedBookings) {
+      return res.status(200).json(
+        new ApiResponse(200, JSON.parse(cachedBookings), "All bookings fetched (cached)")
+      );
+    }
 
-    const showdata = await Booking.find().sort({ date: -1 }).lean();
+    const bookings = await Booking.find()
+      .populate("user", "userName email phone")
+      .sort({ createdAt: -1 })
+      .lean();
 
-    res.status(200).json(showdata);
+    await redisCLient.setEx(cacheKey, 3600, JSON.stringify(bookings)); // Cache for 1 hour
+
+    return res.status(200).json(new ApiResponse(200, bookings, "All bookings fetched successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching bookings", error });
+    next(error);
   }
 };
 
-export const DeleteBooking = async (req, res) => {
+export const DeleteBooking = async (req, res, next) => {
   try {
     const id = req.params.id;
-
-    const deleted = await Booking.findByIdAndDelete(id);
-
-    await redisCLient.del("all_Bookings");
-    if (!deleted) {
-      return res.status(404).json({ message: "Booking not found" });
+    const booking = await Booking.findById(id);
+    
+    if (!booking) {
+      return res.status(404).json(new ApiResponse(404, null, "Booking not found"));
     }
-    res.status(200).json({ message: "Booking deleted successfully" });
+
+    await Booking.findByIdAndDelete(id);
+
+    // Invalidate caches
+    await redisCLient.del("all_Bookings");
+    await redisCLient.del(`booking:user:${booking.user}`);
+
+    return res.status(200).json(new ApiResponse(200, null, "Booking deleted successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error deleting booking", error });
+    next(error);
   }
 };
 
-export const UpdateBooking = async (req, res) => {
+export const UpdateBooking = async (req, res, next) => {
   try {
-    const { status } = req.body;
-
-    if (!status) {
-      return res.status(400).json({ message: "Status field is required" });
-    }
+    const { status, technician } = req.body;
+    const id = req.params.id;
 
     const updated = await Booking.findByIdAndUpdate(
-      req.params.id,
-      { status },
-      { new: true },
-    );
+      id,
+      { $set: { status, technician } },
+      { new: true }
+    ).populate("user", "userName email phone");
 
     if (!updated) {
-      return res.status(404).json({ message: "Booking not found" });
+      return res.status(404).json(new ApiResponse(404, null, "Booking not found"));
     }
-    await redisCLient.setEx("all_Bookings", 21600, JSON.stringify(updated));
 
-    res.status(200).json({ message: "Booking updated successfully", updated });
+    // Invalidate caches
+    await redisCLient.del("all_Bookings");
+    await redisCLient.del(`booking:user:${updated.user?._id || updated.user}`);
+
+    return res.status(200).json(new ApiResponse(200, updated, "Booking updated successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error updating booking", error });
+    next(error);
   }
 };
 
-export const historyBookingPDF = async (req, res) => {
+export const historyBookingPDF = async (req, res, next) => {
   try {
-    const booking = await Booking.findById(req.params.id);
+    const booking = await Booking.findById(req.params.id).populate("user", "userName email phone address");
     if (!booking) {
-      return res.status(404).json({ message: "Booking not found" });
+      return res.status(404).json(new ApiResponse(404, null, "Booking not found"));
     }
     generateBookingPDF(booking, res);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error generating booking PDF", error });
+    next(error);
   }
 };
 
-export const searchData = async (req, res) => {
-  const { startDate, endDate } = req.query;
-
-  if (!startDate || !endDate) {
-    return res
-      .status(400)
-      .json({ message: "Please provide start and end dates" });
-  }
-
+export const searchData = async (req, res, next) => {
   try {
-    const filter = await Booking.find({
-      issueDate: {
+    const { startDate, endDate } = req.query;
+
+    if (!startDate || !endDate) {
+      return res.status(400).json(new ApiResponse(400, null, "Start and end dates are required"));
+    }
+
+    const bookings = await Booking.find({
+      createdAt: {
         $gte: new Date(startDate),
         $lte: new Date(endDate),
       },
     })
-      .sort({ issueDate: -1 })
+      .populate("user", "userName email")
+      .sort({ createdAt: -1 })
       .lean();
 
-    res.status(200).json(filter);
+    return res.status(200).json(new ApiResponse(200, bookings, "Filtered bookings fetched"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error filtering bookings", error });
+    next(error);
   }
 };
 
-export const getStatusBooking = async (req, res) => {
-  const { status } = req.query;
-
+export const getStatusBooking = async (req, res, next) => {
   try {
-    if (status === "all") {
-      const bookings = await Booking.find({ user: req.user.id }).lean();
+    const { status } = req.query;
+    const userId = req.user?.id || req.user?._id;
 
-      if (bookings.length === 0) {
-        return res
-          .status(404)
-          .json({ message: "No bookings found , book a service " });
-      }
-
-      return res.status(200).json(bookings);
+    const query = { user: userId };
+    if (status && status !== "all") {
+      query.status = status;
     }
 
-    const bookings = await Booking.find({
-      $and: [{ status }, { user: req.user.id }],
-    }).lean();
+    const bookings = await Booking.find(query).sort({ createdAt: -1 }).lean();
 
-    if (bookings.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No bookings found with this status" });
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json(new ApiResponse(404, [], "No bookings found for the requested status"));
     }
 
-    res.status(200).json(bookings);
+    return res.status(200).json(new ApiResponse(200, bookings, "User bookings fetched successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching bookings", error });
+    next(error);
   }
 };
 
-export const AdminStatusBooking = async (req, res) => {
-  const { status } = req.query;
-
+export const AdminStatusBooking = async (req, res, next) => {
   try {
-    if (status === "all") {
-      const bookings = await Booking.find().lean();
+    const { status } = req.query;
 
-      if (bookings.length === 0) {
-        return res.status(404).json({ message: "No bookings found" });
-      }
-      return res.status(200).json(bookings);
+    const query = {};
+    if (status && status !== "all") {
+      query.status = status;
     }
 
-    const bookings = await Booking.find({ status }).lean();
-    if (bookings.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No bookings found with this status" });
+    const bookings = await Booking.find(query)
+      .populate("user", "userName email")
+      .sort({ createdAt: -1 })
+      .lean();
+
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json(new ApiResponse(404, [], "No matching bookings found"));
     }
 
-    res.status(200).json(bookings);
+    return res.status(200).json(new ApiResponse(200, bookings, "Bookings filtered by status"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching admin bookings", error });
+    next(error);
   }
 };
 
-export const getUsers = async (req, res) => {
+export const getUsers = async (req, res, next) => {
   try {
-    const redisUser = await redisCLient.get("users");
+    const cacheKey = "users_customer";
+    const cachedUsers = await redisCLient.get(cacheKey);
 
-    if (redisUser) {
-      return res.status(200).json(JSON.parse(redisUser));
+    if (cachedUsers) {
+      return res.status(200).json(new ApiResponse(200, JSON.parse(cachedUsers), "Customers fetched (cached)"));
     }
-    const users = await User.find({ userrole: "customer" }).lean();
-    await redisCLient.setEx("users", 21600, JSON.stringify(users));
 
-    res.status(200).json(users);
+    const users = await User.find({ userrole: "customer" }).select("-password").lean();
+    await redisCLient.setEx(cacheKey, 3600, JSON.stringify(users));
+
+    return res.status(200).json(new ApiResponse(200, users, "Customers fetched successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching users", error });
+    next(error);
   }
 };
 
-export const getBookingPerUser = async (req, res) => {
-  const { id } = req.params;
+export const getBookingPerUser = async (req, res, next) => {
   try {
-    const redisBookingPerUser = await redisCLient.get(`booking:user:${id}`);
-
-    if (redisBookingPerUser) {
-      return res.status(200).json(JSON.parse(redisBookingPerUser));
+    const { id } = req.params;
+    const cacheKey = `booking:user:${id}`;
+    
+    const cachedData = await redisCLient.get(cacheKey);
+    if (cachedData) {
+      return res.status(200).json(new ApiResponse(200, JSON.parse(cachedData), "User bookings fetched (cached)"));
     }
 
-    const BookingPerUser = await Booking.find({ user: id }).lean();
-    if (BookingPerUser.length === 0) {
-      return res
-        .status(404)
-        .json({ message: "No bookings found for this user" });
+    const bookings = await Booking.find({ user: id }).sort({ createdAt: -1 }).lean();
+    
+    if (!bookings || bookings.length === 0) {
+      return res.status(404).json(new ApiResponse(404, [], "No bookings found for this user"));
     }
-    await redisCLient.setEx(
-      `booking:user:${id}`,
-      21600,
-      JSON.stringify(BookingPerUser),
-    );
 
-    res.status(200).json(BookingPerUser);
+    await redisCLient.setEx(cacheKey, 1800, JSON.stringify(bookings));
+
+    return res.status(200).json(new ApiResponse(200, bookings, "User bookings fetched successfully"));
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error fetching user bookings", error });
+    next(error);
   }
 };

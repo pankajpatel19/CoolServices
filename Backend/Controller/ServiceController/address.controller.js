@@ -1,49 +1,61 @@
 import Address from "../../Models/Address.model.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
 
-export const add_address = async (req, res) => {
+export const add_address = async (req, res, next) => {
   try {
-    const newAddress = new Address({
+    const { addressLine1, city, state, zipCode, country, addressType } = req.body;
+
+    if (!addressLine1 || !city || !state || !zipCode || !country || !addressType) {
+      return res.status(400).json(new ApiResponse(400, null, "All required address fields must be provided"));
+    }
+
+    const newAddress = await Address.create({
       ...req.body,
-      user: req.user.id,
+      user: req.user?.id || req.user?._id,
     });
-    await newAddress.save();
-    res.status(200).json({ message: "Address Saved SuccessFully" });
+
+    return res.status(201).json(new ApiResponse(201, newAddress, "Address saved successfully"));
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: "Something Went Wrong" });
+    next(error);
   }
 };
 
-export const show_address = async (req, res) => {
+export const show_address = async (req, res, next) => {
   try {
-    const Addresses = await Address.find({ user: req.params.id });
-    res
-      .status(200)
-      .json({ message: "Address Fetched SuccessFully", Addresses });
+    const userId = req.params.id || req.user?.id || req.user?._id;
+    const addresses = await Address.find({ user: userId });
+    
+    return res.status(200).json(new ApiResponse(200, addresses, "Addresses fetched successfully"));
   } catch (error) {
-    console.log(error.message);
-    res.status(500).json({ message: "Something Went Wrong" });
+    next(error);
   }
 };
 
-export const delete_address = async (req, res) => {
+export const delete_address = async (req, res, next) => {
   try {
-    await Address.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: "Address Deleted" });
+    const deletedAddress = await Address.findByIdAndDelete(req.params.id);
+    if (!deletedAddress) {
+      return res.status(404).json(new ApiResponse(404, null, "Address not found"));
+    }
+    return res.status(200).json(new ApiResponse(200, null, "Address deleted successfully"));
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: "Something Went Wrong" });
+    next(error);
   }
 };
 
-export const PaymentDetails = async (req, res) => {
+export const PaymentDetails = async (req, res, next) => {
   try {
     const details = await Address.findById(req.params.id).populate(
       "user",
-      "username email phone avatar"
+      "userName email phone avatar"
     );
-    res.status(200).json({ message: "details fetched", details });
+    
+    if (!details) {
+      return res.status(404).json(new ApiResponse(404, null, "Address details not found"));
+    }
+
+    return res.status(200).json(new ApiResponse(200, details, "Address details fetched successfully"));
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };

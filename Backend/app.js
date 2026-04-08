@@ -1,82 +1,80 @@
 import express from "express";
-import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import helmet from "helmet";
-import {
-  forgotPassword,
-  resetPassword,
-} from "./Controller/Password/forgot-Password.controller.js";
 import dotenv from "dotenv";
+import connectDB from "./config/db.config.js";
+import errorMiddleware from "./MiddleWare/Error.middleware.js";
+
+// Routes
+import UserRoutes from "./Routes/User.Routes.js";
+import ServiceRoutes from "./Routes/Service.Routes.js";
+import BookingRoutes from "./Routes/Booking.Routes.js";
+import TechnicianRoutes from "./Routes/Technician.Routes.js";
+import ComplaintRoutes from "./Routes/Complain.Routes.js";
+import AddressRoutes from "./Routes/Address.Routes.js";
+import PaymentRoutes from "./Routes/Payment.Routes.js";
+import AiRoutes from "./Routes/AI.Routes.js";
+
 dotenv.config();
 
 const app = express();
+const port = process.env.PORT || 10000;
 
-const port = process.env.PORT || 8888;
+// Middleware
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
+// CORS Configuration
 const allowedOrigins = [
   "https://cool-services.vercel.app",
   "http://localhost:5173",
+  "http://localhost:3000",
 ];
+
 app.use(
   cors({
     origin: function (origin, callback) {
-      // allow non-browser requests (Postman, curl)
-      if (!origin) return callback(null, true);
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
       }
-
-      callback(new Error("Not allowed by CORS"));
     },
     credentials: true,
-    allowedHeaders: ["Content-Type", "Authorization"],
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   }),
 );
 
-import ServiceRoutes from "./Routes/Service.Routes.js";
-import UserRoutes from "./Routes/User.Routes.js";
-import BookingRoutes from "./Routes/Booking.Routes.js";
-import TechnicianRoutes from "./Routes/Technician.Routes.js";
-import ComplaintRoutes from "./Routes/Complain.Routes.js";
-import AddressRoutes from "./Routes/Address.Routes.js";
-import {
-  payment,
-  verifyPayment,
-} from "./Controller/payment/razorpay.controller.js";
-import userAuth from "./MiddleWare/UserAuth.middleware.js";
-import connectDB from "./config/db.config.js";
-import errorMiddleware from "./MiddleWare/Error.middleware.js";
-import { getAIResponse } from "./Controller/User/ai.controller.js";
+// Health Check
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "ok", timestamp: new Date().toISOString() });
+});
 
-app.use("/api", UserRoutes);
-app.use("/api", BookingRoutes);
-app.use("/api", TechnicianRoutes);
+// API Routes
+app.use("/api/users", UserRoutes);
+app.use("/api/bookings", BookingRoutes);
+app.use("/api/technicians", TechnicianRoutes);
 app.use("/api/services", ServiceRoutes);
-app.use("/api", ComplaintRoutes);
-app.use("/api/customer", AddressRoutes);
-
-app.post("/api/create-order", userAuth, payment);
-app.post("/api/verify-order", userAuth, verifyPayment);
-
-app.post("/home/chat", userAuth, getAIResponse);
-
-app.post("/api/forgot-password", forgotPassword);
-app.post("/api/reset-password/:token", resetPassword);
+app.use("/api/complaints", ComplaintRoutes);
+app.use("/api/address", AddressRoutes);
+app.use("/api/payments", PaymentRoutes);
+app.use("/api/ai", AiRoutes);
 
 // Global Error Handler (Must be last)
 app.use(errorMiddleware);
 
-// Start server
-
-// const Murl = process.env.MONGO_URL;
-app.listen(port, () => {
-  console.log(`Server started on http://localhost:${port}`);
-  connectDB();
+// Server Startup
+app.listen(port, async () => {
+  console.log(`[Server] Running on http://localhost:${port}`);
+  try {
+    await connectDB();
+    console.log("[Database] Connected successfully");
+  } catch (error) {
+    console.error("[Database] Connection failed:", error.message);
+    process.exit(1);
+  }
 });

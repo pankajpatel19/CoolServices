@@ -1,41 +1,63 @@
 import redisCLient from "../../config/redis.config.js";
 import Service from "../../Models/Services.model.js";
-export const addService = async (req, res) => {
+import { ApiResponse } from "../../utils/ApiResponse.js";
+
+export const addService = async (req, res, next) => {
   try {
     const { appliance, name, price, videoUrl, description } = req.body;
-    const service = new Service({
+
+    if (!appliance || !name || !price) {
+      return res.status(400).json(new ApiResponse(400, null, "Appliance, name, and price are required"));
+    }
+
+    const service = await Service.create({
       appliance,
       name,
       price,
       videoUrl,
       description,
     });
-    await service.save();
-    res.status(201).json({ message: "Service added successfully", service });
+
+    // Invalidate the cache for this appliance category
+    await redisCLient.del(`appliance:${appliance.toLowerCase()}`);
+
+    return res.status(201).json(
+      new ApiResponse(201, service, "Service added successfully")
+    );
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };
 
-export const getServicesByAppliance = async (req, res) => {
+export const getServicesByAppliance = async (req, res, next) => {
   try {
     const { appliance } = req.query;
-
-    const redisProvide = await redisCLient.get(`applience : ${appliance}`);
-
-    if (redisProvide) {
-      return res.status(200).json(JSON.parse(redisProvide));
+    if (!appliance) {
+      return res.status(400).json(new ApiResponse(400, null, "Appliance category is required"));
     }
-    const services = await Service.find({ appliance });
 
+    const cacheKey = `appliance:${appliance.toLowerCase()}`;
+    const cachedData = await redisCLient.get(cacheKey);
+
+    if (cachedData) {
+      return res.status(200).json(
+        new ApiResponse(200, JSON.parse(cachedData), "Services fetched (cached)")
+      );
+    }
+
+    const services = await Service.find({ appliance: new RegExp(`^${appliance}$`, "i") });
+
+    // Cache for 6 hours
     await redisCLient.setEx(
-      `applience : ${appliance}`,
+      cacheKey,
       21600,
       JSON.stringify(services),
     );
 
-    res.json(services);
+    return res.status(200).json(
+      new ApiResponse(200, services, "Services fetched successfully")
+    );
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    next(err);
   }
 };

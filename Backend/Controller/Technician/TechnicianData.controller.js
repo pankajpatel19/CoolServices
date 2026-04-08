@@ -3,51 +3,58 @@ import User from "../../Models/User.model.js";
 import Booking from "../../Models/Booking.model.js";
 import { TechReminder } from "../../utils/Sendmails.js";
 import redisCLient from "../../config/redis.config.js";
+import { ApiResponse } from "../../utils/ApiResponse.js";
 
-export const handleTech = async (req, res) => {
+export const handleTech = async (req, res, next) => {
   try {
-    const redisTechnician = await redisCLient.get("Technicians");
+    const cacheKey = "Technicians";
+    const cachedTechnicians = await redisCLient.get(cacheKey);
 
-    if (redisTechnician) {
-      return res.status(200).json(JSON.parse(redisTechnician));
+    if (cachedTechnicians) {
+      return res.status(200).json(
+        new ApiResponse(200, JSON.parse(cachedTechnicians), "Technicians fetched (cached)")
+      );
     }
 
-    const technicians = await User.find({ userrole: "technician" }).lean();
+    const technicians = await User.find({ userrole: "technician" }).select("-password").lean();
 
     if (!technicians || technicians.length === 0) {
-      return res.status(404).json({ message: "No technicians found" });
+      return res.status(404).json(new ApiResponse(404, [], "No technicians found"));
     }
-    await redisCLient.setEx("Technicians", 60, JSON.stringify(technicians));
 
-    res.status(200).json(technicians);
+    await redisCLient.setEx(cacheKey, 600, JSON.stringify(technicians)); // Cache for 10 mins
+
+    return res.status(200).json(new ApiResponse(200, technicians, "Technicians fetched successfully"));
   } catch (error) {
-    console.error("Error fetching technicians:", error);
-    res.status(500).json({ message: "Error fetching technicians", error });
+    next(error);
   }
 };
 
-export const deleteTech = async (req, res) => {
+export const deleteTech = async (req, res, next) => {
   try {
     const deleted = await User.findByIdAndDelete(req.params.id);
 
     if (!deleted) {
-      return res.status(404).json({ message: "Technician not found" });
+      return res.status(404).json(new ApiResponse(404, null, "Technician not found"));
     }
 
-    res.status(200).json({ message: "Technician deleted successfully" });
+    // Invalidate caches
+    await redisCLient.del("Technicians");
+    await redisCLient.del(`technicianProfile:${req.params.id}`);
+
+    return res.status(200).json(new ApiResponse(200, null, "Technician deleted successfully"));
   } catch (error) {
-    console.error("Error deleting technician:", error);
-    res.status(500).json({ message: "Error deleting technician", error });
+    next(error);
   }
 };
 
-export const UpdateTechnician = async (req, res) => {
+export const UpdateTechnician = async (req, res, next) => {
   try {
     const id = req.params.id;
     const { technician } = req.body;
 
     if (!technician) {
-      return res.status(400).json({ message: "Technician field is required" });
+      return res.status(400).json(new ApiResponse(400, null, "Technician assignment is required"));
     }
 
     const updatedBooking = await Booking.findByIdAndUpdate(
@@ -57,62 +64,58 @@ export const UpdateTechnician = async (req, res) => {
     );
 
     if (!updatedBooking) {
-      return res.status(404).json({ message: "Booking not found" });
+      return res.status(404).json(new ApiResponse(404, null, "Booking not found"));
     }
 
     try {
       await TechReminder(updatedBooking);
     } catch (err) {
-      console.error("TechReminder failed:", err);
+      console.warn("[TechReminder] Failed to send notification:", err.message);
     }
 
-    res.status(200).json({
-      message: "Technician assigned successfully",
-      updatedBooking,
-    });
+    return res.status(200).json(
+      new ApiResponse(200, updatedBooking, "Technician assigned successfully")
+    );
   } catch (error) {
-    console.error("Error updating technician:", error);
-    res.status(500).json({ message: "Error updating technician", error });
+    next(error);
   }
 };
 
-export const updateLocation = async (req, res) => {
+export const updateLocation = async (req, res, next) => {
   try {
     const { technicianId, latitude, longitude } = req.body;
+    const currentTechId = technicianId || req.user?.id || req.user?._id;
 
-    if (!technicianId || !latitude || !longitude) {
-      return res.status(400).json({ message: "Missing required fields" });
+    if (!currentTechId || latitude === undefined || longitude === undefined) {
+      return res.status(400).json(new ApiResponse(400, null, "Missing location data"));
     }
 
     const location = await TechnicianLocation.findOneAndUpdate(
-      { technicianId },
+      { technicianId: currentTechId },
       { latitude, longitude, updatedAt: Date.now() },
       { upsert: true, new: true }
     );
 
-    res.status(200).json({
-      message: "Technician location updated successfully",
-      location,
-    });
+    return res.status(200).json(
+      new ApiResponse(200, location, "Technician location updated successfully")
+    );
   } catch (error) {
-    console.error("Error updating technician location:", error);
-    res.status(500).json({ message: "Error updating location", error });
+    next(error);
   }
 };
 
-export const getAllLocations = async (req, res) => {
+export const getAllLocations = async (req, res, next) => {
   try {
     const locations = await TechnicianLocation.find()
-      .populate("technicianId", "phone userName")
+      .populate("technicianId", "phone userName email avatar")
       .lean();
 
     if (!locations || locations.length === 0) {
-      return res.status(404).json({ message: "No technician locations found" });
+      return res.status(404).json(new ApiResponse(404, [], "No technician locations found"));
     }
 
-    res.status(200).json(locations);
+    return res.status(200).json(new ApiResponse(200, locations, "Technician locations fetched successfully"));
   } catch (error) {
-    console.error("Error fetching technician locations:", error);
-    res.status(500).json({ message: "Error fetching locations", error });
+    next(error);
   }
 };

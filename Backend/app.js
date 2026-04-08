@@ -1,4 +1,3 @@
-import Groq from "groq-sdk";
 import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
@@ -13,7 +12,6 @@ dotenv.config();
 
 const app = express();
 
-const groq = new Groq({ apiKey: process.env.GROQ_API });
 const port = process.env.PORT || 8888;
 app.use(helmet());
 app.use(express.json());
@@ -54,6 +52,8 @@ import {
 } from "./Controller/payment/razorpay.controller.js";
 import userAuth from "./MiddleWare/UserAuth.middleware.js";
 import connectDB from "./config/db.config.js";
+import errorMiddleware from "./MiddleWare/Error.middleware.js";
+import { getAIResponse } from "./Controller/User/ai.controller.js";
 
 app.use("/api", UserRoutes);
 app.use("/api", BookingRoutes);
@@ -65,35 +65,13 @@ app.use("/api/customer", AddressRoutes);
 app.post("/api/create-order", userAuth, payment);
 app.post("/api/verify-order", userAuth, verifyPayment);
 
-// Chat route
-app.post("/home/chat", async (req, res) => {
-  try {
-    const { data } = req.body;
-    if (!data) return res.status(400).json({ error: "Message required" });
-
-    const chatCompletion = await groq.chat.completions.create({
-      messages: [
-        {
-          role: "user",
-          content: data,
-        },
-      ],
-      model: "llama-3.1-8b-instant",
-    });
-
-    const reply = chatCompletion.choices[0]?.message?.content || "";
-    res.json({ text: reply });
-  } catch (error) {
-    console.error(
-      "Error with groq API:",
-      error.response ? error.response.data : error.message,
-    );
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
+app.post("/home/chat", userAuth, getAIResponse);
 
 app.post("/api/forgot-password", forgotPassword);
 app.post("/api/reset-password/:token", resetPassword);
+
+// Global Error Handler (Must be last)
+app.use(errorMiddleware);
 
 // Start server
 

@@ -82,7 +82,9 @@ function EditProfile({ user, getRoleColor, handleLogout }) {
               <div>
                 <p className="text-sm text-gray-600">Member Since</p>
                 <p className="font-medium text-gray-900">
-                  {new Date(user.joinAt).toLocaleDateString()}
+                  {user.joinAt 
+                    ? new Date(user.joinAt).toLocaleDateString() 
+                    : "Not available"}
                 </p>
               </div>
             </div>

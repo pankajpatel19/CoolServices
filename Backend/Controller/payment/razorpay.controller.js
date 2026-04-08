@@ -39,22 +39,22 @@ export const verifyPayment = async (req, res) => {
       .update(sign)
       .digest("hex");
 
-    const newPayment = new Payment({
-      user: req.user.id,
-      service: service_id,
-      razorpay_order_id,
-      razorpay_payment_id,
-      razorpay_signature,
-    });
-
-    await newPayment.save();
-
     if (expectedSign === razorpay_signature) {
+      const newPayment = new Payment({
+        user: req.user.id,
+        service: service_id,
+        razorpay_order_id,
+        razorpay_payment_id,
+        razorpay_signature,
+      });
+
+      await newPayment.save();
+
       return res
         .status(200)
         .json({ message: "Payment SuccessFull", success: true });
     } else {
-      return res.status(400).json({ message: "failed", success: false });
+      return res.status(400).json({ message: "Payment verification failed", success: false });
     }
   } catch (error) {
     console.error("Payment verification error:", error);

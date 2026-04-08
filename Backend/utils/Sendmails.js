@@ -5,11 +5,17 @@ dotenv.config();
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 export const sendBookEmail = async (booking) => {
-  await sgMail.send({
-    from: `"Service Booking" <${process.env.EMAIL_USER}>`,
-    to: booking.email || process.env.ADMIN_EMAIL,
-    subject: `Booking Confirmed - ${booking.appliance} Service`,
-    html: `
+  if (!booking) {
+    console.error("[EmailService] sendBookEmail aborted: No booking data provided");
+    return;
+  }
+
+  try {
+    await sgMail.send({
+      from: `"Service Booking" <${process.env.EMAIL_USER}>`,
+      to: booking.email || process.env.ADMIN_EMAIL,
+      subject: `Booking Confirmed - ${booking.appliance} Service`,
+      html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -152,15 +158,25 @@ export const sendBookEmail = async (booking) => {
       </body>
       </html>
     `,
-  });
+    });
+    console.log(`[EmailService] Booking confirmation sent to ${booking.email || "Admin"}`);
+  } catch (error) {
+    console.error("[EmailService] sendBookEmail failed:", error.response?.body || error.message);
+  }
 };
 
 export const SignUpEmail = async (register) => {
-  await sgMail.send({
-    from: `"Cool Service Store" <${process.env.EMAIL_USER}>`,
-    to: register.email || process.env.ADMIN_EMAIL,
-    subject: "Welcome to Cool Service Store! 🎉",
-    html: `
+  if (!register || !register.email) {
+    console.error("[EmailService] SignUpEmail aborted: Invalid register data");
+    return;
+  }
+
+  try {
+    await sgMail.send({
+      from: `"Cool Service Store" <${process.env.EMAIL_USER}>`,
+      to: register.email || process.env.ADMIN_EMAIL,
+      subject: "Welcome to Cool Service Store! 🎉",
+      html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -329,11 +345,17 @@ export const SignUpEmail = async (register) => {
 };
 
 export const alertUser = async (data) => {
-  await sgMail.send({
-    from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
-    to: data.email || process.env.ADMIN_EMAIL,
-    subject: `Service Request Confirmed ✅ - #${data.requestId || "PENDING"}`,
-    html: `
+  if (!data || !data.email) {
+    console.error("[EmailService] alertUser aborted: Invalid data");
+    return;
+  }
+
+  try {
+    await sgMail.send({
+      from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
+      to: data.email || process.env.ADMIN_EMAIL,
+      subject: `Service Request Confirmed ✅ - #${data.requestId || "PENDING"}`,
+      html: `
       <!DOCTYPE html>
       <html>
       <head>
@@ -644,11 +666,17 @@ export const alertUser = async (data) => {
 };
 
 export const TechReminder = async (job) => {
-  await sgMail.send({
-    from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
-    to: job.technicianEmail || process.env.ADMIN_EMAIL,
-    subject: `🛠 New Job Assigned - Service #${job.id}`,
-    html: `
+  if (!job || !job.technicianEmail) {
+    console.error("[EmailService] TechReminder aborted: Invalid job data");
+    return;
+  }
+
+  try {
+    await sgMail.send({
+      from: `"Home Appliance Service Store" <${process.env.EMAIL_USER}>`,
+      to: job.technicianEmail || process.env.ADMIN_EMAIL,
+      subject: `🛠 New Job Assigned - Service #${job.id}`,
+      html: `
       <!DOCTYPE html>
       <html>
       <head>

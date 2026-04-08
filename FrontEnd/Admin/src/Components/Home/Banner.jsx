@@ -127,7 +127,7 @@ function Banner() {
                   className="group flex items-center justify-center space-x-3 px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-600 hover:to-blue-700 text-white font-semibold rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
                 >
                   <Wrench className="w-5 h-5" />
-                  <Link to="/Home/addbooking">
+                  <Link to="/home/addbooking">
                     <span>Book a Service Now</span>
                   </Link>
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />

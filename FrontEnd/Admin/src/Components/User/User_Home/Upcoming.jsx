@@ -1,5 +1,5 @@
 import React from "react";
-import { useHistoryData } from "../../../Contaxt/HistoryContaxt";
+import { useHistoryData } from "../../../context/HistoryContext";
 
 function Upcoming() {
   const { history, loading } = useHistoryData();

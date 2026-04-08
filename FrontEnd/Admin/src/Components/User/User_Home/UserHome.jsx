@@ -1,14 +1,13 @@
-import { useEffect } from "react";
-import { useState } from "react";
-import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import StateCard from "./StateCard";
-import ComplainBox from "./Complaints/ComplainBox";
+import ComplainBox from "./complaints/ComplainBox";
 import { User2 } from "lucide-react";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 
 function UserHome() {
-  const [User, setUser] = useState("");
+  const [User, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
   const navigate = useNavigate();
@@ -23,8 +22,11 @@ function UserHome() {
   };
 
   useEffect(() => {
-    currUser();
-    setIsLoading(false);
+    const initialize = async () => {
+      await currUser();
+      setIsLoading(false);
+    };
+    initialize();
   }, []);
 
   if (isLoading) {
@@ -152,7 +154,7 @@ function UserHome() {
                 transition={{ delay: 0.7, duration: 0.5 }}
               >
                 <button
-                  onClick={() => navigate("/Home/addbooking")}
+                  onClick={() => navigate("/home/addbooking")}
                   className="relative flex-1 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white px-8 py-5 rounded-2xl font-bold text-lg hover:from-blue-700 hover:via-indigo-700 hover:to-purple-700 transform hover:scale-105 hover:-translate-y-1 transition-all duration-300 shadow-xl hover:shadow-2xl flex items-center justify-center gap-3 group overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
@@ -188,7 +190,7 @@ function UserHome() {
                 </button>
 
                 <Link
-                  to={`/Home/history/${User._id}`}
+                  to={`/home/history/${User._id}`}
                   className="relative flex-1 bg-white text-gray-800 px-8 py-5 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl hover:-translate-y-1 overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -226,7 +228,7 @@ function UserHome() {
                 </Link>
 
                 <Link
-                  to="/Home/Services"
+                  to="/home/services"
                   className="relative flex-1 bg-white text-gray-800 px-8 py-5 rounded-2xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 flex items-center justify-center gap-3 group border-2 border-gray-200 hover:border-gray-300 shadow-lg hover:shadow-xl hover:-translate-y-1 overflow-hidden"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-blue-50 to-purple-50 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>

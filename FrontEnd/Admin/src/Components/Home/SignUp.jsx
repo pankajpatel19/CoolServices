@@ -7,7 +7,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ToastContainer, toast } from "react-toastify";
-import api from "../../../Utils/axios";
+import api from "../../utils/axios";
 
 // ------------------------
 // 🔹 ZOD VALIDATION SCHEMA

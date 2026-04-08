@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { MapPin, Save, X } from "lucide-react";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -62,7 +62,7 @@ function AddAddress() {
       const res = await api.post("/customer/add_address", formData);
 
       toast.success(res.data.message);
-      navigate("/Home/show_address");
+      navigate("/home/show_address");
     } catch (error) {
       console.log(error.message);
     }

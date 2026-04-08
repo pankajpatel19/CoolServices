@@ -2,7 +2,7 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { Loader, AlertCircle, Users as UsersIcon } from "lucide-react";
 import Users from "./Users";
-import api from "../../../Utils/axios";
+import api from "../../utils/axios";
 
 function ShowUser() {
   const [users, setUsers] = useState([]);

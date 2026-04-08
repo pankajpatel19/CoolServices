@@ -1,16 +1,15 @@
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { motion } from "framer-motion";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useEffect, useState, useCallback } from "react";
 import TechnicianHeader from "./TechnicianHeader";
 import MainContent from "./MainContent";
-import api from "../../../Utils/axios";
+import api from "../../utils/axios";
 
 function TechHome() {
   const [booking, setbooking] = useState([]);
-  const [Technician, setTechnician] = useState("");
+  const [technician, setTechnician] = useState(null);
   const [anchorEl, setAnchorEl] = useState(null);
 
   const navigate = useNavigate();
@@ -26,18 +25,18 @@ function TechHome() {
     setAnchorEl(event.currentTarget);
   };
 
-  const fetchBookings = async () => {
+  const fetchBookings = useCallback(async () => {
     try {
       const response = await api.get(`/techhome/getdata`, {
         params: { username },
       });
 
       setbooking(response.data);
-    } catch (error) {
+    } catch {
       toast.error("Failed to fetch bookings");
       setbooking([]);
     }
-  };
+  }, [username]);
 
   const updatebooking = async (id, val) => {
     try {
@@ -46,51 +45,53 @@ function TechHome() {
       });
       toast.success("Updated successfully!");
       fetchBookings();
-    } catch (error) {
-      console.log(error);
+    } catch {
       toast.error("Something went wrong");
     }
   };
 
   const handleLogout = async () => {
-    await api.get("/logout", {
-      withCredentials: true,
-    });
-    localStorage.removeItem("user");
-    toast.success("LogOut SuccessFully");
-    navigate("/login");
-    window.location.reload();
+    try {
+      await api.get("/logout", {
+        withCredentials: true,
+      });
+      localStorage.removeItem("user");
+      setTechnician(null);
+      toast.success("LogOut SuccessFully");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Logout failed");
+    }
   };
 
   useEffect(() => {
-    const technician = JSON.parse(localStorage.getItem("user"));
-
-    if (technician) {
-      setTechnician(technician);
+    const user = JSON.parse(localStorage.getItem("user"));
+    if (user) {
+      setTechnician(user);
     }
     fetchBookings();
-  }, [username]);
+  }, [username, fetchBookings]);
 
   useEffect(() => {
-    if (!Technician?._id) {
-      console.log("not found");
-    }
+    if (!technician?._id) return;
+
     const interval = setInterval(() => {
-      navigator.geolocation.getCurrentPosition((pos) => {
-        fetch(`${import.meta.env.VITE_API_URL}/technician/update-location`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            technicianId: Technician._id,
+      navigator.geolocation.getCurrentPosition(async (pos) => {
+        try {
+          await api.post("/technician/update-location", {
+            technicianId: technician._id,
             latitude: pos.coords.latitude,
             longitude: pos.coords.longitude,
-          }),
-        });
+          });
+        } catch (err) {
+          console.error("Location update failed:", err);
+        }
       });
-    }, 10000);
+    }, 30000);
 
     return () => clearInterval(interval);
-  }, [Technician]);
+  }, [technician]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -120,7 +121,7 @@ function TechHome() {
         handleLogout={handleLogout}
         anchorEl={anchorEl}
         open={open}
-        Technician={Technician}
+        Technician={technician}
       />
       {/* Main Content */}
       <MainContent

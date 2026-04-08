@@ -15,7 +15,7 @@ import {
   ArrowLeft,
   ClipboardList,
 } from "lucide-react";
-import api from "../../../Utils/axios";
+import api from "../../utils/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 function BookingPerUser() {

@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import Status from "../User/History/Status";
-import Api from "../../../Utils/axios.js";
+import Status from "../user/history/Status";
+import Api from "../../utils/axios.js";
 
 function MainContent({ booking, getStatusColor, updatebooking, username }) {
   const [status, setStatus] = useState("");

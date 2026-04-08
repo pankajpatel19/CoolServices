@@ -5,5 +5,5 @@ Backend/Admin/
 #frontend
 FrontEnd/Admin/node_modules/
 FrontEnd/Admin/.env
-
+.vscode/
 /CoolServices

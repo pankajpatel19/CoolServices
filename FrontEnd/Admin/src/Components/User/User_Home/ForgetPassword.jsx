@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Mail, Send } from "lucide-react";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 
 function ForgetPassword() {
   const [email, setEmail] = useState("");

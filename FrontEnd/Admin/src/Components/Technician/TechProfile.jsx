@@ -1,37 +1,31 @@
-import { useState } from "react";
-import { ArrowLeft } from "lucide-react";
-import { Mail, Shield, Edit2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ArrowLeft, Mail, Shield, Edit2, Phone, MapPin, LogOut, Camera, User } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
-import { useEffect } from "react";
-import EditProfile from "../User/User_Home/ProfileData/EditProfile";
-import api from "../../../Utils/axios";
+import { motion, AnimatePresence } from "framer-motion";
+import "react-toastify/dist/ReactToastify.css";
+import EditProfile from "../user/user_home/profile_data/EditProfile";
+import api from "../../utils/axios";
 
 function TechProfile() {
   const [edit, setEdit] = useState(false);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const User = JSON.parse(localStorage.getItem("user"));
-      setUser(User);
-    };
-    fetchUser();
-  }, [token]);
-
-  useEffect(() => {
-    if (user) {
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    if (storedUser) {
+      setUser(storedUser);
       setFormData({
-        userName: user.userName || "",
-        email: user.email || "",
-        phone: user.phone || "",
-        location: user.location || "",
+        userName: storedUser.userName || "",
+        email: storedUser.email || "",
+        phone: storedUser.phone || "",
+        location: storedUser.location || "",
       });
     }
-  }, [user]);
+    setIsLoading(false);
+  }, []);
 
   const [formData, setFormData] = useState({
     userName: "",
@@ -43,272 +37,262 @@ function TechProfile() {
   const handleUpdate = async () => {
     try {
       const res = await api.patch("/updateprofile", formData);
-
       setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
       setEdit(false);
+      toast.success("Profile updated successfully");
     } catch (error) {
-      console.log("Update Profile Error : ", error);
-      toast.success("Error While Updating value");
+      console.error("Update Profile Error:", error);
+      toast.error("Failed to update profile");
     }
   };
 
   const handleLogout = async () => {
-    await api.get("/logout", { withCredentials: true });
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    toast.success("LogOut SuccessFully");
-    navigate("/login");
-    window.location.reload();
-  };
-
-  const handleGoBack = () => {
-    window.history.back();
+    try {
+      await api.get("/logout", { withCredentials: true });
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      toast.success("Logged out successfully");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout error:", error);
+      toast.error("Logout failed");
+    }
   };
 
   const [file, setFile] = useState(null);
-  const [upload, setUpload] = useState(null);
 
   const changeImage = (e) => {
     setFile(e.target.files[0]);
   };
+
   const changeProfile = async () => {
     if (!file) {
-      toast.error("Select Image First");
+      toast.error("Please select an image first");
       return;
     }
 
-    const formData = new FormData();
-    formData.append("image", file);
+    const uploadData = new FormData();
+    uploadData.append("image", file);
 
     try {
-      const res = await api.post("/profile/upload", formData, {
+      const res = await api.post("/profile/upload", uploadData, {
         headers: {
           "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
       });
-
-      setUpload(res.data.user.avatar);
-      toast.success("Profile Changed");
+      setUser(res.data.user);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      toast.success("Profile picture updated");
     } catch (error) {
-      toast.success(error);
+      console.error("Profile upload error:", error);
+      toast.error("Failed to upload profile picture");
     }
   };
 
   const getRoleColor = (role) => {
     switch (role?.toLowerCase()) {
-      case "admin":
-        return "bg-purple-100 text-purple-800";
-      case "technician":
-        return "bg-blue-100 text-blue-800";
-      case "customer":
-        return "bg-green-100 text-green-800";
-      default:
-        return "bg-gray-100 text-gray-800";
+      case "admin": return "bg-purple-100 text-purple-700 border-purple-200";
+      case "technician": return "bg-blue-100 text-blue-700 border-blue-200";
+      case "customer": return "bg-green-100 text-green-700 border-green-200";
+      default: return "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
 
+  if (isLoading || !user) return null;
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 font-sans pb-20">
+      <ToastContainer
+        position="top-center"
+        toastClassName="backdrop-blur-md shadow-2xl rounded-2xl"
+        bodyClassName="font-bold"
+      />
 
-      <button
-        onClick={handleGoBack}
-        className="group flex items-center ml-10 mt-10 px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 hover:from-purple-700 hover:to-blue-700"
+      {/* Aesthetic Header */}
+      <motion.div 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="max-w-5xl mx-auto px-4 py-10"
       >
-        <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" />
-        Go Back
-      </button>
-      <div>
-        <ToastContainer
-          position="top-center"
-          autoClose={3000}
-          hideProgressBar={false}
-          closeOnClick={true}
-          pauseOnHover={true}
-          toastClassName="!bg-white !border !border-gray-200 !shadow-lg !rounded-lg"
-          bodyClassName="!text-sm !font-medium"
-          progressClassName="!bg-blue-500"
-        />
-        <div className="max-w-4xl mx-auto px-2 sm:px-4 py-4 sm:py-8">
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            {/* Header Gradient */}
-            <div className="bg-gradient-to-r from-blue-500 to-purple-600 h-24 sm:h-32"></div>
+        <button
+          onClick={() => navigate(-1)}
+          className="group flex items-center gap-3 px-6 py-3 bg-white/70 backdrop-blur-xl text-slate-700 font-bold rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 border border-white/40 hover:-translate-x-1"
+        >
+          <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+          Back
+        </button>
+      </motion.div>
 
-            <div className="relative px-4 sm:px-6 pb-4 sm:pb-6">
-              <div className="flex flex-col sm:flex-row items-center sm:items-start">
-                <div className="relative -mt-12 sm:-mt-16">
-                  <div className="w-20 h-20 sm:w-24 sm:h-24 bg-white rounded-full border-4 border-white shadow-lg flex items-center justify-center">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-200 rounded-full flex items-center justify-center overflow-hidden">
-                      <img
-                        src={user.avatar}
-                        className="w-full h-full object-cover"
+      <main className="max-w-5xl mx-auto px-4">
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/20 overflow-hidden"
+        >
+          {/* Cover Area */}
+          <div className="h-48 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 relative overflow-hidden">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            <div className="absolute top-10 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl"></div>
+          </div>
+
+          <div className="relative px-8 pb-12">
+            <div className="flex flex-col md:flex-row items-center md:items-end gap-8 -mt-20">
+              {/* Profile Image Section */}
+              <div className="relative group">
+                <div className="w-40 h-40 bg-white rounded-3xl p-1.5 shadow-2xl border border-white/50">
+                  <div className="w-full h-full bg-slate-100 rounded-[1.25rem] overflow-hidden flex items-center justify-center">
+                    {user.avatar ? (
+                      <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      <User className="w-16 h-16 text-slate-300" />
+                    )}
+                  </div>
+                </div>
+                <label className="absolute bottom-3 right-3 p-3 bg-blue-600 text-white rounded-2xl shadow-xl cursor-pointer hover:bg-blue-700 hover:scale-110 transition-all border-4 border-white">
+                  <Camera className="w-5 h-5" />
+                  <input type="file" className="hidden" onChange={changeImage} />
+                </label>
+              </div>
+
+              {/* Identity Section */}
+              <div className="text-center md:text-left flex-1 space-y-2">
+                <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">
+                  <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+                    {user.userName}
+                  </h1>
+                  <span className={`px-4 py-1.5 rounded-full text-xs font-black border uppercase tracking-widest ${getRoleColor(user.userrole)}`}>
+                    <Shield className="w-4 h-4 inline mr-1.5" />
+                    {user.userrole}
+                  </span>
+                </div>
+                <p className="text-slate-500 font-bold flex items-center justify-center md:justify-start gap-2">
+                  <Mail className="w-4 h-4" />
+                  {user.email}
+                </p>
+                {file && (
+                  <motion.button
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    onClick={changeProfile}
+                    className="mt-2 text-xs font-black text-blue-600 bg-blue-50 px-3 py-1.5 rounded-xl hover:bg-blue-100 transition-colors uppercase tracking-widest"
+                  >
+                    Confirm New Image
+                  </motion.button>
+                )}
+              </div>
+
+              {/* Action Area */}
+              <div className="flex gap-3">
+                <button 
+                  onClick={() => setEdit(true)}
+                  className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-bold rounded-2xl shadow-xl hover:bg-slate-800 transition-all hover:-translate-y-1"
+                >
+                  <Edit2 className="w-5 h-5" />
+                  Edit Profile
+                </button>
+                <button 
+                  onClick={handleLogout}
+                  className="p-3 bg-red-50 text-red-600 rounded-2xl hover:bg-red-100 transition-colors border border-red-100"
+                >
+                  <LogOut className="w-6 h-6" />
+                </button>
+              </div>
+            </div>
+
+            {/* Quick Info Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
+              {[
+                { icon: Phone, label: "Phone", value: user.phone || "Not Set", color: "blue" },
+                { icon: MapPin, label: "Location", value: user.location || "Not Set", color: "indigo" },
+                { icon: Shield, label: "Joined", value: user.joinAt || "Dec 2023", color: "purple" }
+              ].map((info, i) => (
+                <div key={i} className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 group hover:border-blue-200 transition-colors">
+                  <div className={`w-12 h-12 bg-${info.color}-100 rounded-2xl flex items-center justify-center text-${info.color}-600 mb-4 shadow-inner`}>
+                    <info.icon className="w-6 h-6" />
+                  </div>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">{info.label}</p>
+                  <p className="text-lg font-black text-slate-800">{info.value}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* Sub-Components */}
+            <div className="mt-12 pt-12 border-t border-slate-100">
+              <EditProfile 
+                user={user} 
+                getRoleColor={getRoleColor} 
+                handleLogout={handleLogout} 
+              />
+            </div>
+          </div>
+        </motion.div>
+      </main>
+
+      {/* Edit Modal */}
+      <AnimatePresence>
+        {edit && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setEdit(false)}
+              className="absolute inset-0 bg-slate-900/40 backdrop-blur-md"
+            ></motion.div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white w-full max-w-lg rounded-[2.5rem] shadow-2xl relative z-10 overflow-hidden"
+            >
+              <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
+                <h2 className="text-2xl font-black">Update Information</h2>
+                <p className="text-blue-100 font-medium">Keep your profile fresh and accurate.</p>
+              </div>
+              
+              <div className="p-8 space-y-6">
+                {[
+                  { id: "userName", label: "Full Name", icon: User },
+                  { id: "email", label: "Email Address", icon: Mail, type: "email" },
+                  { id: "phone", label: "Phone Number", icon: Phone },
+                  { id: "location", label: "Work Location", icon: MapPin }
+                ].map((field) => (
+                  <div key={field.id} className="space-y-2">
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">{field.label}</label>
+                    <div className="relative group">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">
+                        <field.icon className="w-5 h-5" />
+                      </div>
+                      <input
+                        type={field.type || "text"}
+                        value={formData[field.id]}
+                        onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
+                        className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl py-4 pl-12 pr-4 outline-none font-bold text-slate-700 transition-all"
                       />
                     </div>
                   </div>
-                </div>
+                ))}
 
-                {/* User Info */}
-                <div className="text-center sm:text-left sm:ml-6 mt-2 sm:mt-4">
-                  <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
-                    {user.userName}
-                  </h2>
-                  <p className="text-sm sm:text-base text-gray-600 mt-1 break-all">
-                    {user.email}
-                  </p>
-                  <div className="flex items-center justify-center sm:justify-start gap-2 mt-2 sm:mt-3">
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRoleColor(
-                        user.userrole
-                      )}`}
-                    >
-                      <Shield className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />
-                      {user.userrole}
-                    </span>
-                    <input
-                      type="file"
-                      className="flex items-center w-30 gap-2 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                      placeholder="update Profile Image"
-                      onChange={changeImage}
-                    />
-                    <button
-                      onClick={changeProfile}
-                      className="flex items-center gap-2 px-3 py-1 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
-                    >
-                      Edit Profile
-                    </button>
-                  </div>
+                <div className="flex gap-4 pt-4">
+                  <button
+                    onClick={() => setEdit(false)}
+                    className="flex-1 px-6 py-4 bg-slate-100 text-slate-600 font-bold rounded-2xl hover:bg-slate-200 transition-all"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdate}
+                    className="flex-3 px-10 py-4 bg-blue-600 text-white font-bold rounded-2xl hover:bg-blue-700 shadow-xl shadow-blue-200 transition-all"
+                  >
+                    Save Changes
+                  </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </div>
-
-          {/* Information Cards */}
-          <EditProfile
-            user={user}
-            getRoleColor={getRoleColor}
-            handleLogout={handleLogout}
-          />
-        </div>
-      </div>
-      <div className="m-15 bg-white rounded-lg shadow-md p-6">
-        <h3 className="text-lg font-semibold text-gray-900 mb-4">
-          Quick Actions
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <button
-            onClick={() => setEdit(!edit)}
-            className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center"
-          >
-            <Edit2 className="w-6 h-6 text-gray-600 mx-auto mb-2" />
-            <p className="text-sm font-medium text-gray-900">Edit Profile</p>
-          </button>
-
-          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center">
-            <Shield className="w-6 h-6 text-gray-600 mx-auto mb-2" />
-            <p className="text-sm font-medium text-gray-900">
-              Security Settings
-            </p>
-          </button>
-
-          <button className="p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors text-center">
-            <Mail className="w-6 h-6 text-gray-600 mx-auto mb-2" />
-            <p className="text-sm font-medium text-gray-900">Notifications</p>
-          </button>
-        </div>
-      </div>
-
-      {edit && (
-        <div className="fixed inset-0 flex items-center justify-center  backdrop-blur-2xl z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
-            <h2 className="text-xl font-bold mb-4">Edit Profile</h2>
-
-            {/* Name */}
-            <label className="block mb-3">
-              <span className="text-gray-700 text-sm">Full Name</span>
-              <input
-                type="text"
-                name="userName"
-                value={formData.userName}
-                onChange={(e) =>
-                  setFormData({ ...formData, [e.target.name]: e.target.value })
-                }
-                className="w-full border p-2 rounded mt-1"
-              />
-            </label>
-
-            {/* Email */}
-            <label className="block mb-3">
-              <span className="text-gray-700 text-sm">Email</span>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, [e.target.name]: e.target.value })
-                }
-                className="w-full border p-2 rounded mt-1"
-              />
-            </label>
-
-            {/* Phone */}
-            <label className="block mb-3">
-              <span className="text-gray-700 text-sm">Phone</span>
-              <input
-                type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, [e.target.name]: e.target.value })
-                }
-                className="w-full border p-2 rounded mt-1"
-              />
-            </label>
-
-            {/* Location */}
-            <label className="block mb-3">
-              <span className="text-gray-700 text-sm">Location</span>
-              <input
-                type="text"
-                name="location"
-                value={formData.location}
-                onChange={(e) =>
-                  setFormData({ ...formData, [e.target.name]: e.target.value })
-                }
-                className="w-full border p-2 rounded mt-1"
-              />
-            </label>
-
-            {/* <label className="block mb-3">
-              <span className="text-gray-700 text-sm">avatar</span>
-              <input
-                type="file"
-                name="avatar"
-                onChange={(e) =>
-                  setFormData({ ...formData, avatar: e.target.files })
-                }
-                className="w-full border p-2 rounded mt-1"
-              />
-            </label> */}
-
-            {/* Buttons */}
-            <div className="flex justify-end space-x-2 mt-4">
-              <button
-                onClick={() => setEdit(!edit)}
-                className="px-4 py-2 bg-gray-200 rounded"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleUpdate}
-                className="px-4 py-2 bg-blue-600 text-white rounded"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+        )}
+      </AnimatePresence>
     </div>
   );
 }

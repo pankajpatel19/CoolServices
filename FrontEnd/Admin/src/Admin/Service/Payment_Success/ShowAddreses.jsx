@@ -9,7 +9,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 import { toast, ToastContainer } from "react-toastify";
 
 function ShowAddresses() {
@@ -122,7 +122,7 @@ function ShowAddresses() {
                     </div>
                   )}
 
-                  <Link to={`/Home/selected_address/${address._id}`}>
+                  <Link to={`/home/selected_address/${address._id}`}>
                     <div className="flex items-start gap-3 mb-4">
                       <div
                         className={`p-2 rounded-lg ${getAddressColor(
@@ -247,7 +247,7 @@ function ShowAddresses() {
         )}
 
         <Link
-          to="/Home/add_Address"
+          to="/home/add_address"
           className="flex items-center justify-center gap-2 w-full sm:w-auto px-8 py-3 mt-6 text-lg font-semibold text-white bg-gradient-to-r from-red-500 to-red-600 rounded-xl shadow-lg hover:shadow-red-500/30 transition-all duration-300 ease-in-out transform hover:-translate-y-1 hover:scale-[1.02] active:scale-95 sticky bottom-4 sm:static z-10 sticky bottom-1"
         >
           <Plus className="w-5 h-5" /> {/* Icon adds visual context */}

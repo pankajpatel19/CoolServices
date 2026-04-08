@@ -8,7 +8,7 @@ import {
   Wallet,
   CheckCircle,
 } from "lucide-react";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 import { useParams } from "react-router-dom";
 
 function SelectedAddress() {

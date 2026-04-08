@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import api from "../../../../../Utils/axios";
+import api from "../../../../utils/axios";
 import { useState } from "react";
 
 function ShowComplaints() {
@@ -10,7 +10,7 @@ function ShowComplaints() {
 
   const fetchComplaints = async () => {
     try {
-      const res = await api.get(`/Home/Complaint/${id}`);
+      const res = await api.get(`/home/complaint/${id}`);
       setComplaints(res.data.complaint);
     } catch (error) {
       console.log(error);

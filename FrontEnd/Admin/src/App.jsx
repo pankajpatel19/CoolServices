@@ -1,7 +1,7 @@
-import router from "../Routes/Route";
+import router from "./routes/Route";
 import { RouterProvider } from "react-router-dom";
-import { ServiceProvider } from "./Contaxt/SetServiceContext";
-import { HistoryProvider } from "./Contaxt/HistoryContaxt";
+import { ServiceProvider } from "./context/SetServiceContext";
+import { HistoryProvider } from "./context/HistoryContext";
 
 function App() {
   return (

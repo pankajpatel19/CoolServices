@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 function HistoryFilter() {
   const [status, setstatus] = useState("");
 

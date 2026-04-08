@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import logo from "../../assets/logo.png";
 import { useEffect, useState } from "react";
@@ -17,13 +17,14 @@ import {
   UserPlus,
   LogIn,
   Cog,
+  ShieldCheck,
 } from "lucide-react";
 
 //MUI import
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import api from "../../../Utils/axios.js";
+import api from "../../utils/axios.js";
 
 function Nav() {
   const [user, setUser] = useState();
@@ -42,19 +43,39 @@ function Nav() {
   };
 
   const handleLogout = async () => {
-    await api.get("/logout", {
-      withCredentials: true,
-    });
-    toast.success("LogOut SuccessFully");
-    navigate("/login");
+    try {
+      await api.get("/logout", {
+        withCredentials: true,
+      });
+      localStorage.removeItem("user");
+      localStorage.removeItem("token");
+      setUser(null);
+      setMobileMenuOpen(false);
+      toast.success("LogOut SuccessFully");
+      navigate("/login");
+    } catch (error) {
+      console.error("Logout failed:", error);
+      toast.error("Logout failed");
+    }
   };
 
   useEffect(() => {
-    const currentUser = JSON.parse(localStorage.getItem("user"));
-    if (currentUser) {
-      setUser(currentUser.user);
-    } else {
+    try {
+      const storedItem = localStorage.getItem("user");
+      if (storedItem) {
+        const currentUser = JSON.parse(storedItem);
+        if (currentUser && currentUser.user) {
+          setUser(currentUser.user);
+        } else {
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("Failed to parse user data from localStorage:", error);
       setUser(null);
+      localStorage.removeItem("user");
     }
   }, []);
 
@@ -149,23 +170,27 @@ function Nav() {
                 >
                   <MenuItem onClick={handleClose}>
                     <User className="w-5 h-5 mr-3 text-gray-600" />
-                    {user?.id && <Link to={`profile/${user.id}`}>Profile</Link>}
+                    {(user?._id || user?.id) && (
+                      <Link to={`/home/profile/${user._id || user.id}`}>
+                        Profile
+                      </Link>
+                    )}
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Home className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to={`/Home`}>Home</Link>
+                    <Link to={`/home`}>Home</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Wrench className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to="/Home/addbooking">Book Service</Link>
+                    <Link to="/home/addbooking">Book Service</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Cog className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to="/Home/Services">Services We Provide</Link>
+                    <Link to="/home/services">Services We Provide</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <MessageSquareWarning className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to={`/Home/complain/${user.id}`}>Complaints</Link>
+                    <Link to={`/home/complain/${user.id}`}>Complaints</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Phone className="w-5 h-5 mr-3 text-gray-600" />
@@ -173,7 +198,7 @@ function Nav() {
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <CalendarDays className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to="/Home/history/upcoming">Upcoming Bookings</Link>
+                    <Link to="/home/history/upcoming">Upcoming Bookings</Link>
                   </MenuItem>
                   <div className="border-t border-gray-200 my-2 mx-2"></div>
                   <MenuItem onClick={handleLogout}>
@@ -300,143 +325,157 @@ function Nav() {
       </div>
 
       {/* Mobile menu */}
-      {mobileMenuOpen && (
-        <motion.div
-          initial={{ opacity: 0, height: 0 }}
-          animate={{ opacity: 1, height: "auto" }}
-          exit={{ opacity: 0, height: 0 }}
-          className="md:hidden border-t border-gray-200 bg-white"
-        >
-          <div className="px-4 pt-2 pb-3 space-y-1">
-            {user ? (
-              <>
-                {user?._id && (
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, y: -20 }}
+            animate={{ opacity: 1, height: "auto", y: 0 }}
+            exit={{ opacity: 0, height: 0, y: -20 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="md:hidden border-t border-gray-100 bg-white/95 backdrop-blur-xl overflow-hidden"
+          >
+            <div className="px-4 pt-2 pb-6 space-y-2">
+              {user ? (
+                <>
                   <Link
-                    to={`profile/${user._id}`}
+                    to={
+                      user?._id || user?.id
+                        ? `/home/profile/${user._id || user.id}`
+                        : "#"
+                    }
                     onClick={() => setMobileMenuOpen(false)}
-                    className="block flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
+                    className="flex items-center px-4 py-3 rounded-xl text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600 transition-all duration-300 group"
                   >
-                    {" "}
-                    <User className="w-5 h-5 mr-3 text-gray-600" />
-                    Profile
+                    <User className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
+                    <span className="font-semibold">Profile</span>
                   </Link>
-                )}
 
-                <Link
-                  to="/Home/addbooking"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
-                >
-                  <Wrench className="w-5 h-5 inline mr-3" />
-                  Book Service
-                </Link>
+                  <Link
+                    to="/home/addbooking"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-xl text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600 transition-all duration-300 group"
+                  >
+                    <Wrench className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
+                    <span className="font-semibold">Book Service</span>
+                  </Link>
 
-                <Link
-                  to="/Home/Services"
-                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <Cog className="w-5 h-5 mr-3 text-gray-600" />
-                  Services We Provide
-                </Link>
-                <Link
-                  to={`/Home/complain/${user.id}`}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
-                >
-                  <MessageSquareWarning className="w-5 h-5 inline mr-3" />
-                  Complaints
-                </Link>
-                <Link
-                  to="contactUs"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
-                >
-                  <Phone className="w-5 h-5 mr-3 text-gray-600" />
-                  Contact
-                </Link>
-                <Link
-                  to="/Home/history/upcoming"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex px-4 py-3 rounded-lg text-gray-700 hover:bg-green-50 hover:text-green-600 font-medium"
-                >
-                  <CalendarDays className="w-5 h-5 mr-3 text-gray-600" />
-                  Upcoming Bookings
-                </Link>
-                <button
-                  onClick={() => {
-                    handleLogout();
-                    setMobileMenuOpen(false);
-                  }}
-                  className="flex w-full text-left px-4 py-3 rounded-lg text-red-500 hover:bg-red-50 font-semibold"
-                >
-                  <LogOut className="w-5 h-5 mr-3 text-red-600" />
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <NavLink
-                  to="/"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `flex px-4 py-3 rounded-lg font-medium ${
-                      isActive
-                        ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
-                        : "text-gray-700 hover:bg-green-50 hover:text-green-600"
-                    }`
-                  }
-                >
-                  <Home className="w-5 h-5 mr-3 text-gray-600" />
-                  Home
-                </NavLink>
-                <NavLink
-                  to="/signup"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `flex px-4 py-3 rounded-lg font-medium ${
-                      isActive
-                        ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
-                        : "text-gray-700 hover:bg-green-50 hover:text-green-600"
-                    }`
-                  }
-                >
-                  <UserPlus className="w-5 h-5 mr-3 text-gray-600" />
-                  Sign Up
-                </NavLink>
-                <NavLink
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `flex px-4 py-3 rounded-lg font-medium ${
-                      isActive
-                        ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
-                        : "text-gray-700 hover:bg-green-50 hover:text-green-600"
-                    }`
-                  }
-                >
-                  <LogIn className="w-5 h-5 mr-3 text-gray-600" />
-                  Login
-                </NavLink>
-                <NavLink
-                  to="/contactUs"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={({ isActive }) =>
-                    `flex px-4 py-3 rounded-lg font-medium ${
-                      isActive
-                        ? "bg-gradient-to-r from-green-500 via-blue-500 to-purple-500 text-white"
-                        : "text-gray-700 hover:bg-green-50 hover:text-green-600"
-                    }`
-                  }
-                >
-                  <Phone className="w-5 h-5 mr-3 text-gray-600" />
-                  Contact Us
-                </NavLink>
-              </>
-            )}
-          </div>
-        </motion.div>
-      )}
+                  <Link
+                    to="/home/services"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-xl text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600 transition-all duration-300 group"
+                  >
+                    <Cog className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
+                    <span className="font-semibold">Our Services</span>
+                  </Link>
+
+                  <Link
+                    to={
+                      user?._id || user?.id
+                        ? `/home/complain/${user._id || user.id}`
+                        : "#"
+                    }
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-xl text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600 transition-all duration-300 group"
+                  >
+                    <MessageSquareWarning className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
+                    <span className="font-semibold">Complaints</span>
+                  </Link>
+
+                  <Link
+                    to="/contactUs"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-xl text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600 transition-all duration-300 group"
+                  >
+                    <Phone className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
+                    <span className="font-semibold">Contact</span>
+                  </Link>
+
+                  <Link
+                    to="/home/history/upcoming"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center px-4 py-3 rounded-xl text-gray-700 hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 hover:text-blue-600 transition-all duration-300 group"
+                  >
+                    <CalendarDays className="w-5 h-5 mr-3 text-gray-400 group-hover:text-blue-500" />
+                    <span className="font-semibold">Upcoming</span>
+                  </Link>
+
+                  <div className="h-px bg-gray-100 mx-4 my-2"></div>
+
+                  <button
+                    onClick={() => {
+                      handleLogout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center w-full px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition-all duration-300 group"
+                  >
+                    <LogOut className="w-5 h-5 mr-3 text-red-400 group-hover:text-red-600" />
+                    <span className="font-bold">Logout</span>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <NavLink
+                    to="/"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-3 rounded-xl font-bold transition-all duration-300 ${
+                        isActive
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`
+                    }
+                  >
+                    <Home className="w-5 h-5 mr-3" />
+                    Home
+                  </NavLink>
+                  <NavLink
+                    to="/signup"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-3 rounded-xl font-bold transition-all duration-300 ${
+                        isActive
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`
+                    }
+                  >
+                    <UserPlus className="w-5 h-5 mr-3" />
+                    Sign Up
+                  </NavLink>
+                  <NavLink
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-3 rounded-xl font-bold transition-all duration-300 ${
+                        isActive
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`
+                    }
+                  >
+                    <LogIn className="w-5 h-5 mr-3" />
+                    Login
+                  </NavLink>
+                  <NavLink
+                    to="/contactUs"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className={({ isActive }) =>
+                      `flex items-center px-4 py-3 rounded-xl font-bold transition-all duration-300 ${
+                        isActive
+                          ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white shadow-lg"
+                          : "text-gray-700 hover:bg-gray-50"
+                      }`
+                    }
+                  >
+                    <Phone className="w-5 h-5 mr-3" />
+                    Contact Us
+                  </NavLink>
+                </>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.nav>
   );
 }

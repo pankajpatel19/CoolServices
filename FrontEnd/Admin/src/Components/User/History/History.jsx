@@ -16,7 +16,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import Status from "./Status";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 function History() {
   const [history, setHistory] = useState([]);
   const [status, setStatus] = useState("all");
@@ -37,12 +37,13 @@ function History() {
     }
   };
 
+
+
   const getStatusBooking = async (stts) => {
     try {
       setLoading(true);
 
-      const res = await api.get(`/Home/history/status?status=${stts}`);
-      toast.success(res.data.message);
+      const res = await api.get(`/home/history/status?status=${stts}`);
       setHistory(res.data);
     } catch (error) {
       toast.error(error.response.data.message);
@@ -62,7 +63,7 @@ function History() {
     window.history.back();
   };
   useEffect(() => {
-    getStatusBooking();
+    getStatusBooking(status);
   }, []);
 
   if (loading) {
@@ -405,7 +406,7 @@ function History() {
               your history here.
             </p>
             <button
-              onClick={() => (window.location.href = "/Home/addbooking")}
+              onClick={() => (window.location.href = "/home/addbooking")}
               className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold py-4 px-8 rounded-xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300"
             >
               Book Your First Service

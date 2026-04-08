@@ -1,13 +1,12 @@
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import axios from "axios";
+
 import ServiceData from "./ServiceData";
 import StateCard from "./StateCard";
 import SearchBooks from "./SearchBooks";
-import Status from "../../Components/User/History/Status";
-import api from "../../../Utils/axios.js";
+import Status from "../../components/user/history/Status";
+import api from "../../utils/axios.js";
 
 function Dashboard() {
   const [booking, setbooking] = useState([]);
@@ -34,7 +33,7 @@ function Dashboard() {
       const response = await api.get("/showbooking");
 
       setbooking(response.data);
-    } catch (error) {
+    } catch (err) {
       toast.error("Failed to fetch bookings");
       setbooking([]);
     }
@@ -51,8 +50,8 @@ function Dashboard() {
 
       toast.success("Deleted successfully!");
       setTimeout(() => fetchBookings(), 500);
-    } catch (error) {
-      toast.error(error.message);
+    } catch (err) {
+      toast.error(err.message);
     }
   };
 

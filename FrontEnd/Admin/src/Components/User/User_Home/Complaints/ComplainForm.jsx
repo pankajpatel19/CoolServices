@@ -1,5 +1,5 @@
 import { useState } from "react";
-import api from "../../../../../Utils/axios";
+import api from "../../../../utils/axios";
 function ComplaintForm() {
   const [formData, setFormData] = useState({
     fullname: "",
@@ -39,7 +39,7 @@ function ComplaintForm() {
     }
 
     try {
-      const res = await api.post("/Home/Complaint", formData);
+      const res = await api.post("/home/complaint", formData);
       console.log("Complaint submitted:", res.data);
       showNotification("✅ Complaint submitted successfully!", "success");
 

@@ -2,7 +2,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import { useState, useEffect, useRef } from "react";
-import api from "../../../Utils/axios.js";
+import api from "../../utils/axios.js";
 import { FanIcon, ShowerHead } from "lucide-react";
 
 const IconHome = () => (

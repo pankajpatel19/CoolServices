@@ -4,9 +4,9 @@ import { Home, User, Settings, Mail, FileText, LogOut } from "lucide-react";
 const SideBar = () => {
   const navigationItems = [
     { href: "/Home", icon: Home, label: "Dashboard" },
-    { href: "/Home/messages", icon: Mail, label: "Messages" },
-    { href: "/Home/settings", icon: Settings, label: "Settings" },
-    { href: "/Home/Complain", icon: FileText, label: "Complaint Form" },
+    { href: "/home/messages", icon: Mail, label: "Messages" },
+    { href: "/home/settings", icon: Settings, label: "Settings" },
+    { href: "/home/complain", icon: FileText, label: "Complaint Form" },
   ];
 
   return (

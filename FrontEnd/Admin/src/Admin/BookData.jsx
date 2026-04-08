@@ -1,12 +1,27 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  ArrowLeft, 
+  User, 
+  Phone, 
+  Wrench, 
+  Building2, 
+  Calendar, 
+  Clock, 
+  ClipboardList,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+  ShieldCheck,
+  ChevronRight
+} from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
-import api from "../../Utils/axios";
+import api from "../utils/axios";
+
 function BookData() {
-  const item = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [booking, setBooking] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -15,10 +30,8 @@ function BookData() {
     const fetchBooking = async () => {
       try {
         setIsLoading(true);
-        const res = await api.get(`/showbooking/${item.id}`);
-
+        const res = await api.get(`/showbooking/${id}`);
         setBooking(res.data);
-        toast.success("Booking details loaded successfully");
       } catch (error) {
         toast.error("Failed to fetch booking details");
         console.error(error);
@@ -27,33 +40,23 @@ function BookData() {
       }
     };
     fetchBooking();
-  }, [item]);
+  }, [id]);
 
   const getStatusColor = (status) => {
     switch (status) {
-      case "New":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case "In Progress":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "Done":
-        return "bg-green-100 text-green-800 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
+      case "New": return "bg-blue-100 text-blue-700 border-blue-200";
+      case "In Progress": return "bg-orange-100 text-orange-700 border-orange-200";
+      case "Done": return "bg-emerald-100 text-emerald-700 border-emerald-200";
+      default: return "bg-slate-100 text-slate-700 border-slate-200";
     }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
-        >
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg font-medium">
-            Loading booking details...
-          </p>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 flex items-center justify-center">
+        <motion.div initial={{ scale: 0.8, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} className="text-center">
+          <div className="w-16 h-16 border-4 border-indigo-200 border-t-indigo-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-slate-500 font-bold uppercase tracking-widest text-xs">Accessing Records...</p>
         </motion.div>
       </div>
     );
@@ -61,342 +64,165 @@ function BookData() {
 
   if (!booking) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center bg-white p-8 rounded-xl shadow-lg"
+      <div className="min-h-screen bg-transparent flex items-center justify-center p-4">
+        <motion.div 
+          initial={{ y: 20, opacity: 0 }} 
+          animate={{ y: 0, opacity: 1 }}
+          className="bg-white/90 backdrop-blur-2xl p-10 rounded-[2.5rem] shadow-2xl border border-white/40 max-w-md w-full text-center"
         >
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
+          <div className="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6 text-red-500">
+            <AlertCircle className="w-10 h-10" />
+          </div>
+          <h2 className="text-2xl font-black text-slate-900 mb-2">Record Missing</h2>
+          <p className="text-slate-500 font-medium mb-8">The requested service file could not be discovered or has been archived.</p>
+          <button 
+            onClick={() => navigate(-1)}
+            className="w-full py-4 bg-slate-900 text-white font-black rounded-2xl shadow-xl hover:bg-slate-800 transition-all"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
-            No booking found
-          </h3>
-          <p className="text-gray-600">
-            The requested booking could not be found.
-          </p>
+            Return to Dashboard
+          </button>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <ToastContainer position="top-center" />
+    <div className="min-h-screen bg-transparent pb-20">
+      <ToastContainer position="top-center" toastClassName="backdrop-blur-xl shadow-2xl rounded-2xl" />
 
-      {/* Header Section */}
-      <div className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-          <div className="flex items-center justify-between">
-            <div>
-              <motion.h1
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent"
-              >
-                Booking Details
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-gray-600 mt-1"
-              >
-                Service request information and status
-              </motion.p>
-            </div>
-
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+      {/* Premium Header */}
+      <motion.div 
+        initial={{ y: -50, opacity: 0 }} 
+        animate={{ y: 0, opacity: 1 }}
+        className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-white/40 px-4 py-4"
+      >
+        <div className="max-w-5xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
               onClick={() => navigate(-1)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-md transition-all duration-200 font-medium flex items-center gap-2"
+              className="p-3 bg-white/70 rounded-2xl shadow-sm border border-slate-100 hover:shadow-md transition-all text-slate-600"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              Back
-            </motion.button>
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div>
+              <h1 className="text-xl font-black text-slate-900 tracking-tight">Service Control</h1>
+              <p className="text-[10px] font-black text-indigo-500 uppercase tracking-widest leading-none">ID: {booking._id?.slice(-12)}</p>
+            </div>
+          </div>
+          <div className={`px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border ${getStatusColor(booking.status)}`}>
+            {booking.status}
           </div>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <main className="max-w-5xl mx-auto px-4 mt-10">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           className="bg-white/90 backdrop-blur-2xl rounded-[3rem] shadow-2xl border border-white/40 overflow-hidden"
         >
-          {/* Customer Info Header */}
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/20 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">{booking.name}</h2>
-                <p className="text-blue-100 text-sm">Customer Information</p>
-              </div>
-            </div>
+          {/* Customer Identity Area */}
+          <div className="bg-gradient-to-br from-indigo-600 via-indigo-700 to-purple-800 p-10 text-white relative overflow-hidden">
+             <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-3xl -mr-48 -mt-48"></div>
+             <div className="relative z-10 flex flex-col md:flex-row items-center gap-8">
+               <div className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-3xl flex items-center justify-center text-4xl font-black border-2 border-white/30 shadow-2xl">
+                 {booking.name?.charAt(0)}
+               </div>
+               <div className="text-center md:text-left">
+                  <h2 className="text-4xl font-black tracking-tight mb-2">{booking.name}</h2>
+                  <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 text-blue-100 font-bold text-sm">
+                    <span className="flex items-center gap-2"><Phone className="w-4 h-4 opacity-70" /> {booking.phone}</span>
+                    <span className="w-1 h-1 bg-white/30 rounded-full hidden md:block"></span>
+                    <span className="flex items-center gap-2"><ShieldCheck className="w-4 h-4 opacity-70" /> Primary Customer</span>
+                  </div>
+               </div>
+             </div>
           </div>
 
-          {/* Booking Details Cards */}
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-              {/* Contact Info */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
+          <div className="p-10 space-y-12">
+            {/* Core Details Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { label: "Appliance Type", value: booking.appliance, icon: Wrench, color: "blue" },
+                { label: "System Manufacturer", value: booking.company, icon: Building2, color: "purple" },
+                { label: "Service Logic", value: "Verified Inquiry", icon: CheckCircle2, color: "emerald" }
+              ].map((spec, i) => (
+                <div key={i} className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100/50 group hover:border-indigo-100 transition-colors">
+                  <div className={`p-3 bg-${spec.color}-100 rounded-2xl text-${spec.color}-600 w-fit mb-4 group-hover:scale-110 transition-transform`}>
+                    <spec.icon className="w-6 h-6" />
                   </div>
-                  <div>
-                    <p className="text-sm font-medium text-green-700">
-                      Phone Number
-                    </p>
-                    <p className="text-green-900 font-semibold">
-                      {booking.phone}
-                    </p>
-                  </div>
+                  <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">{spec.label}</p>
+                  <p className="text-lg font-black text-slate-800 tracking-tight">{spec.value}</p>
                 </div>
-              </motion.div>
-
-              {/* Service Details */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg border border-purple-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-purple-700">
-                      Appliance
-                    </p>
-                    <p className="text-purple-900 font-semibold">
-                      {booking.appliance}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              {/* Company */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-lg border border-orange-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-orange-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-orange-700">
-                      Company
-                    </p>
-                    <p className="text-orange-900 font-semibold">
-                      {booking.company}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+              ))}
             </div>
 
-            {/* Schedule Information */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200 mb-6"
-            >
-              <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                Service Schedule
-              </h3>
+            {/* Schedule Console */}
+            <div className="bg-slate-900 rounded-[2.5rem] p-8 text-white relative overflow-hidden">
+               <div className="absolute top-0 right-0 w-64 h-64 bg-indigo-600/20 rounded-full blur-3xl -mr-32 -mt-32"></div>
+               <div className="relative z-10">
+                 <h3 className="text-lg font-black uppercase tracking-widest text-indigo-400 mb-8 flex items-center gap-3">
+                   <Calendar className="w-5 h-5" />
+                   Appointment Window
+                 </h3>
+                 
+                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    <div className="flex items-center gap-6">
+                      <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-indigo-400 border border-white/5">
+                        <Calendar className="w-8 h-8" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Target Date</p>
+                        <p className="text-2xl font-black tracking-tight">{booking.date}</p>
+                      </div>
+                    </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
+                    <div className="flex items-center gap-6">
+                      <div className="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center text-purple-400 border border-white/5">
+                        <Clock className="w-8 h-8" />
+                      </div>
+                      <div>
+                        <p className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Time Slot</p>
+                        <p className="text-2xl font-black tracking-tight uppercase">{booking.time}</p>
+                      </div>
+                    </div>
+                 </div>
+               </div>
+            </div>
+
+            {/* Description / Logs */}
+            <div className="space-y-6">
+               <h3 className="text-xl font-black text-slate-900 tracking-tight flex items-center gap-3">
+                 <FileText className="w-6 h-6 text-indigo-600" />
+                 Diagnostic Report
+               </h3>
+               <div className="bg-white p-8 rounded-[2rem] border border-slate-100 shadow-inner">
+                 <p className="text-slate-600 font-medium leading-relaxed">
+                   {booking.issue || booking.description || "No specific technical diagnostics provided for this request."}
+                 </p>
+               </div>
+            </div>
+
+            {/* Operator Assignment Display */}
+            <div className="pt-8 border-t border-slate-50 flex flex-wrap items-center justify-between gap-6">
+               <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-slate-100 rounded-2xl flex items-center justify-center text-slate-400">
+                    <User className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-blue-700">Date</p>
-                    <p className="text-blue-900 font-semibold text-lg">
-                      {booking.date}
-                    </p>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">Assigned Tech</p>
+                    <p className="text-sm font-black text-slate-700">{booking.technician || "Unassigned Operations"}</p>
                   </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-blue-700">Time</p>
-                    <p className="text-blue-900 font-semibold text-lg">
-                      {booking.time}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-
-            {/* Status Section */}
-            {booking.status && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-center"
-              >
-                <p className="text-sm font-medium text-gray-600 mb-2">
-                  Current Status
-                </p>
-                <span
-                  className={`inline-flex px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(
-                    booking.status
-                  )}`}
-                >
-                  {booking.status}
-                </span>
-              </motion.div>
-            )}
-
-            {/* Additional Info Section */}
-            {booking.description && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-6 bg-gray-50 p-4 rounded-lg"
-              >
-                <h4 className="font-semibold text-gray-800 mb-2">
-                  Description
-                </h4>
-                <p className="text-gray-700">{booking.description}</p>
-              </motion.div>
-            )}
+               </div>
+               
+               <div className="flex items-center gap-2 opacity-30 text-slate-500 font-bold text-[10px] uppercase tracking-[0.2em]">
+                 <ShieldCheck className="w-4 h-4" />
+                 Encrypted Forensic Log Entry
+               </div>
+            </div>
           </div>
         </motion.div>
-      </div>
+      </main>
     </div>
   );
 }

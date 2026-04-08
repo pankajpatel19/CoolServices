@@ -1,13 +1,24 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
+import { 
+  ArrowLeft, 
+  User, 
+  Phone, 
+  Wrench, 
+  Building2, 
+  Calendar, 
+  Clock, 
+  ClipboardList,
+  CheckCircle2,
+  AlertCircle
+} from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
-import Api from "../../../Utils/axios.js";
+import api from "../../utils/axios.js";
 
 function Call() {
-  const item = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [booking, setBooking] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -16,10 +27,8 @@ function Call() {
     const fetchBooking = async () => {
       try {
         setIsLoading(true);
-        const res = await Api.get(`/showbooking/${item.id}`);
-
+        const res = await api.get(`/showbooking/${id}`);
         setBooking(res.data);
-        toast.success("Booking details loaded successfully");
       } catch (error) {
         toast.error("Failed to fetch booking details");
         console.error(error);
@@ -28,7 +37,7 @@ function Call() {
       }
     };
     fetchBooking();
-  }, [item]);
+  }, [id]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -45,15 +54,20 @@ function Call() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 flex items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600 text-lg font-medium">
-            Loading booking details...
+          <div className="relative">
+            <div className="w-16 h-16 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mx-auto mb-4"></div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="w-8 h-8 bg-blue-500/10 rounded-full"></div>
+            </div>
+          </div>
+          <p className="text-gray-600 text-lg font-bold tracking-tight">
+            Fetching Details...
           </p>
         </motion.div>
       </div>
@@ -62,332 +76,175 @@ function Call() {
 
   if (!booking) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center bg-white p-8 rounded-xl shadow-lg"
+          className="text-center bg-white/90 backdrop-blur-xl p-10 rounded-3xl shadow-2xl border border-white/40 max-w-md w-full"
         >
-          <svg
-            className="mx-auto h-12 w-12 text-gray-400 mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-          <h3 className="text-lg font-medium text-gray-900 mb-2">
+          <div className="w-20 h-20 bg-red-50 rounded-2xl flex items-center justify-center mx-auto mb-6">
+            <AlertCircle className="w-10 h-10 text-red-500" />
+          </div>
+          <h3 className="text-2xl font-bold text-gray-900 mb-2">
             No booking found
           </h3>
-          <p className="text-gray-600">
-            The requested booking could not be found.
+          <p className="text-gray-500 mb-8 font-medium">
+            The requested booking details are not available or have been removed.
           </p>
+          <button
+            onClick={() => navigate(-1)}
+            className="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 transition-all shadow-lg shadow-blue-200"
+          >
+            Go Back
+          </button>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-      <ToastContainer position="top-center" />
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 font-sans pb-12">
+      <ToastContainer
+        position="top-center"
+        toastClassName="backdrop-blur-sm shadow-xl"
+        bodyClassName="font-medium"
+      />
 
       {/* Header Section */}
-      <div className="bg-white shadow-sm border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
+      <motion.div 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-white/40 shadow-sm"
+      >
+        <div className="max-w-5xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
-            <div>
-              <motion.h1
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent"
+            <div className="flex items-center gap-4">
+              <button
+                onClick={() => navigate(-1)}
+                className="p-2 hover:bg-slate-100 rounded-xl transition-colors text-slate-600"
               >
-                Booking Details
-              </motion.h1>
-              <motion.p
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="text-gray-600 mt-1"
-              >
-                Service request information and status
-              </motion.p>
+                <ArrowLeft className="w-6 h-6" />
+              </button>
+              <div>
+                <h1 className="text-xl font-bold text-slate-900">
+                  Booking Details
+                </h1>
+                <p className="text-xs font-bold text-blue-500 uppercase tracking-widest">
+                  #{booking._id?.slice(-8)}
+                </p>
+              </div>
             </div>
 
-            <motion.button
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.2 }}
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => navigate(-1)}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg shadow-md transition-all duration-200 font-medium flex items-center gap-2"
-            >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                />
-              </svg>
-              Back
-            </motion.button>
+            <div className={`px-4 py-1.5 rounded-full text-xs font-bold border ${getStatusColor(booking.status)}`}>
+              {booking.status}
+            </div>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+      <div className="max-w-5xl mx-auto px-4 py-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden"
+          className="bg-white/90 backdrop-blur-2xl rounded-3xl shadow-2xl border border-white/20 overflow-hidden"
         >
-          <div className="bg-gradient-to-r from-blue-600 to-blue-700 px-6 py-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 bg-white/20 rounded-lg">
-                <svg
-                  className="w-6 h-6 text-white"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
+          {/* Hero Section */}
+          <div className="bg-gradient-to-br from-blue-600 via-indigo-600 to-purple-700 p-8 sm:p-12 relative overflow-hidden text-white">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+            <div className="relative z-10 flex flex-col sm:flex-row items-center gap-6 sm:gap-10">
+              <div className="w-24 h-24 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center text-4xl font-black border-2 border-white/30 shadow-2xl">
+                {booking.name?.charAt(0)}
               </div>
-              <div>
-                <h2 className="text-xl font-bold text-white">{booking.name}</h2>
-                <p className="text-blue-100 text-sm">Customer Information</p>
+              <div className="text-center sm:text-left">
+                <h2 className="text-3xl font-black mb-1">{booking.name}</h2>
+                <div className="flex items-center gap-2 text-blue-100 font-medium opacity-90 justify-center sm:justify-start">
+                  <Phone className="w-4 h-4" />
+                  {booking.phone}
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 }}
-                className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg border border-green-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
+          <div className="p-8 sm:p-10 space-y-10">
+            {/* Stats Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[
+                { icon: Wrench, label: "Appliance", value: booking.appliance, color: "blue" },
+                { icon: Building2, label: "Brand", value: booking.company, color: "purple" },
+                { icon: ClipboardList, label: "Status", value: booking.status, color: "emerald" }
+              ].map((stat, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: 0.1 * i }}
+                  className={`bg-gradient-to-br from-${stat.color}-50/50 to-white p-5 rounded-2xl border border-${stat.color}-100 flex items-center gap-4 group hover:shadow-lg transition-all`}
+                >
+                  <div className={`p-3 bg-${stat.color}-100 rounded-xl text-${stat.color}-600 group-hover:scale-110 transition-transform`}>
+                    <stat.icon className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-green-700">
-                      Phone Number
-                    </p>
-                    <p className="text-green-900 font-semibold">
-                      {booking.phone}
-                    </p>
+                    <p className={`text-xs font-black text-${stat.color}-400 uppercase tracking-widest`}>{stat.label}</p>
+                    <p className={`text-lg font-black text-${stat.color}-900`}>{stat.value}</p>
                   </div>
-                </div>
-              </motion.div>
-
-              {/* Service Details */}
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 }}
-                className="bg-gradient-to-r from-purple-50 to-violet-50 p-4 rounded-lg border border-purple-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-purple-700">
-                      Appliance
-                    </p>
-                    <p className="text-purple-900 font-semibold">
-                      {booking.appliance}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-lg border border-orange-200"
-              >
-                <div className="flex items-center gap-3 mb-2">
-                  <div className="p-2 bg-orange-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-orange-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                      />
-                    </svg>
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-orange-700">
-                      Company
-                    </p>
-                    <p className="text-orange-900 font-semibold">
-                      {booking.company}
-                    </p>
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              ))}
             </div>
 
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 rounded-lg border border-blue-200 mb-6"
-            >
-              <h3 className="text-lg font-semibold text-blue-900 mb-4 flex items-center gap-2">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
+            {/* Schedule Section */}
+            <div className="bg-slate-50/50 rounded-3xl p-8 border border-slate-100">
+              <h3 className="text-lg font-black text-slate-800 mb-6 flex items-center gap-3">
+                <Calendar className="w-5 h-5 text-blue-500" />
                 Service Schedule
               </h3>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                      />
-                    </svg>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-blue-600 border border-blue-50 font-bold">
+                    <Calendar className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-blue-700">Date</p>
-                    <p className="text-blue-900 font-semibold text-lg">
-                      {booking.date}
-                    </p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Appointment Date</p>
+                    <p className="text-xl font-black text-slate-700">{booking.date}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+                <div className="flex items-center gap-5">
+                  <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-purple-600 border border-purple-50 font-bold">
+                    <Clock className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-sm font-medium text-blue-700">Time</p>
-                    <p className="text-blue-900 font-semibold text-lg">
-                      {booking.time}
-                    </p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Service Time</p>
+                    <p className="text-xl font-black text-slate-700">{booking.time}</p>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            {booking.status && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-center"
-              >
-                <p className="text-sm font-medium text-gray-600 mb-2">
-                  Current Status
-                </p>
-                <span
-                  className={`inline-flex px-4 py-2 rounded-full text-sm font-medium border ${getStatusColor(
-                    booking.status
-                  )}`}
-                >
-                  {booking.status}
-                </span>
-              </motion.div>
+            {/* Description Section */}
+            {booking.issue && (
+              <div className="space-y-4">
+                <h3 className="text-lg font-black text-slate-800 flex items-center gap-3">
+                  <ClipboardList className="w-5 h-5 text-indigo-500" />
+                  Reported Issue
+                </h3>
+                <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-inner">
+                  <p className="text-slate-600 leading-relaxed font-medium">
+                    {booking.issue}
+                  </p>
+                </div>
+              </div>
             )}
+          </div>
 
-            {booking.description && (
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="mt-6 bg-gray-50 p-4 rounded-lg"
-              >
-                <h4 className="font-semibold text-gray-800 mb-2">
-                  Description
-                </h4>
-                <p className="text-gray-700">{booking.description}</p>
-              </motion.div>
-            )}
+          {/* Footer Branding */}
+          <div className="p-8 border-t border-slate-50 bg-slate-50/30 flex justify-center">
+            <div className="flex items-center gap-2 opacity-30 text-slate-500 font-bold text-xs uppercase tracking-[0.2em]">
+              <CheckCircle2 className="w-4 h-4" />
+              Verified Service Request
+            </div>
           </div>
         </motion.div>
       </div>

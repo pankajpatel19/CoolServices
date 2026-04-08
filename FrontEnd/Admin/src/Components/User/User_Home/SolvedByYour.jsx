@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useState, useEffect, useRef } from "react";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 function SolvedByYour() {
   const [data, setData] = useState([
     {

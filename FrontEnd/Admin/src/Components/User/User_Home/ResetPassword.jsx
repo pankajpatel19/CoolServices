@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Lock, CheckCircle } from "lucide-react";
-import api from "../../../../Utils/axios";
+import api from "../../../utils/axios";
 
 function ResetPassword() {
   const { token } = useParams();

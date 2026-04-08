@@ -233,19 +233,22 @@ export const updateProfile = async (req, res) => {
 
 export const fetchUser = async (req, res) => {
   try {
-    const redisprofileuser = await redisCLient.get("userProfile");
+    const { id } = req.params;
+    const cacheKey = `userProfile:${id}`;
+    
+    const redisprofileuser = await redisCLient.get(cacheKey);
 
     if (redisprofileuser) {
       const user = JSON.parse(redisprofileuser);
       return res.status(200).json({ message: "Profile Fetched", user });
     }
 
-    const user = await User.findById(req.params.id).select("-password");
+    const user = await User.findById(id).select("-password");
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-    await redisCLient.setEx("userProfile", 60, JSON.stringify(user));
+    await redisCLient.setEx(cacheKey, 60, JSON.stringify(user));
     res.status(200).json({ message: "User profile fetched", user });
   } catch (error) {
     console.error("Fetch user error:", error);

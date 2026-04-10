@@ -63,7 +63,7 @@ function SelectedAddress() {
     alert(
       `Payment initiated via ${
         selectedPayment === "cash" ? "Cash on Delivery" : `UPI (${upiId})`
-      }`
+      }`,
     );
   };
 

@@ -3,47 +3,46 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import SignUp from "../components/home/SignUp.jsx";
-import Login from "../components/home/Login.jsx";
-import Data from "../admin/Data";
 import Home from "../components/home/Home";
-import NotFound from "../components/home/NotFound";
-import Booking from "../components/Booking";
-import Dashboard from "../admin/dashboard/Dashboard.jsx";
-import ContactUs from "../components/home/ContactUs.jsx";
+import RootLayout from "../components/layout/RootLayout";
+import SignUp from "../components/home/SignUp";
+import Login from "../components/home/Login";
+import AuthSuccess from "../components/user/AuthSuccess";
+import ContactUs from "../components/home/ContactUs";
 import UserHomeLayout from "../components/layout/UserHomeLayout";
 import UserHome from "../components/user/user_home/UserHome";
-import ProtectedRoute from "../components/protected_route/ProtectedRoute.jsx";
-import BookData from "../admin/BookData";
-import History from "../components/user/history/History.jsx";
-import TechHome from "../components/technician/TechHome";
-import Profile from "../components/user/user_home/profile_data/Profile.jsx";
+import Booking from "../components/Booking";
+import ShowServices from "../admin/service/ShowServices";
 import Upcoming from "../components/user/user_home/Upcoming";
-import ComplainForm from "../components/user/user_home/complaints/ComplainForm";
+import History from "../components/user/history/History";
+import Profile from "../components/user/user_home/profile_data/Profile";
+import ComplaintForm from "../components/user/user_home/complaints/ComplainForm";
+import ShowComplaints from "../components/user/user_home/complaints/ShowComplaints";
+import SolvedByYour from "../components/user/user_home/SolvedByYour";
+import Complete_Payment from "../admin/service/payment_success/final_payment/Complete_Payment";
+import AddAddress from "../admin/service/payment_success/AddAddress";
+import ShowAddresses from "../admin/service/payment_success/ShowAddreses";
+import Payment from "../admin/service/payment_success/final_payment/Payment";
+import AdminLayout from "../components/layout/AdminLayout";
+import Dashboard from "../admin/dashboard/Dashboard";
+import SearchBooks from "../admin/dashboard/SearchBooks";
+import BookData from "../admin/BookData";
+import Data from "../admin/Data";
 import HandleTechnician from "../admin/HandleTechnician";
-import SearchBooks from "../admin/dashboard/SearchBooks.jsx";
-import TechnicianHomePage from "../components/technician/TechnicianHomePage.jsx";
-import Unauthorized from "../components/home/Unauthorized.jsx";
-import TechLocation from "../admin/TechLocation.jsx";
-import SolvedByYour from "../components/user/user_home/SolvedByYour.jsx";
-import AdminLayout from "../components/layout/AdminLayout.jsx";
-import Call from "../components/technician/Call.jsx";
-import TechProfile from "../components/technician/TechProfile.jsx";
-import HistoryFilter from "../components/user/history/HistoryFilter.jsx";
-import ShowUser from "../admin/users/ShowUser.jsx";
-import BookingPerUser from "../admin/users/BookingPerUser.jsx";
-import ShowComplaints from "../components/user/user_home/complaints/ShowComplaints.jsx";
-import ForgetPassword from "../components/user/user_home/ForgetPassword.jsx";
-import ResetPassword from "../components/user/user_home/ResetPassword.jsx";
-import AddService from "../admin/service/AddService.jsx";
-import ShowServices from "../admin/service/ShowServices.jsx";
-import AuthSuccess from "../components/user/AuthSuccess.jsx";
-import Complete_Payment from "../admin/service/payment_success/final_payment/Complete_Payment.jsx";
-import AddAddress from "../admin/service/payment_success/AddAddress.jsx";
-import ShowAddreses from "../admin/service/payment_success/ShowAddreses.jsx";
-import Payment from "../admin/service/payment_success/final_payment/Payment.jsx";
-import AddTechnician from "../admin/AddTechnician.jsx";
-import RootLayout from "../components/layout/RootLayout.jsx";
+import AddTechnician from "../admin/AddTechnician";
+import ShowUser from "../admin/users/ShowUser";
+import BookingPerUser from "../admin/users/BookingPerUser";
+import AddService from "../admin/service/AddService";
+import TechLocation from "../admin/TechLocation";
+import TechnicianHomePage from "../components/technician/TechnicianHomePage";
+import TechHome from "../components/technician/TechHome";
+import Call from "../components/technician/Call";
+import TechProfile from "../components/technician/TechProfile";
+import ForgetPassword from "../components/user/user_home/ForgetPassword";
+import ResetPassword from "../components/user/user_home/ResetPassword";
+import ProtectedRoute from "../components/protected_route/ProtectedRoute";
+import NotFound from "../components/home/NotFound";
+import Unauthorized from "../components/home/Unauthorized";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -64,16 +63,16 @@ const router = createBrowserRouter(
           <Route path="addbooking" element={<Booking />} />
           <Route path="services" element={<ShowServices />} />
           <Route path="history/upcoming" element={<Upcoming />} />
-          <Route path="history/status" element={<HistoryFilter />} />
+          {/* <Route path="history/status" element={<HistoryFilter />} /> */}
           <Route path="history/:id" element={<History />} />
           <Route path="profile/:id" element={<Profile />} />
-          <Route path="complain" element={<ComplainForm />} />
+          <Route path="complain" element={<ComplaintForm />} />
           <Route path="complain/:id" element={<ShowComplaints />} />
           <Route path="solved_by_you" element={<SolvedByYour />} />
           <Route path="show_service" element={<ShowServices />} />
           <Route path="complete_payment" element={<Complete_Payment />} />
           <Route path="add_address" element={<AddAddress />} />
-          <Route path="show_address" element={<ShowAddreses />} />
+          <Route path="show_address" element={<ShowAddresses />} />
           <Route path="selected_address/:id" element={<Payment />} />
         </Route>
       </Route>

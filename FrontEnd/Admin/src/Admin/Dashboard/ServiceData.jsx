@@ -1,17 +1,17 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  User, 
-  Settings, 
-  Calendar, 
-  Phone, 
-  CheckCircle2, 
-  Clock, 
-  ChevronRight, 
+import {
+  User,
+  Settings,
+  Calendar,
+  Phone,
+  CheckCircle2,
+  Clock,
+  ChevronRight,
   Trash2,
   Wrench,
-  UserCheck
+  UserCheck,
 } from "lucide-react";
 
 function ServiceData({
@@ -21,11 +21,12 @@ function ServiceData({
   updatebooking,
   updateTechnician,
 }) {
-  const tableHeaderClasses = "px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]";
+  const tableHeaderClasses =
+    "px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]";
 
   return (
     <div className="m-4 sm:m-10">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/40 overflow-hidden"
@@ -81,9 +82,13 @@ function ServiceData({
                             <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </Link>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">{item.appliance}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                              {item.appliance}
+                            </span>
                             <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">{item.company}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                              {item.company}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -95,7 +100,9 @@ function ServiceData({
                         <select
                           className={`appearance-none pl-4 pr-10 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all focus:outline-none focus:ring-4 focus:ring-indigo-100 ${getStatusColor(item.status)}`}
                           value={item.status}
-                          onChange={(e) => updatebooking(item._id, e.target.value)}
+                          onChange={(e) =>
+                            updatebooking(item._id, e.target.value)
+                          }
                         >
                           <option value="New">New</option>
                           <option value="In Progress">In Progress</option>
@@ -129,7 +136,9 @@ function ServiceData({
                         <select
                           className="appearance-none pl-9 pr-10 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-[10px] font-black text-slate-600 uppercase tracking-widest hover:border-indigo-200 transition-all focus:outline-none focus:ring-4 focus:ring-indigo-50"
                           value={item.technician || ""}
-                          onChange={(e) => updateTechnician(item._id, e.target.value)}
+                          onChange={(e) =>
+                            updateTechnician(item._id, e.target.value)
+                          }
                         >
                           <option value="">No Operator</option>
                           <option value="ajay">Ajay P.</option>
@@ -145,7 +154,7 @@ function ServiceData({
                     {/* Action */}
                     <td className="px-6 py-5">
                       <div className="flex items-center gap-3">
-                        <button 
+                        <button
                           className="p-2 text-slate-400 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all"
                           title="Contact Details"
                         >
@@ -167,16 +176,20 @@ function ServiceData({
           </table>
 
           {booking.length === 0 && (
-            <motion.div 
-              initial={{ opacity: 0 }} 
+            <motion.div
+              initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               className="text-center py-20"
             >
               <div className="w-20 h-20 bg-slate-50 rounded-3xl flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="w-10 h-10 text-slate-200" />
               </div>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">All Syncronized</h3>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">No active requests found</p>
+              <h3 className="text-xl font-black text-slate-800 tracking-tight">
+                All Syncronized
+              </h3>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">
+                No active requests found
+              </p>
             </motion.div>
           )}
         </div>

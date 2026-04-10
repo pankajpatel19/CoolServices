@@ -48,7 +48,7 @@ function Upcoming() {
 
   // Sort by date ascending
   const upcomingBookingsSorted = upcomingBookings.sort(
-    (a, b) => new Date(a.issueDate) - new Date(b.issueDate)
+    (a, b) => new Date(a.issueDate) - new Date(b.issueDate),
   );
 
   return (
@@ -109,8 +109,8 @@ function Upcoming() {
                     isToday
                       ? "border-red-200 bg-red-50 hover:shadow-red-100"
                       : isTomorrow
-                      ? "border-amber-200 bg-amber-50 hover:shadow-amber-100"
-                      : "border-gray-200 bg-white hover:shadow-gray-200"
+                        ? "border-amber-200 bg-amber-50 hover:shadow-amber-100"
+                        : "border-gray-200 bg-white hover:shadow-gray-200"
                   }`}
                 >
                   {/* Status indicator */}
@@ -119,8 +119,8 @@ function Upcoming() {
                       isToday
                         ? "bg-red-500"
                         : isTomorrow
-                        ? "bg-amber-500"
-                        : "bg-blue-500"
+                          ? "bg-amber-500"
+                          : "bg-blue-500"
                     }`}
                   ></div>
 

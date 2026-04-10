@@ -13,18 +13,18 @@ import {
   Cell,
   Legend,
   AreaChart,
-  Area
+  Area,
 } from "recharts";
-import { 
-  TrendingUp, 
-  Activity, 
-  CheckCircle2, 
-  Clock, 
-  PieChart as PieChartIcon, 
-  BarChart3, 
+import {
+  TrendingUp,
+  Activity,
+  CheckCircle2,
+  Clock,
+  PieChart as PieChartIcon,
+  BarChart3,
   Zap,
   ArrowUpRight,
-  Users
+  Users,
 } from "lucide-react";
 import api from "../utils/axios";
 
@@ -47,11 +47,22 @@ function Data() {
     fetchDashboardData();
   }, []);
 
-  const chartData = useMemo(() => [
-    { name: "New", count: dashData.newBooking || 0, color: "#3b82f6" },
-    { name: "In Progress", count: dashData.InProgress || dashData.inProgress || 0, color: "#f59e0b" },
-    { name: "Completed", count: dashData.Done || dashData.done || 0, color: "#10b981" },
-  ], [dashData]);
+  const chartData = useMemo(
+    () => [
+      { name: "New", count: dashData.newBooking || 0, color: "#3b82f6" },
+      {
+        name: "In Progress",
+        count: dashData.InProgress || dashData.inProgress || 0,
+        color: "#f59e0b",
+      },
+      {
+        name: "Completed",
+        count: dashData.Done || dashData.done || 0,
+        color: "#10b981",
+      },
+    ],
+    [dashData],
+  );
 
   const pieColors = ["#3b82f6", "#f59e0b", "#10b981"];
 
@@ -61,8 +72,13 @@ function Data() {
         <div className="bg-white/90 backdrop-blur-xl p-4 rounded-2xl shadow-2xl border border-white/40 ring-1 ring-black/5">
           <p className="font-black text-slate-800 mb-1">{label}</p>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: payload[0].payload.color }}></div>
-            <p className="text-indigo-600 font-bold text-lg">{payload[0].value} Tasks</p>
+            <div
+              className="w-3 h-3 rounded-full"
+              style={{ backgroundColor: payload[0].payload.color }}
+            ></div>
+            <p className="text-indigo-600 font-bold text-lg">
+              {payload[0].value} Tasks
+            </p>
           </div>
         </div>
       );
@@ -78,10 +94,14 @@ function Data() {
       whileHover={{ y: -5 }}
       className={`bg-white/90 backdrop-blur-2xl p-6 rounded-[2rem] border border-white/40 shadow-xl relative overflow-hidden group flex flex-col justify-between h-44`}
     >
-      <div className={`absolute -right-4 -top-4 w-24 h-24 bg-${colorClass}-500/5 rounded-full blur-2xl group-hover:bg-${colorClass}-500/10 transition-all duration-500`}></div>
-      
+      <div
+        className={`absolute -right-4 -top-4 w-24 h-24 bg-${colorClass}-500/5 rounded-full blur-2xl group-hover:bg-${colorClass}-500/10 transition-all duration-500`}
+      ></div>
+
       <div className="flex justify-between items-start relative z-10">
-        <div className={`p-4 bg-${colorClass}-50 rounded-2xl text-${colorClass}-600 shadow-inner group-hover:scale-110 transition-transform duration-500`}>
+        <div
+          className={`p-4 bg-${colorClass}-50 rounded-2xl text-${colorClass}-600 shadow-inner group-hover:scale-110 transition-transform duration-500`}
+        >
           <Icon className="w-6 h-6" />
         </div>
         <div className="flex items-center gap-1 px-3 py-1 bg-emerald-50 text-emerald-600 rounded-full text-[10px] font-black uppercase tracking-widest">
@@ -91,12 +111,16 @@ function Data() {
       </div>
 
       <div className="relative z-10">
-        <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-1">{title}</p>
+        <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-1">
+          {title}
+        </p>
         <div className="flex items-baseline gap-2">
           <h3 className="text-4xl font-black text-slate-900 tracking-tight">
             {isLoading ? "..." : value || 0}
           </h3>
-          <span className="text-[10px] font-bold text-slate-400">Total volume</span>
+          <span className="text-[10px] font-bold text-slate-400">
+            Total volume
+          </span>
         </div>
       </div>
     </motion.div>
@@ -105,7 +129,7 @@ function Data() {
   return (
     <div className="min-h-screen bg-transparent p-4 sm:p-8 space-y-10">
       {/* Dynamic Header */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, x: -30 }}
         animate={{ opacity: 1, x: 0 }}
         className="flex flex-col md:flex-row md:items-center justify-between gap-6"
@@ -134,10 +158,34 @@ function Data() {
 
       {/* Stats Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard title="Overall Volume" value={dashData.total} icon={TrendingUp} colorClass="blue" delay={0.1} />
-        <StatCard title="Pending Review" value={dashData.newBooking} icon={Clock} colorClass="amber" delay={0.2} />
-        <StatCard title="Active Jobs" value={dashData.InProgress || dashData.inProgress} icon={Activity} colorClass="orange" delay={0.3} />
-        <StatCard title="Successful Ends" value={dashData.Done || dashData.done} icon={CheckCircle2} colorClass="emerald" delay={0.4} />
+        <StatCard
+          title="Overall Volume"
+          value={dashData.total}
+          icon={TrendingUp}
+          colorClass="blue"
+          delay={0.1}
+        />
+        <StatCard
+          title="Pending Review"
+          value={dashData.newBooking}
+          icon={Clock}
+          colorClass="amber"
+          delay={0.2}
+        />
+        <StatCard
+          title="Active Jobs"
+          value={dashData.InProgress || dashData.inProgress}
+          icon={Activity}
+          colorClass="orange"
+          delay={0.3}
+        />
+        <StatCard
+          title="Successful Ends"
+          value={dashData.Done || dashData.done}
+          icon={CheckCircle2}
+          colorClass="emerald"
+          delay={0.4}
+        />
       </div>
 
       {/* Visual Analytics */}
@@ -151,8 +199,12 @@ function Data() {
         >
           <div className="flex items-center justify-between mb-10">
             <div>
-              <h3 className="text-2xl font-black text-slate-900 tracking-tight">Workload Flow</h3>
-              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest mt-1">Status distribution analysis</p>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                Workload Flow
+              </h3>
+              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest mt-1">
+                Status distribution analysis
+              </p>
             </div>
             <div className="p-3 bg-indigo-50 rounded-2xl text-indigo-600">
               <BarChart3 className="w-6 h-6" />
@@ -161,28 +213,38 @@ function Data() {
 
           <div className="h-[400px] w-full">
             <ResponsiveContainer width="100%" height="100%">
-              <BarChart data={chartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f1f5f9" />
-                <XAxis 
-                  dataKey="name" 
-                  axisLine={false} 
-                  tickLine={false} 
+              <BarChart
+                data={chartData}
+                margin={{ top: 0, right: 0, left: -20, bottom: 0 }}
+              >
+                <CartesianGrid
+                  strokeDasharray="3 3"
+                  vertical={false}
+                  stroke="#f1f5f9"
+                />
+                <XAxis
+                  dataKey="name"
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fill: "#94a3b8", fontSize: 12, fontWeight: 700 }}
                   dy={15}
                 />
-                <YAxis 
-                  axisLine={false} 
-                  tickLine={false} 
+                <YAxis
+                  axisLine={false}
+                  tickLine={false}
                   tick={{ fill: "#94a3b8", fontSize: 12, fontWeight: 700 }}
                 />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: '#f8fafc', radius: 16 }} />
-                <Bar 
-                  dataKey="count" 
-                  radius={[12, 12, 12, 12]} 
-                  barSize={60}
-                >
+                <Tooltip
+                  content={<CustomTooltip />}
+                  cursor={{ fill: "#f8fafc", radius: 16 }}
+                />
+                <Bar dataKey="count" radius={[12, 12, 12, 12]} barSize={60}>
                   {chartData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} fillOpacity={0.8} />
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
+                      fillOpacity={0.8}
+                    />
                   ))}
                 </Bar>
               </BarChart>
@@ -199,8 +261,12 @@ function Data() {
         >
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h3 className="text-2xl font-black text-slate-900 tracking-tight">Focus Map</h3>
-              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest mt-1">Percentage split</p>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                Focus Map
+              </h3>
+              <p className="text-slate-400 font-bold text-xs uppercase tracking-widest mt-1">
+                Percentage split
+              </p>
             </div>
             <div className="p-3 bg-pink-50 rounded-2xl text-pink-600">
               <PieChartIcon className="w-6 h-6" />
@@ -221,9 +287,9 @@ function Data() {
                   animationDuration={1000}
                 >
                   {chartData.map((entry, index) => (
-                    <Cell 
-                      key={`cell-${index}`} 
-                      fill={entry.color} 
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={entry.color}
                       fillOpacity={0.8}
                       strokeWidth={0}
                     />
@@ -233,20 +299,35 @@ function Data() {
               </PieChart>
             </ResponsiveContainer>
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-4xl font-black text-slate-800">{dashData.total || 0}</span>
-              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total</span>
+              <span className="text-4xl font-black text-slate-800">
+                {dashData.total || 0}
+              </span>
+              <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                Total
+              </span>
             </div>
           </div>
 
           <div className="space-y-3 mt-6">
             {chartData.map((item, i) => (
-              <div key={i} className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100">
+              <div
+                key={i}
+                className="flex items-center justify-between p-3 bg-slate-50 rounded-2xl border border-slate-100"
+              >
                 <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 rounded-full" style={{ backgroundColor: item.color }}></div>
-                  <span className="text-sm font-black text-slate-600">{item.name}</span>
+                  <div
+                    className="w-3 h-3 rounded-full"
+                    style={{ backgroundColor: item.color }}
+                  ></div>
+                  <span className="text-sm font-black text-slate-600">
+                    {item.name}
+                  </span>
                 </div>
                 <span className="text-sm font-black text-slate-900">
-                  {dashData.total ? Math.round((item.count / dashData.total) * 100) : 0}%
+                  {dashData.total
+                    ? Math.round((item.count / dashData.total) * 100)
+                    : 0}
+                  %
                 </span>
               </div>
             ))}
@@ -265,18 +346,46 @@ function Data() {
         <div className="relative z-10 md:flex items-center justify-between gap-10">
           <div className="mb-8 md:mb-0">
             <h3 className="text-3xl font-black mb-4">Operational Efficiency</h3>
-            <p className="text-slate-400 font-bold max-w-md">Our systems are running at peak performance. Current data indicates a high completion rate across all service sectors.</p>
+            <p className="text-slate-400 font-bold max-w-md">
+              Our systems are running at peak performance. Current data
+              indicates a high completion rate across all service sectors.
+            </p>
           </div>
-          
+
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-8">
             {[
-              { label: "Completion", value: dashData.total ? Math.round(((dashData.Done || dashData.done) / dashData.total) * 100) : 0 },
-              { label: "Active Flow", value: dashData.total ? Math.round(((dashData.InProgress || dashData.inProgress) / dashData.total) * 100) : 0 },
-              { label: "Response", value: dashData.total ? Math.round((dashData.newBooking / dashData.total) * 100) : 0 }
+              {
+                label: "Completion",
+                value: dashData.total
+                  ? Math.round(
+                      ((dashData.Done || dashData.done) / dashData.total) * 100,
+                    )
+                  : 0,
+              },
+              {
+                label: "Active Flow",
+                value: dashData.total
+                  ? Math.round(
+                      ((dashData.InProgress || dashData.inProgress) /
+                        dashData.total) *
+                        100,
+                    )
+                  : 0,
+              },
+              {
+                label: "Response",
+                value: dashData.total
+                  ? Math.round((dashData.newBooking / dashData.total) * 100)
+                  : 0,
+              },
             ].map((metric, i) => (
               <div key={i} className="text-center">
-                <div className="text-4xl font-black text-indigo-400 mb-1">{metric.value}%</div>
-                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{metric.label}</div>
+                <div className="text-4xl font-black text-indigo-400 mb-1">
+                  {metric.value}%
+                </div>
+                <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">
+                  {metric.label}
+                </div>
               </div>
             ))}
           </div>

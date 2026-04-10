@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
-import { 
-  ArrowLeft, 
-  User, 
-  Phone, 
-  Wrench, 
-  Building2, 
-  Calendar, 
-  Clock, 
+import {
+  ArrowLeft,
+  User,
+  Phone,
+  Wrench,
+  Building2,
+  Calendar,
+  Clock,
   ClipboardList,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import "react-toastify/dist/ReactToastify.css";
 import api from "../../utils/axios.js";
@@ -89,7 +89,8 @@ function Call() {
             No booking found
           </h3>
           <p className="text-gray-500 mb-8 font-medium">
-            The requested booking details are not available or have been removed.
+            The requested booking details are not available or have been
+            removed.
           </p>
           <button
             onClick={() => navigate(-1)}
@@ -111,7 +112,7 @@ function Call() {
       />
 
       {/* Header Section */}
-      <motion.div 
+      <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-white/40 shadow-sm"
@@ -135,7 +136,9 @@ function Call() {
               </div>
             </div>
 
-            <div className={`px-4 py-1.5 rounded-full text-xs font-bold border ${getStatusColor(booking.status)}`}>
+            <div
+              className={`px-4 py-1.5 rounded-full text-xs font-bold border ${getStatusColor(booking.status)}`}
+            >
               {booking.status}
             </div>
           </div>
@@ -171,9 +174,24 @@ function Call() {
             {/* Stats Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
-                { icon: Wrench, label: "Appliance", value: booking.appliance, color: "blue" },
-                { icon: Building2, label: "Brand", value: booking.company, color: "purple" },
-                { icon: ClipboardList, label: "Status", value: booking.status, color: "emerald" }
+                {
+                  icon: Wrench,
+                  label: "Appliance",
+                  value: booking.appliance,
+                  color: "blue",
+                },
+                {
+                  icon: Building2,
+                  label: "Brand",
+                  value: booking.company,
+                  color: "purple",
+                },
+                {
+                  icon: ClipboardList,
+                  label: "Status",
+                  value: booking.status,
+                  color: "emerald",
+                },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
@@ -182,12 +200,20 @@ function Call() {
                   transition={{ delay: 0.1 * i }}
                   className={`bg-gradient-to-br from-${stat.color}-50/50 to-white p-5 rounded-2xl border border-${stat.color}-100 flex items-center gap-4 group hover:shadow-lg transition-all`}
                 >
-                  <div className={`p-3 bg-${stat.color}-100 rounded-xl text-${stat.color}-600 group-hover:scale-110 transition-transform`}>
+                  <div
+                    className={`p-3 bg-${stat.color}-100 rounded-xl text-${stat.color}-600 group-hover:scale-110 transition-transform`}
+                  >
                     <stat.icon className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className={`text-xs font-black text-${stat.color}-400 uppercase tracking-widest`}>{stat.label}</p>
-                    <p className={`text-lg font-black text-${stat.color}-900`}>{stat.value}</p>
+                    <p
+                      className={`text-xs font-black text-${stat.color}-400 uppercase tracking-widest`}
+                    >
+                      {stat.label}
+                    </p>
+                    <p className={`text-lg font-black text-${stat.color}-900`}>
+                      {stat.value}
+                    </p>
                   </div>
                 </motion.div>
               ))}
@@ -206,8 +232,12 @@ function Call() {
                     <Calendar className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Appointment Date</p>
-                    <p className="text-xl font-black text-slate-700">{booking.date}</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
+                      Appointment Date
+                    </p>
+                    <p className="text-xl font-black text-slate-700">
+                      {booking.date}
+                    </p>
                   </div>
                 </div>
 
@@ -216,8 +246,12 @@ function Call() {
                     <Clock className="w-6 h-6" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">Service Time</p>
-                    <p className="text-xl font-black text-slate-700">{booking.time}</p>
+                    <p className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">
+                      Service Time
+                    </p>
+                    <p className="text-xl font-black text-slate-700">
+                      {booking.time}
+                    </p>
                   </div>
                 </div>
               </div>

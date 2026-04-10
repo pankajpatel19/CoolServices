@@ -140,7 +140,7 @@ function BookingPerUser() {
                     </div>
                     <span
                       className={`inline-flex px-4 py-1.5 rounded-full text-sm font-semibold border-2 ${getStatusColor(
-                        item.status
+                        item.status,
                       )}`}
                     >
                       {item.status || "Pending"}

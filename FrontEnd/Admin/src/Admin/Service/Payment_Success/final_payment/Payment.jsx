@@ -39,7 +39,7 @@ function Payment() {
     toast.success(
       `Payment initiated via ${
         selectedPayment === "cash" ? "Cash on Delivery" : `UPI (${upiId})`
-      }`
+      }`,
     );
   };
 

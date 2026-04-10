@@ -45,7 +45,7 @@ function ShowAddresses() {
       addresses.map((addr) => ({
         ...addr,
         isDefault: addr.id === id,
-      }))
+      })),
     );
   };
 
@@ -126,7 +126,7 @@ function ShowAddresses() {
                     <div className="flex items-start gap-3 mb-4">
                       <div
                         className={`p-2 rounded-lg ${getAddressColor(
-                          address.addressType
+                          address.addressType,
                         )}`}
                       >
                         {getAddressIcon(address.addressType)}
@@ -138,7 +138,7 @@ function ShowAddresses() {
                           </h3>
                           <span
                             className={`text-xs px-2 py-1 rounded-full uppercase font-medium ${getAddressColor(
-                              address.addressType
+                              address.addressType,
                             )}`}
                           >
                             {address.addressType}

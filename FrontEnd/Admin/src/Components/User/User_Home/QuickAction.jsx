@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 
 function QuickAction() {
+  // const navigate = useNavigate();
   return (
     <div>
       <motion.div
@@ -30,7 +31,7 @@ function QuickAction() {
           ].map((service, index) => (
             <button
               key={index}
-              onClick={() => navigate(service.path)}
+              // onClick={() => navigate(service.path)}
               className="p-4 text-center rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 group"
             >
               <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-200">

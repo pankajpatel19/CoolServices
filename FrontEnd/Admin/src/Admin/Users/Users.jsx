@@ -8,7 +8,7 @@ import {
   ArrowRight,
   Search,
   Filter,
-  ShieldCheck
+  ShieldCheck,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -25,9 +25,9 @@ function Users({ users = [], formatDate }) {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.05
-      }
-    }
+        staggerChildren: 0.05,
+      },
+    },
   };
 
   const itemVariants = {
@@ -35,15 +35,15 @@ function Users({ users = [], formatDate }) {
     visible: {
       y: 0,
       opacity: 1,
-      transition: { type: "spring", stiffness: 100 }
-    }
+      transition: { type: "spring", stiffness: 100 },
+    },
   };
 
   return (
     <div className="min-h-screen bg-transparent p-4 sm:p-8">
       <div className="max-w-7xl mx-auto">
         {/* Aesthetic Header */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-12 flex flex-col md:flex-row md:items-end justify-between gap-6"
@@ -66,9 +66,9 @@ function Users({ users = [], formatDate }) {
           <div className="flex gap-3">
             <div className="relative group">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-              <input 
-                type="text" 
-                placeholder="Search customers..." 
+              <input
+                type="text"
+                placeholder="Search customers..."
                 className="pl-12 pr-6 py-3.5 bg-white/70 backdrop-blur-xl border border-white/40 rounded-2xl shadow-sm focus:outline-none focus:ring-4 focus:ring-indigo-100 transition-all font-medium text-slate-700 w-full sm:w-64"
               />
             </div>
@@ -81,16 +81,18 @@ function Users({ users = [], formatDate }) {
         {/* Users List */}
         <AnimatePresence>
           {users.length === 0 ? (
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               className="text-center py-24 bg-white/50 backdrop-blur-xl rounded-[2.5rem] border border-white/40 shadow-xl"
             >
               <UsersIcon className="w-20 h-20 text-slate-200 mx-auto mb-6" />
-              <p className="text-slate-400 text-xl font-black italic tracking-tight">No customers found in your records.</p>
+              <p className="text-slate-400 text-xl font-black italic tracking-tight">
+                No customers found in your records.
+              </p>
             </motion.div>
           ) : (
-            <motion.div 
+            <motion.div
               variants={containerVariants}
               initial="hidden"
               animate="visible"
@@ -121,7 +123,9 @@ function Users({ users = [], formatDate }) {
                       <h3 className="text-2xl font-black text-slate-900 mb-1 tracking-tight group-hover:text-indigo-600 transition-colors">
                         {user.userName}
                       </h3>
-                      <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">{user._id?.slice(-8)}</p>
+                      <p className="text-xs font-black text-slate-400 uppercase tracking-[0.2em]">
+                        {user._id?.slice(-8)}
+                      </p>
                     </div>
 
                     <div className="space-y-4">
@@ -130,8 +134,12 @@ function Users({ users = [], formatDate }) {
                           <Mail className="w-4 h-4" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Email</p>
-                          <p className="text-sm font-bold text-slate-700 truncate">{user.email}</p>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">
+                            Email
+                          </p>
+                          <p className="text-sm font-bold text-slate-700 truncate">
+                            {user.email}
+                          </p>
                         </div>
                       </div>
 
@@ -140,8 +148,12 @@ function Users({ users = [], formatDate }) {
                           <Phone className="w-4 h-4" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Phone</p>
-                          <p className="text-sm font-bold text-slate-700">{user.phone}</p>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">
+                            Phone
+                          </p>
+                          <p className="text-sm font-bold text-slate-700">
+                            {user.phone}
+                          </p>
                         </div>
                       </div>
 
@@ -150,8 +162,12 @@ function Users({ users = [], formatDate }) {
                           <Calendar className="w-4 h-4" />
                         </div>
                         <div className="flex-1">
-                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">Customer Since</p>
-                          <p className="text-sm font-bold text-slate-700">{formatDate(user.joinAt)}</p>
+                          <p className="text-xs font-bold text-slate-400 uppercase tracking-widest leading-none mb-1">
+                            Customer Since
+                          </p>
+                          <p className="text-sm font-bold text-slate-700">
+                            {formatDate(user.joinAt)}
+                          </p>
                         </div>
                       </div>
                     </div>

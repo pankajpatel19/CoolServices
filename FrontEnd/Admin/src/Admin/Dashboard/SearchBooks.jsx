@@ -1,17 +1,17 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import { 
-  User, 
-  Settings, 
-  Calendar, 
-  Phone, 
-  CheckCircle2, 
-  Clock, 
-  ChevronRight, 
+import {
+  User,
+  Settings,
+  Calendar,
+  Phone,
+  CheckCircle2,
+  Clock,
+  ChevronRight,
   Trash2,
   Wrench,
-  UserCheck
+  UserCheck,
 } from "lucide-react";
 
 function SearchBooks({
@@ -21,11 +21,12 @@ function SearchBooks({
   updatebooking,
   updateTechnician,
 }) {
-  const tableHeaderClasses = "px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]";
+  const tableHeaderClasses =
+    "px-6 py-4 text-left text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]";
 
   return (
     <div className="bg-transparent">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         className="bg-white/90 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl border border-white/40 overflow-hidden"
@@ -81,9 +82,13 @@ function SearchBooks({
                             <ChevronRight className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
                           </Link>
                           <div className="flex items-center gap-2 mt-0.5">
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">{item.appliance}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                              {item.appliance}
+                            </span>
                             <span className="w-1 h-1 bg-slate-300 rounded-full"></span>
-                            <span className="text-[10px] font-bold text-slate-400 uppercase">{item.phone}</span>
+                            <span className="text-[10px] font-bold text-slate-400 uppercase">
+                              {item.phone}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -95,7 +100,9 @@ function SearchBooks({
                         <select
                           className={`appearance-none pl-4 pr-10 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest border transition-all focus:outline-none focus:ring-4 focus:ring-indigo-100 ${getStatusColor(item.status)}`}
                           value={item.status}
-                          onChange={(e) => updatebooking(item._id, e.target.value)}
+                          onChange={(e) =>
+                            updatebooking(item._id, e.target.value)
+                          }
                         >
                           <option value="New">New</option>
                           <option value="In Progress">In Progress</option>
@@ -129,7 +136,9 @@ function SearchBooks({
                         <select
                           className="appearance-none pl-9 pr-10 py-1.5 bg-slate-50 border border-slate-100 rounded-full text-[10px] font-black text-slate-600 uppercase tracking-widest hover:border-indigo-200 transition-all focus:outline-none focus:ring-4 focus:ring-indigo-50"
                           value={item.technician || ""}
-                          onChange={(e) => updateTechnician(item._id, e.target.value)}
+                          onChange={(e) =>
+                            updateTechnician(item._id, e.target.value)
+                          }
                         >
                           <option value="">No Operator</option>
                           <option value="ajay">Ajay P.</option>
@@ -164,8 +173,12 @@ function SearchBooks({
               <div className="w-20 h-20 bg-slate-100 rounded-3xl flex items-center justify-center mx-auto mb-6">
                 <CheckCircle2 className="w-10 h-10 text-slate-300" />
               </div>
-              <h3 className="text-xl font-black text-slate-800 tracking-tight">Nothing Found</h3>
-              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">No matches for your search query</p>
+              <h3 className="text-xl font-black text-slate-800 tracking-tight">
+                Nothing Found
+              </h3>
+              <p className="text-sm font-bold text-slate-400 uppercase tracking-widest mt-1">
+                No matches for your search query
+              </p>
             </div>
           )}
         </div>

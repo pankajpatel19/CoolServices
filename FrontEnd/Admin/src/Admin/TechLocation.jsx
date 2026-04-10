@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import L from "leaflet";
 import { MapContainer, TileLayer, Marker, Popup, Tooltip } from "react-leaflet";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  Navigation, 
-  Map as MapIcon, 
-  Activity, 
-  RefreshCw, 
-  Phone, 
-  Clock, 
-  User, 
+import {
+  Navigation,
+  Map as MapIcon,
+  Activity,
+  RefreshCw,
+  Phone,
+  Clock,
+  User,
   ShieldCheck,
   Zap,
-  Radio
+  Radio,
 } from "lucide-react";
 import "leaflet/dist/leaflet.css";
 import api from "../utils/axios";
@@ -22,7 +22,7 @@ const techIcon = new L.Icon({
   iconUrl: "https://cdn-icons-png.flaticon.com/128/3588/3588614.png",
   iconSize: [40, 40],
   iconAnchor: [20, 40],
-  popupAnchor: [0,-40],
+  popupAnchor: [0, -40],
 });
 
 function TechLocation() {
@@ -60,17 +60,30 @@ function TechLocation() {
   }, []);
 
   const stats = [
-    { label: "Active Staff", value: locations.length, icon: User, color: "blue" },
+    {
+      label: "Active Staff",
+      value: locations.length,
+      icon: User,
+      color: "blue",
+    },
     { label: "Pulse Rate", value: "10s", icon: Activity, color: "indigo" },
-    { label: "Signal Status", value: "Secure", icon: radioIcon, color: "emerald", isSignal: true }
+    {
+      label: "Signal Status",
+      value: "Secure",
+      icon: radioIcon,
+      color: "emerald",
+      isSignal: true,
+    },
   ];
 
-  function radioIcon(props) { return <Radio {...props} />; }
+  function radioIcon(props) {
+    return <Radio {...props} />;
+  }
 
   return (
     <div className="min-h-screen bg-transparent p-4 sm:p-8 space-y-10">
       {/* Aesthetic Header */}
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col md:flex-row md:items-center justify-between gap-6"
@@ -80,7 +93,9 @@ function TechLocation() {
             <div className="p-3 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-xl shadow-indigo-200">
               <Navigation className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-4xl font-black text-slate-900 tracking-tight">Geospatial Intelligence</h1>
+            <h1 className="text-4xl font-black text-slate-900 tracking-tight">
+              Geospatial Intelligence
+            </h1>
           </div>
           <p className="text-slate-500 font-bold flex items-center gap-2 px-1">
             <Activity className="w-4 h-4 text-emerald-500" />
@@ -102,13 +117,13 @@ function TechLocation() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
         {/* Map View */}
-        <motion.div 
+        <motion.div
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           className="lg:col-span-3 bg-white/90 backdrop-blur-2xl rounded-[3rem] shadow-2xl border border-white/40 overflow-hidden h-[700px] relative"
         >
           <MapContainer
-            center={[28.6139, 77.2090]} // New Delhi Default
+            center={[28.6139, 77.209]} // New Delhi Default
             zoom={12}
             style={{ height: "100%", width: "100%" }}
             className="z-10"
@@ -130,8 +145,12 @@ function TechLocation() {
                         {tech.technicianId?.userName?.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-black text-slate-900 leading-none">{tech.technicianId?.userName || "Professional"}</p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">Status: Online</p>
+                        <p className="font-black text-slate-900 leading-none">
+                          {tech.technicianId?.userName || "Professional"}
+                        </p>
+                        <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+                          Status: Online
+                        </p>
                       </div>
                     </div>
                     <div className="space-y-2">
@@ -149,7 +168,12 @@ function TechLocation() {
                     </button>
                   </div>
                 </Popup>
-                <Tooltip permanent direction="top" offset={[0, -40]} className="custom-tooltip bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/50 px-3 py-1 font-black text-xs text-slate-800">
+                <Tooltip
+                  permanent
+                  direction="top"
+                  offset={[0, -40]}
+                  className="custom-tooltip bg-white/90 backdrop-blur-md rounded-lg shadow-xl border border-white/50 px-3 py-1 font-black text-xs text-slate-800"
+                >
                   {tech.technicianId?.userName}
                 </Tooltip>
               </Marker>
@@ -159,25 +183,31 @@ function TechLocation() {
 
         {/* Sidebar Controls & Stats */}
         <div className="space-y-6">
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             className="bg-white/90 backdrop-blur-2xl p-8 rounded-[2.5rem] shadow-2xl border border-white/40 flex flex-col h-full"
           >
             <div className="mb-10">
-              <h3 className="text-2xl font-black text-slate-900 tracking-tight">Live Registry</h3>
-              <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1">Staff Currently Tracked</p>
+              <h3 className="text-2xl font-black text-slate-900 tracking-tight">
+                Live Registry
+              </h3>
+              <p className="text-slate-400 font-bold text-[10px] uppercase tracking-widest mt-1">
+                Staff Currently Tracked
+              </p>
             </div>
 
             <div className="flex-1 space-y-4 overflow-y-auto pr-2 custom-scrollbar">
               {locations.length === 0 ? (
                 <div className="text-center py-10 opacity-30">
                   <Activity className="w-10 h-10 mx-auto mb-2" />
-                  <p className="text-[10px] font-black uppercase">Scanning for targets...</p>
+                  <p className="text-[10px] font-black uppercase">
+                    Scanning for targets...
+                  </p>
                 </div>
               ) : (
                 locations.map((tech, i) => (
-                  <motion.div 
+                  <motion.div
                     key={tech._id}
                     initial={{ opacity: 0, x: 10 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -188,8 +218,12 @@ function TechLocation() {
                       {tech.technicianId?.userName?.charAt(0)}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-black text-slate-800 truncate">{tech.technicianId?.userName}</p>
-                      <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">Online</p>
+                      <p className="text-sm font-black text-slate-800 truncate">
+                        {tech.technicianId?.userName}
+                      </p>
+                      <p className="text-[10px] font-bold text-emerald-500 uppercase tracking-widest">
+                        Online
+                      </p>
                     </div>
                   </motion.div>
                 ))
@@ -200,12 +234,18 @@ function TechLocation() {
               {stats.map((stat, i) => (
                 <div key={i} className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 bg-${stat.color}-50 rounded-xl text-${stat.color}-600`}>
+                    <div
+                      className={`p-2 bg-${stat.color}-50 rounded-xl text-${stat.color}-600`}
+                    >
                       <stat.icon className="w-4 h-4" />
                     </div>
-                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{stat.label}</span>
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                      {stat.label}
+                    </span>
                   </div>
-                  <span className={`text-sm font-black text-${stat.color}-700`}>{stat.value}</span>
+                  <span className={`text-sm font-black text-${stat.color}-700`}>
+                    {stat.value}
+                  </span>
                 </div>
               ))}
             </div>
@@ -226,7 +266,11 @@ function TechLocation() {
               <Zap className="w-8 h-8 text-indigo-400 fill-indigo-400" />
               Response Optimization
             </h3>
-            <p className="text-slate-400 font-bold">Automatic dispatch logic calculates the nearest technician for new service requests. Our tracking provides 99.9% uptime for logistics coordination.</p>
+            <p className="text-slate-400 font-bold">
+              Automatic dispatch logic calculates the nearest technician for new
+              service requests. Our tracking provides 99.9% uptime for logistics
+              coordination.
+            </p>
           </div>
           <button className="mt-8 md:mt-0 px-10 py-5 bg-indigo-600 hover:bg-indigo-700 text-white font-black text-sm uppercase tracking-[0.2em] rounded-2xl shadow-xl shadow-indigo-900/50 transition-all flex items-center gap-3 active:scale-95 whitespace-nowrap">
             Recalibrate Array

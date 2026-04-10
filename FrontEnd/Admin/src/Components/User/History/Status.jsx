@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
 
 function Status({ status, changeStatus }) {
@@ -49,10 +48,10 @@ function Status({ status, changeStatus }) {
                 status === "New"
                   ? "bg-blue-100 text-blue-800 border border-blue-200"
                   : status === "In Progress"
-                  ? "bg-yellow-100 text-yellow-800 border border-yellow-200"
-                  : status === "Done"
-                  ? "bg-green-100 text-green-800 border border-green-200"
-                  : "bg-gray-100 text-gray-800 border border-gray-200"
+                    ? "bg-yellow-100 text-yellow-800 border border-yellow-200"
+                    : status === "Done"
+                      ? "bg-green-100 text-green-800 border border-green-200"
+                      : "bg-gray-100 text-gray-800 border border-gray-200"
               }`}
             >
               <span className="w-2 h-2 rounded-full bg-current animate-pulse"></span>

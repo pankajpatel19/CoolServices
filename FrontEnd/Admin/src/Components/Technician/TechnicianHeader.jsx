@@ -23,8 +23,8 @@ function TechnicianHeader({
               {Technician?.userrole === "technician"
                 ? Technician.userName
                 : Technician?.userrole === "customer"
-                ? Technician.userName
-                : Technician.userName}
+                  ? Technician.userName
+                  : Technician.userName}
             </h1>
             <p className="text-gray-600 text-sm mt-1">
               Manage complaints and service requests

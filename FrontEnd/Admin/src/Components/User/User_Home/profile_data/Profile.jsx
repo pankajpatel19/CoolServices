@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Mail, Shield, Edit2 } from "lucide-react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
 import ProfileCard from "./ProfileCard";
@@ -21,7 +21,7 @@ function Profile() {
       setUser(data.data);
     };
     fetchUser();
-  }, [id, token]);
+  }, [id]);
 
   useEffect(() => {
     if (User) {

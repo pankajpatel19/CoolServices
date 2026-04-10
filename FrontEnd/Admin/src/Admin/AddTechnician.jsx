@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  UserPlus, 
-  ArrowLeft, 
-  User, 
-  Mail, 
-  Phone, 
-  Lock, 
-  Shield, 
+import {
+  UserPlus,
+  ArrowLeft,
+  User,
+  Mail,
+  Phone,
+  Lock,
+  Shield,
   Briefcase,
   CheckCircle2,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
@@ -25,7 +25,7 @@ function AddTechnician() {
     email: "",
     Phone: "",
     password: "",
-    userrole: "technician"
+    userrole: "technician",
   });
 
   const handleChange = (e) => {
@@ -39,34 +39,35 @@ function AddTechnician() {
     try {
       const res = await api.post("/admin/add_technician", formData);
       toast.success(res.data.message || "Technician added successfully!");
-      
+
       // Delay navigation slightly to let the toast be seen
       setTimeout(() => {
         navigate("/admin/handleTechnician");
       }, 1500);
     } catch (error) {
       console.error("Add Technician Error:", error);
-      toast.error(
-        error.response?.data?.message || "Failed to add technician"
-      );
+      toast.error(error.response?.data?.message || "Failed to add technician");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const inputClasses = 
+  const inputClasses =
     "w-full bg-slate-50/50 border-2 border-slate-100 rounded-2xl py-4 pl-12 pr-4 outline-none font-bold text-slate-700 focus:border-indigo-500 focus:bg-white transition-all shadow-inner";
-  const labelClasses = 
+  const labelClasses =
     "text-xs font-black text-slate-400 uppercase tracking-[0.2em] ml-2 mb-2 block";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 p-4 sm:p-8">
-      <ToastContainer position="top-center" toastClassName="backdrop-blur-xl shadow-2xl rounded-2xl" />
+      <ToastContainer
+        position="top-center"
+        toastClassName="backdrop-blur-xl shadow-2xl rounded-2xl"
+      />
 
       <div className="max-w-3xl mx-auto space-y-10">
         {/* Aesthetic Header */}
-        <motion.div 
-          initial={{ opacity: 0, x: -30 }} 
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           className="flex items-center justify-between"
         >
@@ -77,12 +78,14 @@ function AddTechnician() {
             <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
             Registry
           </button>
-          
+
           <div className="flex items-center gap-4">
-             <div className="p-3 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-xl shadow-indigo-100">
-                <UserPlus className="w-6 h-6 text-white" />
-              </div>
-              <h1 className="text-3xl font-black text-slate-900 tracking-tight hidden sm:block">Onboard Staff</h1>
+            <div className="p-3 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-2xl shadow-xl shadow-indigo-100">
+              <UserPlus className="w-6 h-6 text-white" />
+            </div>
+            <h1 className="text-3xl font-black text-slate-900 tracking-tight hidden sm:block">
+              Onboard Staff
+            </h1>
           </div>
         </motion.div>
 
@@ -95,8 +98,12 @@ function AddTechnician() {
           <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-10 text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
             <div className="relative z-10">
-              <h2 className="text-4xl font-black tracking-tight mb-2">Technician Registry</h2>
-              <p className="text-indigo-100 font-bold opacity-90">Create a secure professional account for your service staff.</p>
+              <h2 className="text-4xl font-black tracking-tight mb-2">
+                Technician Registry
+              </h2>
+              <p className="text-indigo-100 font-bold opacity-90">
+                Create a secure professional account for your service staff.
+              </p>
             </div>
           </div>
 
@@ -204,8 +211,8 @@ function AddTechnician() {
               <button
                 disabled={isSubmitting}
                 className={`w-full py-5 rounded-2xl font-black text-lg uppercase tracking-widest transition-all duration-300 flex items-center justify-center gap-3 shadow-2xl ${
-                  isSubmitting 
-                    ? "bg-slate-200 text-slate-400 cursor-not-allowed" 
+                  isSubmitting
+                    ? "bg-slate-200 text-slate-400 cursor-not-allowed"
                     : "bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-200 active:scale-95"
                 }`}
               >
@@ -237,8 +244,13 @@ function AddTechnician() {
               <Shield className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-black text-slate-800 text-sm uppercase tracking-widest mb-1">Security First</h4>
-              <p className="text-slate-500 text-sm font-medium">Auto-generate login credentials and enforce multi-factor authentication for new staff.</p>
+              <h4 className="font-black text-slate-800 text-sm uppercase tracking-widest mb-1">
+                Security First
+              </h4>
+              <p className="text-slate-500 text-sm font-medium">
+                Auto-generate login credentials and enforce multi-factor
+                authentication for new staff.
+              </p>
             </div>
           </div>
           <div className="bg-white/50 backdrop-blur-xl p-6 rounded-3xl border border-white/40 flex gap-4">
@@ -246,8 +258,13 @@ function AddTechnician() {
               <Briefcase className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-black text-slate-800 text-sm uppercase tracking-widest mb-1">Workforce Ready</h4>
-              <p className="text-slate-500 text-sm font-medium">Technicians can immediately accept bookings once their account is verified by the system.</p>
+              <h4 className="font-black text-slate-800 text-sm uppercase tracking-widest mb-1">
+                Workforce Ready
+              </h4>
+              <p className="text-slate-500 text-sm font-medium">
+                Technicians can immediately accept bookings once their account
+                is verified by the system.
+              </p>
             </div>
           </div>
         </div>

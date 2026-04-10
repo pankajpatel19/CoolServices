@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   User,
   Mail,
@@ -69,7 +68,7 @@ function EditProfile({ user, getRoleColor, handleLogout }) {
                 <p className="text-sm text-gray-600">Role</p>
                 <span
                   className={`px-2 py-1 rounded text-sm font-medium ${getRoleColor(
-                    user.userrole
+                    user.userrole,
                   )}`}
                 >
                   {user.userrole}
@@ -82,8 +81,8 @@ function EditProfile({ user, getRoleColor, handleLogout }) {
               <div>
                 <p className="text-sm text-gray-600">Member Since</p>
                 <p className="font-medium text-gray-900">
-                  {user.joinAt 
-                    ? new Date(user.joinAt).toLocaleDateString() 
+                  {user.joinAt
+                    ? new Date(user.joinAt).toLocaleDateString()
                     : "Not available"}
                 </p>
               </div>

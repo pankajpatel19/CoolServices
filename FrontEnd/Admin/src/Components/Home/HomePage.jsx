@@ -1,10 +1,8 @@
-import React from "react";
-import Nav from "./Nav";
 import Banner from "./Banner";
 import Service from "./Service";
 import Customer from "./Customer";
 
-function Home() {
+function HomePage() {
   return (
     <>
       <Banner />
@@ -14,4 +12,4 @@ function Home() {
   );
 }
 
-export default Home;
+export default HomePage;

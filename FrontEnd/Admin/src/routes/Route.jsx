@@ -3,7 +3,6 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import RootLayout from "../components/layout/RootLayout";
 import SignUp from "../components/home/SignUp";
 import Login from "../components/home/Login";
 import AuthSuccess from "../components/user/AuthSuccess";
@@ -43,11 +42,12 @@ import ProtectedRoute from "../components/protected_route/ProtectedRoute";
 import NotFound from "../components/home/NotFound";
 import Unauthorized from "../components/home/Unauthorized";
 import HomePage from "../components/home/HomePage";
+import RootLayoutPage from "../components/layout/RootLayoutPage";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<RootLayout />}>
+      <Route path="/" element={<RootLayoutPage />}>
         <Route index element={<HomePage />} />
 
         <Route path="signup" element={<SignUp />} />

@@ -1,7 +1,7 @@
 import Nav from "../home/Nav";
 import { Outlet } from "react-router-dom";
 
-function RootLayout() {
+function RootLayoutPage() {
   return (
     <div>
       <Nav />
@@ -12,4 +12,4 @@ function RootLayout() {
   );
 }
 
-export default RootLayout;
+export default RootLayoutPage;

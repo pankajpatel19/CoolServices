@@ -1,4 +1,10 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import api from "../utils/axios";
 
 const UserContext = createContext(null);
@@ -7,7 +13,7 @@ const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const getUser = async () => {
+  const getUser = useCallback(async () => {
     try {
       const { data } = await api.get("/users/current-user");
 
@@ -18,14 +24,14 @@ const UserProvider = ({ children }) => {
       }
     } catch (error) {
       console.log(error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
-  };
-
+  }, []);
   useEffect(() => {
     getUser();
-  }, []);
+  }, [getUser]);
 
   return (
     <UserContext.Provider value={{ user, setUser, loading }}>

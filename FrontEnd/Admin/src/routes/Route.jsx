@@ -3,7 +3,6 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import RootLayout from "../components/layout/RootLayout.jsx";
 import SignUp from "../components/home/SignUp.jsx";
 import Login from "../components/home/Login.jsx";
 import Data from "../admin/Data";
@@ -44,6 +43,7 @@ import AddAddress from "../admin/service/payment_success/AddAddress.jsx";
 import ShowAddreses from "../admin/service/payment_success/ShowAddreses.jsx";
 import Payment from "../admin/service/payment_success/final_payment/Payment.jsx";
 import AddTechnician from "../admin/AddTechnician.jsx";
+import RootLayout from "../components/layout/RootLayout.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(

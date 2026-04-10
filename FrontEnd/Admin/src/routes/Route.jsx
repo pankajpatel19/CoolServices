@@ -3,7 +3,7 @@ import {
   createRoutesFromElements,
   Route,
 } from "react-router-dom";
-import RootLayout from "../components/layout/RootLayout";
+import RootLayout from "../components/layout/RootLayout.jsx";
 import SignUp from "../components/home/SignUp.jsx";
 import Login from "../components/home/Login.jsx";
 import Data from "../admin/Data";
@@ -112,7 +112,7 @@ const router = createBrowserRouter(
 
       <Route path="*" element={<NotFound />} />
       <Route path="/unauthorized" element={<Unauthorized />} />
-    </>
-  )
+    </>,
+  ),
 );
 export default router;

@@ -31,7 +31,7 @@ function TechLocation() {
 
   const fetchLocations = async () => {
     try {
-      const res = await api.get("/admin/technicians-locations");
+      const res = await api.get("/api/technicians/admin/technicians-locations");
       setLocations(res.data);
     } catch (err) {
       console.error("Error fetching locations:", err);

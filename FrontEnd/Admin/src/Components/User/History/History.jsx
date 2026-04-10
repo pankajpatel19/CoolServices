@@ -24,7 +24,7 @@ function History() {
 
   const downloadReciept = async (id) => {
     try {
-      const res = await api.get(`/Home/history/${id}/pdf`, {
+      const res = await api.get(`/bookings/Home/history/${id}/pdf`, {
         responseType: "blob",
       });
 
@@ -37,13 +37,11 @@ function History() {
     }
   };
 
-
-
   const getStatusBooking = async (stts) => {
     try {
       setLoading(true);
 
-      const res = await api.get(`/home/history/status?status=${stts}`);
+      const res = await api.get(`/bookings/Home/history/status?status=${stts}`);
       setHistory(res.data);
     } catch (error) {
       toast.error(error.response.data.message);

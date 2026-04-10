@@ -3,18 +3,14 @@ import { ApiResponse } from "../../utils/ApiResponse.js";
 
 export const add_address = async (req, res, next) => {
   try {
-    const { addressLine1, city, state, zipCode, country, addressType } = req.body;
-
-    if (!addressLine1 || !city || !state || !zipCode || !country || !addressType) {
-      return res.status(400).json(new ApiResponse(400, null, "All required address fields must be provided"));
-    }
-
     const newAddress = await Address.create({
       ...req.body,
       user: req.user?.id || req.user?._id,
     });
 
-    return res.status(201).json(new ApiResponse(201, newAddress, "Address saved successfully"));
+    return res
+      .status(201)
+      .json(new ApiResponse(201, newAddress, "Address saved successfully"));
   } catch (error) {
     next(error);
   }

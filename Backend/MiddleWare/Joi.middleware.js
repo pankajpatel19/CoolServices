@@ -72,14 +72,40 @@ export const updateBookingSchema = Joi.object({
 
 // Technician Schema
 export const technicianLocationSchema = Joi.object({
-  technicianId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
+  technicianId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .optional(),
   latitude: Joi.number().required(),
   longitude: Joi.number().required(),
 });
 
 // Complain Schema
 export const complaintSchema = Joi.object({
+  fullname: Joi.string().min(3).optional(),
+  email: Joi.string().email().optional(),
   subject: Joi.string().min(3).required(),
-  description: Joi.string().min(10).required(),
-  bookingId: Joi.string().regex(/^[0-9a-fA-F]{24}$/).optional(),
+  message: Joi.string().min(10).required(),
+});
+// Address Schema
+export const addressSchema = Joi.object({
+  addressLine1: Joi.string().min(5).required(),
+  city: Joi.string().required(),
+  state: Joi.string().required(),
+  zipCode: Joi.string().length(6).pattern(/^\d+$/).required(),
+  country: Joi.string().required(),
+  addressType: Joi.string().valid("Home", "Office", "Other").required(),
+});
+
+// Password Management Schemas
+export const forgotPasswordSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
+
+export const resetPasswordSchema = Joi.object({
+  newPassword: Joi.string().min(6).required(),
+});
+
+// AI Query Schema
+export const aiQuerySchema = Joi.object({
+  data: Joi.string().min(1).required(),
 });

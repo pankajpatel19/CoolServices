@@ -3,7 +3,7 @@ import { Link, NavLink, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { toast } from "react-toastify";
 import logo from "../../assets/logo.png";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import {
   Wrench,
   Menu as MenuIcon,
@@ -25,9 +25,9 @@ import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import api from "../../utils/axios.js";
+import { useUser } from "../../context/userContext.jsx";
 
 function Nav() {
-  const [user, setUser] = useState();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -44,11 +44,9 @@ function Nav() {
 
   const handleLogout = async () => {
     try {
-      await api.get("/logout", {
+      await api.get("/users/logout", {
         withCredentials: true,
       });
-      localStorage.removeItem("user");
-      localStorage.removeItem("token");
       setUser(null);
       setMobileMenuOpen(false);
       toast.success("LogOut SuccessFully");
@@ -59,25 +57,7 @@ function Nav() {
     }
   };
 
-  useEffect(() => {
-    try {
-      const storedItem = localStorage.getItem("user");
-      if (storedItem) {
-        const currentUser = JSON.parse(storedItem);
-        if (currentUser && currentUser.user) {
-          setUser(currentUser.user);
-        } else {
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-    } catch (error) {
-      console.error("Failed to parse user data from localStorage:", error);
-      setUser(null);
-      localStorage.removeItem("user");
-    }
-  }, []);
+  const { user, setUser } = useUser();
 
   return (
     <motion.nav
@@ -190,7 +170,7 @@ function Nav() {
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <MessageSquareWarning className="w-5 h-5 mr-3 text-gray-600" />
-                    <Link to={`/home/complain/${user.id}`}>Complaints</Link>
+                    <Link to={`/home/complain/${user._id}`}>Complaints</Link>
                   </MenuItem>
                   <MenuItem onClick={handleClose}>
                     <Phone className="w-5 h-5 mr-3 text-gray-600" />

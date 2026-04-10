@@ -8,10 +8,6 @@ export const forgotPassword = async (req, res, next) => {
   try {
     const { email } = req.body;
 
-    if (!email) {
-      return res.status(400).json(new ApiResponse(400, null, "Email is required"));
-    }
-
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(404).json(new ApiResponse(404, null, "User with this email does not exist"));
@@ -46,10 +42,6 @@ export const resetPassword = async (req, res, next) => {
   try {
     const { token } = req.params;
     const { newPassword } = req.body;
-
-    if (!newPassword || newPassword.length < 6) {
-      return res.status(400).json(new ApiResponse(400, null, "Password must be at least 6 characters long"));
-    }
 
     let decoded;
     try {

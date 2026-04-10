@@ -1,5 +1,3 @@
-import axios from "axios";
-import React from "react";
 import { useState, useEffect, useRef } from "react";
 import api from "../../../utils/axios";
 function SolvedByYour() {
@@ -30,11 +28,12 @@ function SolvedByYour() {
     setIsLoading(true);
 
     try {
-      const res = await api.post("/home/chat", {
+      const { data } = await api.post("/ai/chat", {
         data: input,
       });
+      console.log(data);
 
-      const botReply = res.data.text;
+      const botReply = data.data.text;
       setData((prev) => [...prev, { sender: "bot", text: botReply }]);
     } catch (error) {
       console.error(error);

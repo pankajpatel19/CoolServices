@@ -40,7 +40,9 @@ function SignUp() {
     setIsLoading(true);
 
     try {
-      const res = await api.post("/signup", data, { withCredentials: true });
+      const res = await api.post("/users/signup", data, {
+        withCredentials: true,
+      });
 
       toast.success("Register Successfully!");
       navigate("/login");

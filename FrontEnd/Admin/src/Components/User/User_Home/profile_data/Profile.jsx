@@ -11,15 +11,14 @@ function Profile() {
   const [edit, setEdit] = useState(false);
   const [User, setUser] = useState({});
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
 
   const { id } = useParams();
 
   useEffect(() => {
     const fetchUser = async () => {
-      const res = await api.get(`/profile/${id}`);
+      const { data } = await api.get(`/users/profile/${id}`);
 
-      setUser(res.data.user);
+      setUser(data.data);
     };
     fetchUser();
   }, [id, token]);
@@ -46,7 +45,7 @@ function Profile() {
     try {
       const res = await axios.patch(
         "http://localhost:1916/updateprofile",
-        formData
+        formData,
       );
 
       setUser(res.data.user);

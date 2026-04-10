@@ -1,5 +1,15 @@
 import { useState, useEffect } from "react";
-import { ArrowLeft, Mail, Shield, Edit2, Phone, MapPin, LogOut, Camera, User } from "lucide-react";
+import {
+  ArrowLeft,
+  Mail,
+  Shield,
+  Edit2,
+  Phone,
+  MapPin,
+  LogOut,
+  Camera,
+  User,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
@@ -92,10 +102,14 @@ function TechProfile() {
 
   const getRoleColor = (role) => {
     switch (role?.toLowerCase()) {
-      case "admin": return "bg-purple-100 text-purple-700 border-purple-200";
-      case "technician": return "bg-blue-100 text-blue-700 border-blue-200";
-      case "customer": return "bg-green-100 text-green-700 border-green-200";
-      default: return "bg-gray-100 text-gray-700 border-gray-200";
+      case "admin":
+        return "bg-purple-100 text-purple-700 border-purple-200";
+      case "technician":
+        return "bg-blue-100 text-blue-700 border-blue-200";
+      case "customer":
+        return "bg-green-100 text-green-700 border-green-200";
+      default:
+        return "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
 
@@ -110,7 +124,7 @@ function TechProfile() {
       />
 
       {/* Aesthetic Header */}
-      <motion.div 
+      <motion.div
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         className="max-w-5xl mx-auto px-4 py-10"
@@ -143,7 +157,11 @@ function TechProfile() {
                 <div className="w-40 h-40 bg-white rounded-3xl p-1.5 shadow-2xl border border-white/50">
                   <div className="w-full h-full bg-slate-100 rounded-[1.25rem] overflow-hidden flex items-center justify-center">
                     {user.avatar ? (
-                      <img src={user.avatar} alt="Profile" className="w-full h-full object-cover" />
+                      <img
+                        src={user.avatar}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <User className="w-16 h-16 text-slate-300" />
                     )}
@@ -151,7 +169,11 @@ function TechProfile() {
                 </div>
                 <label className="absolute bottom-3 right-3 p-3 bg-blue-600 text-white rounded-2xl shadow-xl cursor-pointer hover:bg-blue-700 hover:scale-110 transition-all border-4 border-white">
                   <Camera className="w-5 h-5" />
-                  <input type="file" className="hidden" onChange={changeImage} />
+                  <input
+                    type="file"
+                    className="hidden"
+                    onChange={changeImage}
+                  />
                 </label>
               </div>
 
@@ -161,7 +183,9 @@ function TechProfile() {
                   <h1 className="text-4xl font-black text-slate-900 tracking-tight">
                     {user.userName}
                   </h1>
-                  <span className={`px-4 py-1.5 rounded-full text-xs font-black border uppercase tracking-widest ${getRoleColor(user.userrole)}`}>
+                  <span
+                    className={`px-4 py-1.5 rounded-full text-xs font-black border uppercase tracking-widest ${getRoleColor(user.userrole)}`}
+                  >
                     <Shield className="w-4 h-4 inline mr-1.5" />
                     {user.userrole}
                   </span>
@@ -184,14 +208,14 @@ function TechProfile() {
 
               {/* Action Area */}
               <div className="flex gap-3">
-                <button 
+                <button
                   onClick={() => setEdit(true)}
                   className="flex items-center gap-2 px-6 py-3 bg-slate-900 text-white font-bold rounded-2xl shadow-xl hover:bg-slate-800 transition-all hover:-translate-y-1"
                 >
                   <Edit2 className="w-5 h-5" />
                   Edit Profile
                 </button>
-                <button 
+                <button
                   onClick={handleLogout}
                   className="p-3 bg-red-50 text-red-600 rounded-2xl hover:bg-red-100 transition-colors border border-red-100"
                 >
@@ -203,26 +227,50 @@ function TechProfile() {
             {/* Quick Info Grid */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-16">
               {[
-                { icon: Phone, label: "Phone", value: user.phone || "Not Set", color: "blue" },
-                { icon: MapPin, label: "Location", value: user.location || "Not Set", color: "indigo" },
-                { icon: Shield, label: "Joined", value: user.joinAt || "Dec 2023", color: "purple" }
+                {
+                  icon: Phone,
+                  label: "Phone",
+                  value: user.phone || "Not Set",
+                  color: "blue",
+                },
+                {
+                  icon: MapPin,
+                  label: "Location",
+                  value: user.location || "Not Set",
+                  color: "indigo",
+                },
+                {
+                  icon: Shield,
+                  label: "Joined",
+                  value: user.joinAt || "Dec 2023",
+                  color: "purple",
+                },
               ].map((info, i) => (
-                <div key={i} className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 group hover:border-blue-200 transition-colors">
-                  <div className={`w-12 h-12 bg-${info.color}-100 rounded-2xl flex items-center justify-center text-${info.color}-600 mb-4 shadow-inner`}>
+                <div
+                  key={i}
+                  className="bg-slate-50/50 p-6 rounded-3xl border border-slate-100 group hover:border-blue-200 transition-colors"
+                >
+                  <div
+                    className={`w-12 h-12 bg-${info.color}-100 rounded-2xl flex items-center justify-center text-${info.color}-600 mb-4 shadow-inner`}
+                  >
                     <info.icon className="w-6 h-6" />
                   </div>
-                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">{info.label}</p>
-                  <p className="text-lg font-black text-slate-800">{info.value}</p>
+                  <p className="text-xs font-black text-slate-400 uppercase tracking-widest mb-1">
+                    {info.label}
+                  </p>
+                  <p className="text-lg font-black text-slate-800">
+                    {info.value}
+                  </p>
                 </div>
               ))}
             </div>
 
             {/* Sub-Components */}
             <div className="mt-12 pt-12 border-t border-slate-100">
-              <EditProfile 
-                user={user} 
-                getRoleColor={getRoleColor} 
-                handleLogout={handleLogout} 
+              <EditProfile
+                user={user}
+                getRoleColor={getRoleColor}
+                handleLogout={handleLogout}
               />
             </div>
           </div>
@@ -248,18 +296,27 @@ function TechProfile() {
             >
               <div className="bg-gradient-to-r from-blue-600 to-indigo-600 p-8 text-white">
                 <h2 className="text-2xl font-black">Update Information</h2>
-                <p className="text-blue-100 font-medium">Keep your profile fresh and accurate.</p>
+                <p className="text-blue-100 font-medium">
+                  Keep your profile fresh and accurate.
+                </p>
               </div>
-              
+
               <div className="p-8 space-y-6">
                 {[
                   { id: "userName", label: "Full Name", icon: User },
-                  { id: "email", label: "Email Address", icon: Mail, type: "email" },
+                  {
+                    id: "email",
+                    label: "Email Address",
+                    icon: Mail,
+                    type: "email",
+                  },
                   { id: "phone", label: "Phone Number", icon: Phone },
-                  { id: "location", label: "Work Location", icon: MapPin }
+                  { id: "location", label: "Work Location", icon: MapPin },
                 ].map((field) => (
                   <div key={field.id} className="space-y-2">
-                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">{field.label}</label>
+                    <label className="text-xs font-black text-slate-400 uppercase tracking-widest ml-1">
+                      {field.label}
+                    </label>
                     <div className="relative group">
                       <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-blue-500 transition-colors">
                         <field.icon className="w-5 h-5" />
@@ -267,7 +324,12 @@ function TechProfile() {
                       <input
                         type={field.type || "text"}
                         value={formData[field.id]}
-                        onChange={(e) => setFormData({ ...formData, [field.id]: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            [field.id]: e.target.value,
+                          })
+                        }
                         className="w-full bg-slate-50 border-2 border-transparent focus:border-blue-500 rounded-2xl py-4 pl-12 pr-4 outline-none font-bold text-slate-700 transition-all"
                       />
                     </div>

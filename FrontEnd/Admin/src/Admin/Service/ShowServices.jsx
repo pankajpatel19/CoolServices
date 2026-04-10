@@ -1,4 +1,4 @@
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import { motion } from "framer-motion";
 import api from "../../utils/axios";
 import { ArrowLeft } from "lucide-react";
@@ -16,12 +16,11 @@ function ShowServices() {
   const fetchServices = async () => {
     try {
       const { data } = await api.get(
-        `${
-          import.meta.env.VITE_API_URL
-        }/services/appliance?appliance=${appliance}`
+        `/services/appliance?appliance=${appliance}`,
       );
+      console.log(data);
 
-      setServices(data);
+      setServices(data.data);
     } catch (error) {
       console.error("Error fetching services:", error);
     }
@@ -106,7 +105,7 @@ function ShowServices() {
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                {services.map((service) => (
+                {services?.map((service) => (
                   <div
                     key={service._id}
                     className="bg-white shadow-xl rounded-2xl border-2 border-transparent hover:border-blue-300 hover:shadow-2xl transition-all duration-300 overflow-hidden group relative"

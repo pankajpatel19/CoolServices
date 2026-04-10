@@ -41,7 +41,7 @@ function Dashboard() {
 
   const handledelete = async (id) => {
     const confirm = window.confirm(
-      "Are you sure you want to delete this booking?"
+      "Are you sure you want to delete this booking?",
     );
     if (!confirm) return;
     try {
@@ -62,7 +62,7 @@ function Dashboard() {
 
         {
           status: val,
-        }
+        },
       );
       console.log(res);
 

@@ -1,5 +1,8 @@
 # Dependencies
 node_modules/
+build_error.txt
+casing_results.txt
+directories.txt
 
 # Production Build
 dist/

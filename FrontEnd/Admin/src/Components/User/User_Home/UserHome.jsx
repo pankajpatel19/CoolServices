@@ -14,7 +14,7 @@ function UserHome() {
 
   const currUser = async () => {
     try {
-      const res = await api.get("/currentUser");
+      const res = await api.get("/users/current-user");
       setUser(res.data);
     } catch (error) {
       console.log(error);

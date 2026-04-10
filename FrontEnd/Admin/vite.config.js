@@ -13,6 +13,16 @@ export default defineConfig({
     tailwindcss(),
   ],
   build: {
-    sourcemap: true,
+    sourcemap: false,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          ui: ["@mui/material", "@emotion/react", "@emotion/styled", "lucide-react"],
+          mantine: ["@mantine/core", "@mantine/hooks"],
+          utils: ["axios", "framer-motion", "recharts"],
+        },
+      },
+    },
   },
 });

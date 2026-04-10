@@ -39,7 +39,7 @@ function ComplaintForm() {
     }
 
     try {
-      const res = await api.post("/home/complaint", formData);
+      const res = await api.post("/complaints/Home/Complaint", formData);
       console.log("Complaint submitted:", res.data);
       showNotification("✅ Complaint submitted successfully!", "success");
 

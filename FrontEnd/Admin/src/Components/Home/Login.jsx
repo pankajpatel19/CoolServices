@@ -36,19 +36,19 @@ function Login() {
 
   const onSubmit = async (data) => {
     try {
-      const res = await api.post("/login", data, { withCredentials: true });
+      const res = await api.post("/users/login", data, {
+        withCredentials: true,
+      });
 
-      const { role, user } = res.data;
-      console.log(role);
-      localStorage.setItem("user", JSON.stringify({ user, role }));
+      const { user } = res.data.data;
       toast.success("Login Successfully");
 
       let redirect = location.state?.from?.pathname;
       if (!redirect) {
         redirect =
-          role === "customer"
-            ? "/Home"
-            : role === "technician"
+          user.userrole === "customer"
+            ? "/home"
+            : user.userrole === "technician"
               ? "/techhome"
               : "/admin/showbooking";
       }

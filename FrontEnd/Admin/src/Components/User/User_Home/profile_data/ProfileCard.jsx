@@ -103,7 +103,7 @@ function ProfileCard({ getRoleColor, user, handleLogout }) {
                 <div className="flex items-center justify-center sm:justify-start gap-2 mt-2 sm:mt-3">
                   <span
                     className={`px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${getRoleColor(
-                      user.userrole
+                      user.userrole,
                     )}`}
                   >
                     <Shield className="w-3 h-3 sm:w-4 sm:h-4 inline mr-1" />

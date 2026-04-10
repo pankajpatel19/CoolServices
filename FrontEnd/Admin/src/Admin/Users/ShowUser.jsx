@@ -12,7 +12,7 @@ function ShowUser() {
   const fetchUsers = async () => {
     try {
       setError(null);
-      const response = await api.get("/admin/users", {
+      const response = await api.get("/api/bookings/admin/users", {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 

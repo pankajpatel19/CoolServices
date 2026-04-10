@@ -10,8 +10,10 @@ function ShowComplaints() {
 
   const fetchComplaints = async () => {
     try {
-      const res = await api.get(`/home/complaint/${id}`);
-      setComplaints(res.data.complaint);
+      const { data } = await api.get(`/complaints/Home/Complaint/${id}`);
+      console.log(data.data);
+
+      setComplaints(data.data);
     } catch (error) {
       console.log(error);
     }

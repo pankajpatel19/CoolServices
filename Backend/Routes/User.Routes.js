@@ -14,18 +14,29 @@ import {
   forgotPassword,
   resetPassword,
 } from "../Controller/Password/forgot-Password.controller.js";
+import validate from "../MiddleWare/Validate.middleware.js";
+import {
+  userRegistrationSchema,
+  loginRegisterSchema,
+  forgotPasswordSchema,
+  resetPasswordSchema,
+} from "../MiddleWare/Joi.middleware.js";
 
 const router = Router();
 
 // Authentication
-router.post("/login", login);
-router.post("/signup", signup);
+router.post("/login", validate(loginRegisterSchema), login);
+router.post("/signup", validate(userRegistrationSchema), signup);
 router.get("/logout", logout);
 router.get("/current-user", userAuth, currentuser);
 
 // Password Management
-router.post("/forgot-password", forgotPassword);
-router.post("/reset-password/:token", resetPassword);
+router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
+router.post(
+  "/reset-password/:token",
+  validate(resetPasswordSchema),
+  resetPassword
+);
 
 // Profile Management
 router.get("/profile/:id", userAuth, fetchUser);

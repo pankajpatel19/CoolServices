@@ -11,7 +11,9 @@ function MainContent({ booking, getStatusColor, updatebooking, username }) {
 
   const getStatusBooking = async (stts) => {
     try {
-      const res = await Api.get(`/status?status=${stts}&name=${username}`);
+      const res = await Api.get(
+        `/technicians/status?status=${stts}&name=${username}`,
+      );
 
       toast.success(res.data.message);
       setServiceData(res.data.bookings);
@@ -221,7 +223,7 @@ function MainContent({ booking, getStatusColor, updatebooking, username }) {
                       <td className="px-6 py-4">
                         <select
                           className={`px-3 py-1.5 rounded-full text-xs font-medium border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all ${getStatusColor(
-                            item.status
+                            item.status,
                           )}`}
                           value={item.status}
                           onChange={(e) =>

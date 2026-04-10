@@ -29,7 +29,7 @@ app.use(cookieParser());
 
 // CORS Configuration
 const allowedOrigins = [
-  "https://cool-services.vercel.app",
+  "https://cool-services-v918.vercel.app",
   "http://localhost:5173",
   "http://localhost:3000",
 ];

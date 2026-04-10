@@ -8,7 +8,7 @@ import {
   loginRegisterSchema,
 } from "../../MiddleWare/Joi.middleware.js";
 import { uploadFile } from "../../utils/cloudinary.js";
-import redisCLient from "../../config/redis.config.js";
+import redisClient from "../../config/redis.config.js";
 import { generateToken, verifyRefreshToken } from "../../jwt/tokens.js";
 import RefreshToken from "../../Models/RefreshToken.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
@@ -72,7 +72,6 @@ export const login = async (req, res, next) => {
       new ApiResponse(200, { user: sanitizedUser, role: userrole }, "Login successful")
     );
   } catch (error) {
-    console.error("[LoginError]:", error);
     next(error);
   }
 };
@@ -111,7 +110,6 @@ export const signup = async (req, res, next) => {
       new ApiResponse(201, responseUser, "Registration successful")
     );
   } catch (error) {
-    console.error("[SignupError]:", error);
     next(error);
   }
 };
@@ -128,7 +126,6 @@ export const logout = async (req, res, next) => {
     
     return res.status(200).json(new ApiResponse(200, null, "Logged out successfully"));
   } catch (error) {
-    console.error("[LogoutError]:", error);
     next(error);
   }
 };
@@ -172,7 +169,6 @@ export const Refresh = async (req, res, next) => {
 
     return res.status(200).json(new ApiResponse(200, null, "Token refreshed successfully"));
   } catch (error) {
-    console.error("[RefreshError]:", error);
     if (error.name === "TokenExpiredError" || error.name === "JsonWebTokenError") {
       return res.status(403).json(new ApiResponse(403, null, "Session invalid/expired"));
     }
@@ -218,7 +214,7 @@ export const updateProfile = async (req, res, next) => {
     }
 
     // Invalidate profile cache
-    await redisCLient.del(`userProfile:${userId}`);
+    await redisClient.del(`userProfile:${userId}`);
 
     return res.status(200).json(new ApiResponse(200, updatedUser, "Profile updated successfully"));
   } catch (error) {
@@ -231,7 +227,7 @@ export const fetchUser = async (req, res, next) => {
     const { id } = req.params;
     const cacheKey = `userProfile:${id}`;
     
-    const cachedUser = await redisCLient.get(cacheKey);
+    const cachedUser = await redisClient.get(cacheKey);
     if (cachedUser) {
       return res.status(200).json(new ApiResponse(200, JSON.parse(cachedUser), "Profile fetched (cached)"));
     }
@@ -241,7 +237,7 @@ export const fetchUser = async (req, res, next) => {
       return res.status(404).json(new ApiResponse(404, null, "User not found"));
     }
 
-    await redisCLient.setEx(cacheKey, 300, JSON.stringify(user)); // Cache for 5 mins
+    await redisClient.setEx(cacheKey, 300, JSON.stringify(user)); // Cache for 5 mins
     return res.status(200).json(new ApiResponse(200, user, "User profile fetched"));
   } catch (error) {
     next(error);
@@ -273,7 +269,7 @@ export const updateImagePro = async (req, res, next) => {
     }
 
     // Invalidate cache
-    await redisCLient.del(`userProfile:${userId}`);
+    await redisClient.del(`userProfile:${userId}`);
 
     return res.status(200).json(new ApiResponse(200, updatedUser, "Avatar updated successfully"));
   } catch (error) {

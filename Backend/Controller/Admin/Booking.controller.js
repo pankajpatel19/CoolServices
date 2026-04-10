@@ -1,9 +1,13 @@
-import redisCLient from "../../config/redis.config.js";
+import redisClient from "../../config/redis.config.js";
 import Booking from "../../Models/Booking.model.js";
 import User from "../../Models/User.model.js";
 import { generateBookingPDF } from "../../utils/generateBookingPDF.js";
 import { sendBookEmail } from "../../utils/Sendmails.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
+import {
+  bookingSchema,
+  updateBookingSchema,
+} from "../../MiddleWare/Joi.middleware.js";
 
 export const Showbooking_Dashboard = async (req, res, next) => {
   try {
@@ -36,13 +40,13 @@ export const bookData = async (req, res, next) => {
 
 export const AddBooking = async (req, res, next) => {
   try {
-    const { productType, address, phone, date } = req.body;
-    if (!productType || !address || !phone) {
-      return res.status(400).json(new ApiResponse(400, null, "Missing required booking fields"));
+    const { error, value } = bookingSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json(new ApiResponse(400, null, error.details[0].message));
     }
 
     const newBooking = await Booking.create({
-      ...req.body,
+      ...value,
       user: req.user?.id || req.user?._id,
       status: "New"
     });
@@ -53,8 +57,8 @@ export const AddBooking = async (req, res, next) => {
     );
 
     // Invalidate caches
-    await redisCLient.del("all_Bookings");
-    if (req.user?.id) await redisCLient.del(`booking:user:${req.user.id}`);
+    await redisClient.del("all_Bookings");
+    if (req.user?.id) await redisClient.del(`booking:user:${req.user.id}`);
 
     return res.status(201).json(new ApiResponse(201, newBooking, "Booking created successfully"));
   } catch (error) {
@@ -65,7 +69,7 @@ export const AddBooking = async (req, res, next) => {
 export const ShowBooking = async (req, res, next) => {
   try {
     const cacheKey = "all_Bookings";
-    const cachedBookings = await redisCLient.get(cacheKey);
+    const cachedBookings = await redisClient.get(cacheKey);
 
     if (cachedBookings) {
       return res.status(200).json(
@@ -78,7 +82,7 @@ export const ShowBooking = async (req, res, next) => {
       .sort({ createdAt: -1 })
       .lean();
 
-    await redisCLient.setEx(cacheKey, 3600, JSON.stringify(bookings)); // Cache for 1 hour
+    await redisClient.setEx(cacheKey, 3600, JSON.stringify(bookings)); // Cache for 1 hour
 
     return res.status(200).json(new ApiResponse(200, bookings, "All bookings fetched successfully"));
   } catch (error) {
@@ -98,8 +102,8 @@ export const DeleteBooking = async (req, res, next) => {
     await Booking.findByIdAndDelete(id);
 
     // Invalidate caches
-    await redisCLient.del("all_Bookings");
-    await redisCLient.del(`booking:user:${booking.user}`);
+    await redisClient.del("all_Bookings");
+    await redisClient.del(`booking:user:${booking.user}`);
 
     return res.status(200).json(new ApiResponse(200, null, "Booking deleted successfully"));
   } catch (error) {
@@ -109,7 +113,12 @@ export const DeleteBooking = async (req, res, next) => {
 
 export const UpdateBooking = async (req, res, next) => {
   try {
-    const { status, technician } = req.body;
+    const { error, value } = updateBookingSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json(new ApiResponse(400, null, error.details[0].message));
+    }
+
+    const { status, technician } = value;
     const id = req.params.id;
 
     const updated = await Booking.findByIdAndUpdate(
@@ -123,8 +132,8 @@ export const UpdateBooking = async (req, res, next) => {
     }
 
     // Invalidate caches
-    await redisCLient.del("all_Bookings");
-    await redisCLient.del(`booking:user:${updated.user?._id || updated.user}`);
+    await redisClient.del("all_Bookings");
+    await redisClient.del(`booking:user:${updated.user?._id || updated.user}`);
 
     return res.status(200).json(new ApiResponse(200, updated, "Booking updated successfully"));
   } catch (error) {
@@ -217,14 +226,14 @@ export const AdminStatusBooking = async (req, res, next) => {
 export const getUsers = async (req, res, next) => {
   try {
     const cacheKey = "users_customer";
-    const cachedUsers = await redisCLient.get(cacheKey);
+    const cachedUsers = await redisClient.get(cacheKey);
 
     if (cachedUsers) {
       return res.status(200).json(new ApiResponse(200, JSON.parse(cachedUsers), "Customers fetched (cached)"));
     }
 
     const users = await User.find({ userrole: "customer" }).select("-password").lean();
-    await redisCLient.setEx(cacheKey, 3600, JSON.stringify(users));
+    await redisClient.setEx(cacheKey, 3600, JSON.stringify(users));
 
     return res.status(200).json(new ApiResponse(200, users, "Customers fetched successfully"));
   } catch (error) {
@@ -237,7 +246,7 @@ export const getBookingPerUser = async (req, res, next) => {
     const { id } = req.params;
     const cacheKey = `booking:user:${id}`;
     
-    const cachedData = await redisCLient.get(cacheKey);
+    const cachedData = await redisClient.get(cacheKey);
     if (cachedData) {
       return res.status(200).json(new ApiResponse(200, JSON.parse(cachedData), "User bookings fetched (cached)"));
     }
@@ -248,7 +257,7 @@ export const getBookingPerUser = async (req, res, next) => {
       return res.status(404).json(new ApiResponse(404, [], "No bookings found for this user"));
     }
 
-    await redisCLient.setEx(cacheKey, 1800, JSON.stringify(bookings));
+    await redisClient.setEx(cacheKey, 1800, JSON.stringify(bookings));
 
     return res.status(200).json(new ApiResponse(200, bookings, "User bookings fetched successfully"));
   } catch (error) {

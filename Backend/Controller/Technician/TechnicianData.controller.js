@@ -2,13 +2,14 @@ import TechnicianLocation from "../../Models/TechnicianLocation.model.js";
 import User from "../../Models/User.model.js";
 import Booking from "../../Models/Booking.model.js";
 import { TechReminder } from "../../utils/Sendmails.js";
-import redisCLient from "../../config/redis.config.js";
+import redisClient from "../../config/redis.config.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
+import { technicianLocationSchema } from "../../MiddleWare/Joi.middleware.js";
 
 export const handleTech = async (req, res, next) => {
   try {
     const cacheKey = "Technicians";
-    const cachedTechnicians = await redisCLient.get(cacheKey);
+    const cachedTechnicians = await redisClient.get(cacheKey);
 
     if (cachedTechnicians) {
       return res.status(200).json(
@@ -22,7 +23,7 @@ export const handleTech = async (req, res, next) => {
       return res.status(404).json(new ApiResponse(404, [], "No technicians found"));
     }
 
-    await redisCLient.setEx(cacheKey, 600, JSON.stringify(technicians)); // Cache for 10 mins
+    await redisClient.setEx(cacheKey, 600, JSON.stringify(technicians)); // Cache for 10 mins
 
     return res.status(200).json(new ApiResponse(200, technicians, "Technicians fetched successfully"));
   } catch (error) {
@@ -39,8 +40,8 @@ export const deleteTech = async (req, res, next) => {
     }
 
     // Invalidate caches
-    await redisCLient.del("Technicians");
-    await redisCLient.del(`technicianProfile:${req.params.id}`);
+    await redisClient.del("Technicians");
+    await redisClient.del(`technicianProfile:${req.params.id}`);
 
     return res.status(200).json(new ApiResponse(200, null, "Technician deleted successfully"));
   } catch (error) {
@@ -83,11 +84,16 @@ export const UpdateTechnician = async (req, res, next) => {
 
 export const updateLocation = async (req, res, next) => {
   try {
-    const { technicianId, latitude, longitude } = req.body;
+    const { error, value } = technicianLocationSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json(new ApiResponse(400, null, error.details[0].message));
+    }
+
+    const { technicianId, latitude, longitude } = value;
     const currentTechId = technicianId || req.user?.id || req.user?._id;
 
-    if (!currentTechId || latitude === undefined || longitude === undefined) {
-      return res.status(400).json(new ApiResponse(400, null, "Missing location data"));
+    if (!currentTechId) {
+      return res.status(400).json(new ApiResponse(400, null, "Technician ID is required"));
     }
 
     const location = await TechnicianLocation.findOneAndUpdate(

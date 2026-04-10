@@ -1,16 +1,16 @@
 import { Complain } from "../../Models/Complaint.model.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
+import { complaintSchema } from "../../MiddleWare/Joi.middleware.js";
 
 export const SubmitComplaints = async (req, res, next) => {
   try {
-    const { subject, description, bookingId } = req.body;
-
-    if (!subject || !description) {
-      return res.status(400).json(new ApiResponse(400, null, "Subject and description are required"));
+    const { error, value } = complaintSchema.validate(req.body);
+    if (error) {
+      return res.status(400).json(new ApiResponse(400, null, error.details[0].message));
     }
 
     const complaint = await Complain.create({
-      ...req.body,
+      ...value,
       user: req.user?.id || req.user?._id,
     });
 
@@ -23,7 +23,7 @@ export const SubmitComplaints = async (req, res, next) => {
 export const ShowComplaints = async (req, res, next) => {
   try {
     const userId = req.params.id || req.user?.id || req.user?._id;
-    const complaints = await Complain.find({ user: userId });
+    const complaints = await Complain.find({ user: userId }).sort({ createdAt: -1 });
 
     return res.status(200).json(
       new ApiResponse(200, complaints, "Complaints fetched successfully")

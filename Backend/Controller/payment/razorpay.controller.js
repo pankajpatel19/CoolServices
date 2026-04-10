@@ -6,7 +6,7 @@ import { ApiResponse } from "../../utils/ApiResponse.js";
 
 export const payment = async (req, res, next) => {
   try {
-    const { amount, serviceId } = req.body;
+    const { serviceId } = req.body;
 
     if (!serviceId) {
       return res.status(400).json(new ApiResponse(400, null, "Service ID is required"));
@@ -31,7 +31,7 @@ export const payment = async (req, res, next) => {
     
     return res.status(200).json(new ApiResponse(200, order, "Order created successfully"));
   } catch (error) {
-    console.error("[Razorpay] Order creation failed:", error);
+    console.error("[Razorpay] Order creation failed:", error.message);
     next(error);
   }
 };
@@ -71,7 +71,7 @@ export const verifyPayment = async (req, res, next) => {
       new ApiResponse(200, newPayment, "Payment verified and recorded successfully")
     );
   } catch (error) {
-    console.error("[Razorpay] Verification failed:", error);
+    console.error("[Razorpay] Verification failed:", error.message);
     next(error);
   }
 };

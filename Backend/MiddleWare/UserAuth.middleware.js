@@ -1,18 +1,11 @@
 import jwt from "jsonwebtoken";
+import { ApiResponse } from "../utils/ApiResponse.js";
 
 const userAuth = async (req, res, next) => {
   const accessToken = req.cookies.accessToken;
 
-  // if (
-  //   req.headers.authorization &&
-  //   req.headers.authorization.startsWith("Bearer ")
-  // ) {
-  //   token = req.headers.authorization.split(" ")[1];
-  // }
-  // console.log(token);
-
   if (!accessToken) {
-    return res.status(401).json({ message: "Not Authorized! Login again" });
+    return res.status(401).json(new ApiResponse(401, null, "Authentication required. Please log in."));
   }
 
   try {
@@ -22,10 +15,12 @@ const userAuth = async (req, res, next) => {
       req.user = decode;
       next();
     } else {
-      return res.status(401).json({ message: "Login Again" });
+      return res.status(401).json(new ApiResponse(401, null, "Invalid session. Please log in again."));
     }
   } catch (error) {
-    return res.status(401).json({ message: error.message || "Invalid token" });
+    console.error("[AuthMiddleware] Error:", error.message);
+    const message = error.name === "TokenExpiredError" ? "Session expired. Please log in again." : "Invalid token.";
+    return res.status(401).json(new ApiResponse(401, null, message));
   }
 };
 

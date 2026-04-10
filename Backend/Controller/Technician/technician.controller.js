@@ -1,4 +1,4 @@
-import redisCLient from "../../config/redis.config.js";
+import redisClient from "../../config/redis.config.js";
 import Booking from "../../Models/Booking.model.js";
 import User from "../../Models/User.model.js";
 import { ApiResponse } from "../../utils/ApiResponse.js";
@@ -29,7 +29,7 @@ export const getTechnician = async (req, res, next) => {
     const userId = req.user?.id || req.user?._id;
     const cacheKey = `technicianProfile:${userId}`;
     
-    const cachedTech = await redisCLient.get(cacheKey);
+    const cachedTech = await redisClient.get(cacheKey);
     if (cachedTech) {
       return res.status(200).json(
         new ApiResponse(200, JSON.parse(cachedTech), "Profile fetched (cached)")
@@ -41,7 +41,7 @@ export const getTechnician = async (req, res, next) => {
       return res.status(404).json(new ApiResponse(404, null, "Technician profile not found"));
     }
 
-    await redisCLient.setEx(cacheKey, 300, JSON.stringify(tech)); // Cache for 5 mins
+    await redisClient.setEx(cacheKey, 300, JSON.stringify(tech)); // Cache for 5 mins
     
     return res.status(200).json(
       new ApiResponse(200, tech, "Technician profile fetched successfully")

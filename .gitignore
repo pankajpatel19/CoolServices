@@ -1,9 +1,21 @@
-Backend/node_modules/
-Backend/.env
-Backend/Controller/google_OAuth
-Backend/Admin/
-#frontend
-FrontEnd/Admin/node_modules/
-FrontEnd/Admin/.env
+# Subproject node_modules (redundant if .gitignore exists in subfolders, but good for safety)
+**/node_modules/
+**/dist/
+**/build/
+
+# Environment Variables
+**/.env
+**/.env.local
+**/.env.*.local
+
+# IDE Settings
 .vscode/
+.idea/
+
+# OS Junk
+.DS_Store
+Thumbs.db
+
+# Project-specific ignores
 /CoolServices
+*.log

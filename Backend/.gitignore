@@ -1,0 +1,24 @@
+# Dependencies
+node_modules/
+
+# Environment Variables
+.env
+
+# Uploads
+uploads/
+
+# Debug and Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.log
+
+# IDE Settings
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS Junk
+.DS_Store
+Thumbs.db
